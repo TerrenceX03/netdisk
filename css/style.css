@@ -1,0 +1,556 @@
+@charset "utf-8";
+	/* CSS Document*/
+	/*index*/
+.header {
+	background:url(../images/head-bj.png) repeat-x;
+	height:90px;
+	position:fixed;
+	top:0;
+	width:100%;
+	left:0;
+	z-index:999;
+}
+.head-cut {
+	background:#000;
+}
+.head-box {
+	overflow: auto;
+	height:100%;
+	position:relative;
+	width:100%;
+	z-index:999;
+}
+.head {
+	background-image:url('../images/IBMheader.jpg');
+	width: 100%;
+	height:80px;
+}
+.logo {
+	margin-top:11px;
+	margin-left: 15px;
+}
+.head-right {
+	width:600px;
+}
+.head-a {
+	height:26px;
+	margin:16px 0 10px;
+}
+.head-a3 {
+	width:59px;
+	''	text-align:Center;
+	height:24px;
+	line-height:24px;
+	background:#60b6ff;
+	font-size:14px;
+	color:#fff;
+	margin:1px 150px 0 0;
+}
+/*
+	mid-content
+*/
+.content {
+	width:100%;
+	margin:0 auto;
+}
+.left_content {
+	width:220px;
+	margin-left:0 auto;
+	float: left;
+	padding:30px 0 0 40px;
+}
+.right_content {
+	width:625px;
+	float:left;
+	padding:30px 0 0 30px;
+}
+.sidebarmenu {
+	margin:0px 0;
+	top: -20px;
+	position: relative;
+	padding:0;
+	width:200px;
+	height: 450px;
+	overflow: auto;
+}
+.sidebarmenu a.menuitem {
+	background:rgba(25, 25, 112, 1);
+	color: white;
+	display: block;
+	position: relative;
+	width:185px;
+	height:31px;
+	margin:0 0 5px 0;
+	line-height:31px;
+	padding:0px 0 0 10px;
+	text-decoration: none;
+}
+.sidebarmenu a.menuitem_green {
+	background:url(images/green_bt.gif) no-repeat center top;
+	color: #fff;
+	display: block;
+	position: relative;
+	width:185px;
+	height:31px;
+	margin:0 0 5px 0;
+	line-height:31px;
+	padding:0px 0 0 10px;
+	text-decoration: none;
+}
+.sidebarmenu a.menuitem_red {
+	background:url(images/red_bt.gif) no-repeat center top;
+	color: #fff;
+	display: block;
+	position: relative;
+	width:185px;
+	height:31px;
+	margin:0 0 5px 0;
+	line-height:31px;
+	padding:0px 0 0 10px;
+	text-decoration: none;
+}
+.sidebarmenu a.menuitem:hover {
+	background:url(images/sidebar_menu_top_a.gif) no-repeat center top;
+}
+.sidebarmenu a.menuitem_green:hover {
+	background:url(images/green_bt_a.gif) no-repeat center top;
+}
+.sidebarmenu a.menuitem_red:hover {
+	background:url(images/red_bt_a.gif) no-repeat center top;
+}
+.sidebarmenu a.menuitem:visited, .sidebarmenu .menuitem:active {
+	color: white;
+}
+.sidebarmenu a.menuitem .statusicon {
+	position: absolute;
+	top:11px;
+	right:7px;
+	border: none;
+}
+.sidebarmenu div.submenu {
+	background: white;
+	overflow: auto;
+}
+.sidebarmenu div.submenu ul {
+	list-style-type: none;
+	overflow: auto;
+	margin: 0;
+	padding: 0 0 5px 0;
+}
+.sidebarmenu div.submenu ul li {
+	border-bottom: 1px dotted #bfd1d9;
+}
+.sidebarmenu div.submenu ul li a {
+	display: block;
+	color: black;
+	text-decoration: none;
+	padding:5px 0;
+	padding-left: 10px;
+}
+.sidebarmenu div.submenu ul li a:hover {
+	background: #e2f0ff;
+	color: #0e4354;
+}
+.sidebar_search {
+	background:url(images/sidebar_menu_top.gif) no-repeat center;
+	width:195px;
+	height:31px;
+	margin:0 0 5px 0;
+}
+input.search_input {
+	width:155px;
+	height:16px;
+	margin:5px 0 0 5px;
+	border:1px #bdebfd solid;
+	background:#92dbf8;
+	padding:4px 0 0 2px;
+	float:left;
+	color:#096184;
+	font-size:11px;
+}
+input.search_submit {
+	float:left;
+	background:none;
+	border:none;
+	margin:7px 0 0 8px;
+}
+.cou-b-title {
+	height:27px;
+	position:relative;
+}
+.cou-b1 {
+	height:27px;
+	line-height:27px;
+	font-size:18px;
+	float: left;
+	margin-left: 70px;
+	color:#000000;
+}
+.cou-b1 img {
+	margin:-3px 10px 0 0;
+	width: 30px;
+}
+.cou-b2 {
+	height:27px;
+	float: left;
+	line-height:27px;
+	font-size:18px;
+	margin-left: 340px;
+	color:#000000;
+}
+.cou-b2 img {
+	margin:-3px 10px 0 0;
+	width: 30px;
+}
+.cou-b3 {
+	height:27px;
+	line-height:27px;
+	font-size:18px;
+	float: left;
+	margin-left: 370px;
+	color:#000000;
+}
+.cou-b3 img {
+	margin:-3px 10px 0 0;
+	width: 30px;
+}
+/*community*/
+	.community {
+	overflow:hidden;
+	padding-bottom:35px;
+	border-bottom:1px solid #c6c6c6;
+}
+.ru {
+	overflow:hidden;
+	margin:18px 0 36px;
+}
+/*
+	all-table in index
+*/
+#table1 {
+	margin: 0px 400px 30px 320px;
+	top:-400px;
+	right: 70px;
+	width: 130px;
+	height: 20px;
+	border: 1px solid midnightblue ;
+	position: relative;
+	border-collapse: collapse;
+	/*设置表格的边框是否被合并为一个单一的边框*/
+	border-spacing: 0;
+	/*设置相邻单元格的边框间的距离*/
+}
+#table1 tr {
+	width: 300px;
+	height: 40px;
+	line-height: 40px;
+	border: 1px solid  ;
+	background-color: white;
+
+}
+#table1 td {
+	height:30px;
+	width: 150px;
+	line-height: 30px;
+	text-align: center;
+	border: 1px solid midnightblue ;
+
+}
+#table1 th {
+	height:30px;
+	width: 150px;
+	line-height: 30px;
+	text-align: center;
+	border: 1px solid  ;
+    background-color:midnightblue ;
+    color: white;
+}
+#table2 {
+	border-collapse: collapse;
+	word-wrap:break-word;
+	border: 1px solid white;
+	position: absolute;
+	height:40px;
+	width:260px;
+	top:200px;
+	left: 460px;
+}
+#table2 td {
+	border: 1px solid white;
+	height:40px;
+	width:100px;
+}
+#table2 th {
+	border: 1px solid white;
+	height:40px;
+	width: 140px;
+	background-color:lightgrey;
+	color:black;
+}
+/*
+	log block
+*/
+
+#longer {
+	height:240px;
+	width:160px;
+	overflow:auto;
+	word-break: normal;
+}
+#long {
+	overflow:hidden;
+	word-break: normal;
+}
+.ru-fl {
+	width:100%;
+}
+.ru-a {
+	margin: 30px auto;
+	width: 100%;
+	border-bottom:1px solid #c6c6c6;
+}
+.ru-title {
+	height:10px;
+	top: -25px;
+	position:relative;
+}
+/*
+	all progressbar
+*/
+
+#progressbar1 {
+	width: 270px;
+	top: 30px;
+	position: relative;
+	left: 70px;
+}
+#progressbar2 {
+	width: 270px;
+	top: 80px;
+	position: relative;
+	left: 40px;
+}
+#progressbar3 {
+	width: 270px;
+	top: 120px;
+	position: relative;
+	left: 30px;
+}
+#progress_bar1 {
+	width: 320px;
+	margin-top: 70px;
+	margin-left: 65%;
+	top: -80px;
+	position: relative;
+}
+#progress_bar2 {
+	left: 30px;
+	width: 320px;
+	position: relative;
+	top: -130px;
+	margin-left: 65%;
+}
+#progress_bar3 {
+	left: 38px;
+	position: relative;
+	width: 320px;
+	top: -170px;
+	z-index: 1;
+	margin-left: 65%;
+}
+.line1 {
+	position: absolute;
+	z-index: 2;
+	left: 74%;
+	margin-top: -50px;
+	height: 180px;
+	/*竖线高度*/
+	border:1px dashed rgba(128, 128, 128, 1);
+}
+.line2 {
+	position: absolute;
+	margin-top: -50px;
+	z-index: 2;
+	left: 87%;
+	height: 180px;
+	/*竖线高度*/
+	border:1px dashed rgba(128, 128, 128, 1);
+}
+.line1-tag {
+	position: absolute;
+	z-index: 2;
+	left: 72%;
+	color:rgba(128, 128, 128, 1);
+	margin-top: -70px;
+}
+.line2-tag {
+	margin-top: -70px;
+	position: absolute;
+	z-index: 2;
+	left: 85%;
+	color: rgba(128, 128, 128, 1);
+}
+.progress-label-1 {
+	position: absolute;
+	left: 35%;
+	top: 4px;
+	font-size:10px;
+}
+.progress-label-2 {
+	position: absolute;
+	left: 35%;
+	top: 4px;
+	font-size:10px;
+}
+.progress-label-3 {
+	position: absolute;
+	left: 35%;
+	top: 4px;
+	font-size:10px;
+}
+.contain1 {
+	position:relative;
+	top: 0px;
+	left:350px;
+	width: 50px;
+	bottom: 25px;
+	color:blue;
+	word-break: break-all;
+}
+.contain2 {
+	position:relative;
+	left:320px;
+	top: 45px;
+	width: 50px;
+	bottom: 25px;
+	color:blue;
+	word-break: break-all;
+}
+.contain3 {
+	position:relative;
+	left:310px;
+	top: 90px;
+	width: 50px;
+	bottom: 25px;
+	color:blue;
+	word-break: break-all;
+}
+/*
+	all circle
+*/
+.circle1 {
+	display: block;
+	border-radius: 50%;
+	height: 60px;
+	width: 60px;
+	margin: 0;
+	background:green;
+	float: left;
+	position:relative;
+	left:840px;
+	top: -74px;
+}
+
+.circle1:hover
+ { 	
+	background:#00CC00;
+}
+.circle2 {
+	display: block;
+	border-radius: 50%;
+	height: 60px;
+	width: 60px;
+	margin: 0;
+	background: green;
+	float: left;
+	position:relative;
+	
+	left:860px;
+}
+.circle2:hover
+ { 	
+	background:#00CC00;
+}
+.circle3 {
+	display: block;
+	border-radius: 50%;
+	height: 60px;
+	width: 60px;
+	margin: 0;
+	background: green;
+	float: left;
+	top: 68px;
+	left:855px;
+	position:relative;
+}	
+.circle3:hover
+ { 	
+	background:#00CC00;
+}
+.label1 {
+	float:left;
+	position: relative;
+	top: 53px;
+	left: -220px;
+	color: green;
+	font-weight: bold;
+}
+.label2 {
+	float:left;
+	color: green;
+	position: relative;
+	top: 53px;
+	left: -300px;
+	font-weight: bold;
+}
+.label3 {
+	float:left;
+	color: green;
+	position: relative;
+	top: 53px;
+	left: -357px;
+	font-weight: bold;
+}
+/*input*/
+.inputfile {
+    width: 0.1px; 
+    height: 0.1px; 
+    opacity: 0; 
+    overflow: hidden; 
+    position: absolute; 
+    z-index: -1;
+}
+.inputfile + label {
+    font-size: 1.20em;
+    font-weight: 500;
+    width: 115px;
+    color: rgba(255,255,255,0.9);
+  background-color: rgba(255,0,0,0.8);
+      display: inline-block;
+}
+.inputfile:focus + label,
+.inputfile + label:hover {
+  background-color: rgba(255,0,0,1);
+}
+
+.updatebutton {
+    width: 0.1px; 
+    height: 0.1px; 
+    opacity: 0; 
+    overflow: hidden; 
+    position: absolute; 
+    z-index: -1;
+}
+.updatebutton + label {
+	position: relative;
+	top:10px;
+    font-size: 1.20em;
+    font-weight: 500;
+    width: 55px;
+    color: rgba(255,255,255,0.9);
+    background-color: rgba(255,0,0,0.8);
+    display: inline-block;
+}
+.updatebutton:focus + label,
+.updatebutton + label:hover {
+    background-color: rgba(255,0,0,1);}
