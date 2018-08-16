@@ -51,12 +51,12 @@
         <td colspan="2">
         <table id="myTable" border="1" width="70%">
             <tr>
-                <td id="1">cell 1</td>
-                <td id="1">cell 2</td>
+                <td id="1">111.txt</td>
+                <td id="1">10.3M</td>
             </tr>
             <tr>
-                <td id="2">cell 3</td>
-                <td id="2">cell 4</td>
+                <td id="2">123.txt</td>
+                <td id="2">1.6M</td>
             </tr>
          </table>
          
@@ -74,8 +74,6 @@
     $(document).on("click","td",function DisplayFileInfo(e){
          $("#new").remove();
          var td_id=e.target.id;
-        
-         
     var table=document.getElementById("myTable");
     var row=table.insertRow(td_id);
     row.id="new";
@@ -83,6 +81,29 @@
     
     cell1.colSpan=2;
     row.style.cssText="height:30px";
+
+
+    var filename = $(e.target).text();
+
+    $.ajax({
+        url:'show_files_info_table.php',
+        data: {filename: filename},
+        method:'POST',
+        success: function(res) {
+            
+          var str = "";
+                str+="<table id='infotable'>";
+               str+="<tr><th>tier</th><th>creatime</th><th>modifytime</th></tr>"
+               str+="<tr><td>"+res.tier+"</td><td>"+res.crtime+"</td><td>"+res.modtime+"</td></tr>" 
+               
+                str+="</table>";
+
+                cell1.innerHTML=str;
+                
+        }
+        
+    })
+
  }
     )
 </script>
