@@ -1,6 +1,114 @@
 @charset "utf-8";
 	/* CSS Document*/
 	/*index*/
+
+/* General class */
+.english {
+	font-family: arial;
+	color: #1F4E79;
+	font-size: 16px;
+}
+
+.chinese {
+	font-family: 宋体;
+	color: #1F4E79;
+	font-size: 16px;
+}
+
+/* Header */
+#header {
+	background: url(../images/IBMheader.jpg) no-repeat;
+	height: 110px;
+}
+
+#gpfslogo {
+	position: absolute;
+    width: 60px;
+    top: 20px;
+    left: 20px;
+}
+
+#title {
+	position: absolute;
+	top: 30px;
+    left: 100px;
+    font-size: 21px;
+    color: white;
+    white-space: nowrap;
+}
+
+#subtitle {
+	position: absolute;
+	top: 60px;
+    left: 100px;
+    font-size: 16px;
+    color: white;
+    white-space: nowrap;
+}
+
+/* Navigation Bar */
+#navbar {
+	background-color: #E7E6E6;
+	vertical-align: top;
+}
+
+#navbar-title {
+	text-align: center;
+    margin: 10px 0 20px 0;
+}
+
+.folder {
+    margin: 10px 0 0 30px;
+    height: 30px;
+}
+
+.folder label {
+	padding: 0 0 0 10px;
+	height: 30px;
+	vertical-align: middle;
+	white-space: nowrap;
+	color: gray;
+	cursor: pointer;
+}
+
+.openfolder label {
+	color: #1F4E79;
+}
+
+.folder-icon {
+	width: 30px;
+	height: 30px;
+}
+
+/* Operation Button */
+#opbar {
+	background-color: white;
+	padding: 3px 10px;
+}
+
+.default-button {
+	background-color: #C00000;
+	padding: 3px 7px;
+	color: white;
+	font-size: 10px;
+	margin-left: 5px;
+	cursor: pointer;
+}
+
+/* Content */
+#content {
+}
+
+/* Statistics */
+#statistics {
+}
+
+/* logs */
+#logs {
+}
+
+/********************************/
+
 .header {
 	background:url(../images/head-bj.png) repeat-x;
 	height:90px;

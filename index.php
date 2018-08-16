@@ -22,16 +22,47 @@
         <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
     </head>
     <body>
-        <table border= "1" width= "100%" height="650px">
-            <tr height="100px" >
-                <th colspan="3"><img src=images/IBMheader.jpg height="100px" width="100%"></th> 
+        <table border= "0" width= "100%" height="650px">
+            <tr id="header">
+                <th colspan="3">
+                    <img id="gpfslogo" src="images/GPFSlogo.png">
+                    <div id="title" class="english">IBM Spectrum Scale</div>
+                    <div id="subtitle" class="chinese">针对云计算、大数据、分析、对象等的高级非结构化数据存储管理解决方案</div>
+                </th> 
             </tr>
-            <tr height="50px">
-                <td rowspan="3" width="250px"></td>
-                <td colspan="2"></td>
+            <tr>
+                <td id="navbar" rowspan="3" width="250px">
+                    <div id="navbar-title" class="chinese">全部文件夹</div>
+                    <ul>
+                        <li class="folder chinese">
+                            <img class="folder-icon" src="icons/folder.png">
+                            <label>我的文档</label>
+                        </li>
+                        <li class="folder chinese openfolder">
+                            <img class="folder-icon" src="icons/folder-open.png">
+                            <label>方案书</label>
+                        </li>
+                        <li class="folder chinese">
+                            <img class="folder-icon" src="icons/folder.png">
+                            <label>后督影像</label>
+                        </li>
+                        <li class="folder chinese">
+                            <img class="folder-icon" src="icons/folder.png">
+                            <label>数据库日志</label>
+                        </li>
+                    </ul>
+                </td>
+                <td id="opbar" colspan="2" height="50px">
+                    <table>
+                        <tr>
+                            <td><div class="default-button chinese">上传</div></td>
+                            <td><div class="default-button chinese">新建文件夹</div></td>
+                        </tr>
+                    </table>
+                </td>
             </tr>
             <tr>  
-                <td colspan="2">
+                <td id="content" colspan="2">
                     <table id="myTable" border="1" width="70%">
                         <tr>
                             <td id="1">111.txt</td>
@@ -44,13 +75,13 @@
                     </table>
                 </td>   
             </tr>
-            <tr height="200px">
-                <td></td>
-                <td></td>
+            <tr height="200px">  
+                <td id="statistics"></td>  
+                <td id="logs"></td> 
             </tr>
         </table>
         <script type="text/javascript">
-            $(document).on("click","td",function DisplayFileInfo(e){
+            $(document).on("click","#myTable tr",function DisplayFileInfo(e){
                 $("#new").remove();
                 var td_id = e.target.id;
                 var table = document.getElementById("myTable");
