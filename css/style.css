@@ -93,7 +93,7 @@
 	font-size: 10px;
 	margin-left: 5px;
 	cursor: pointer;
-}
+}q
 
 /* Content */
 #content {
@@ -105,8 +105,7 @@
 }
 
 /* logs */
-#logs {
-}
+
 
 /********************************/
 
@@ -426,29 +425,52 @@ input.search_submit {
 /*
 	all progressbar
 */
+#statistics{
+	width: 800px;
+	 height:300px;
+	 overflow: auto;
+}
+
+.all_progress{
+	position: relative;
+	width: 400px;
+	height: 300px;
+	top:30px;
+	left:70px;
+}
+#progressbar{
+	width:400px;
+	height:300px;
+}
+#progressbar_title{
+	position:relative;
+	left: 200px;
+	top: 60px;
+	font-size: 20px;
+}
 
 #progressbar1 {
 	width: 270px;
 	top: 30px;
 	position: relative;
-	left: 70px;
+	left: 20px;
 }
 #progressbar2 {
 	width: 270px;
-	top: 80px;
+	top: 67px;
 	position: relative;
-	left: 40px;
+	left: -56px;
 }
 #progressbar3 {
 	width: 270px;
-	top: 120px;
+	top: 90px;
 	position: relative;
-	left: 30px;
+	left: -56px;
 }
 #progress_bar1 {
 	width: 320px;
 	margin-top: 70px;
-	margin-left: 65%;
+	left: 10%;
 	top: -80px;
 	position: relative;
 }
@@ -457,7 +479,7 @@ input.search_submit {
 	width: 320px;
 	position: relative;
 	top: -130px;
-	margin-left: 65%;
+	left: 30%;
 }
 #progress_bar3 {
 	left: 38px;
@@ -465,38 +487,42 @@ input.search_submit {
 	width: 320px;
 	top: -170px;
 	z-index: 1;
-	margin-left: 65%;
+	left: 30%;
 }
 .line1 {
 	position: absolute;
+	display: none;
 	z-index: 2;
-	left: 74%;
-	margin-top: -50px;
-	height: 180px;
+	left: 28%;
+	margin-top: 30px;
+	height: 220px;
 	/*竖线高度*/
 	border:1px dashed rgba(128, 128, 128, 1);
 }
 .line2 {
 	position: absolute;
-	margin-top: -50px;
+	display: none;
+	margin-top: 30px;
 	z-index: 2;
-	left: 87%;
-	height: 180px;
+	left: 57%;
+	height: 220px;
 	/*竖线高度*/
 	border:1px dashed rgba(128, 128, 128, 1);
 }
 .line1-tag {
 	position: absolute;
+	display: none;
 	z-index: 2;
-	left: 72%;
+	left: 25%;
 	color:rgba(128, 128, 128, 1);
 	margin-top: -70px;
 }
 .line2-tag {
 	margin-top: -70px;
 	position: absolute;
+	display: none;
 	z-index: 2;
-	left: 85%;
+	left: 57%;
 	color: rgba(128, 128, 128, 1);
 }
 .progress-label-1 {
@@ -505,11 +531,25 @@ input.search_submit {
 	top: 4px;
 	font-size:10px;
 }
+#progressbar1_name{
+	position: relative;
+	left: 8px;
+	top: 45px;
+	font-size: 8px;
+	bottom:-20px;
+}
 .progress-label-2 {
 	position: absolute;
 	left: 35%;
 	top: 4px;
 	font-size:10px;
+}
+#progressbar2_name{
+	position: relative;
+	left: 8px;
+	top: -40px;
+	font-size: 8px;
+	bottom:35px;
 }
 .progress-label-3 {
 	position: absolute;
@@ -517,33 +557,66 @@ input.search_submit {
 	top: 4px;
 	font-size:10px;
 }
+#progressbar3_name{
+	position: relative;
+	left: 8px;
+	top: -55px;
+	font-size: 8px;
+	bottom:35px;
+}
 .contain1 {
 	position:relative;
 	top: 0px;
-	left:350px;
+	left:300px;
 	width: 50px;
 	bottom: 25px;
+	font-size: 8px;
 	color:blue;
 	word-break: break-all;
 }
 .contain2 {
 	position:relative;
-	left:320px;
+	left:220px;
 	top: 45px;
 	width: 50px;
 	bottom: 25px;
+	font-size: 8px;
 	color:blue;
 	word-break: break-all;
 }
 .contain3 {
 	position:relative;
-	left:310px;
-	top: 90px;
+	left:220px;
+	top: 70px;
 	width: 50px;
 	bottom: 25px;
+	font-size: 8px;
 	color:blue;
 	word-break: break-all;
 }
+
+#logs_td{
+	width: 400px;
+	 height:300px;
+}
+#logs{
+	position: relative;
+	top:0px;
+}
+#log{
+	overflow: scroll;width:420px;
+	height: 140px;position:relative;
+	left:60px;word-break:keep-all;
+	font-weight: bold;
+	border-top: 1px solid #c6c6c6;
+	border-top-width: 100%;
+}
+#log_title{
+	position:relative;
+	left:40%;bottom:10px;
+	font-size: 20px;
+}
+
 /*
 	all circle
 */

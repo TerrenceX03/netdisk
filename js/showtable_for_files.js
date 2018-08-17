@@ -1,34 +1,34 @@
 //display()：Click on the folder to display a list of files
-$(function display() {  
-    $('li').click(function(e) {  
-        var name=$(e.target).attr('name');
-        $.ajax({
-            url:'show_files_table.php',
-            data: {
-                Name: name
-            },
-            method:'POST',
-            success: function(res) {
-                if (res.msg == 1) {                               
-                    $("table").remove();
-                    $('#close_table').remove();
-                    //Table head:'Filename'
-                    var str = "";
-                    str += "<table id='table1'><thead><tr><th>Filename</th></tr></thead><tbody>";
-                    //Generate file name
-                    str += "<tr><td class='text-left' id='long'><div id='longer'>"+res.html+"</div></td></tr>";                    
-                    str +="</tbody></table>";
-                    //Append table to <div>
-                    $('#wrap').append(str);
-                    $("#log").append("<b> Display a list of all files in the <span style='color:#f00'>" +name+ "</span><br/>");
-                } 
-                    else {
-                    alert('failed')
-                }
-            }
-        }) 
-    });
-});
+// $(function display() {  
+//     $('li').click(function(e) {  
+        // var name=$(e.target).attr('name');
+        // $.ajax({
+        //     url:'show_files_table.php',
+        //     data: {
+        //         Name: name
+        //     },
+        //     method:'POST',
+        //     success: function(res) {
+//                 if (res.msg == 1) {                               
+//                     $("table").remove();
+//                     $('#close_table').remove();
+//                     //Table head:'Filename'
+//                     var str = "";
+//                     str += "<table id='table1'><thead><tr><th>Filename</th></tr></thead><tbody>";
+//                     //Generate file name
+//                     str += "<tr><td class='text-left' id='long'><div id='longer'>"+res.html+"</div></td></tr>";                    
+//                     str +="</tbody></table>";
+//                     //Append table to <div>
+//                     $('#wrap').append(str);
+//                     $("#log").append("<b> Display a list of all files in the <span style='color:#f00'>" +name+ "</span><br/>");
+//                 } 
+//                     else {
+//                     alert('failed')
+//                 }
+//             }
+//         }) 
+//     });
+// });
 // DisplayFileInfo():Click the file and show the information, change the circle's color as meanwhile.
     $(document).on("click","input",function DisplayFileInfo(e){    
     var filename = $(e.target).next().text();

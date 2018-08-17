@@ -8,6 +8,7 @@
         <link rel="stylesheet" href="css/base.css">
         <link rel="stylesheet" href="css/style.css">
         <link rel="stylesheet" type="text/css" media="all" href="css/niceforms-default.css">
+
         <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
         <script type="text/javascript" src="js/ddaccordion.js"></script>
         <script type="text/javascript" src="js/jquery.form.min.js"></script>
@@ -16,13 +17,13 @@
         <script type="text/javascript" src="js/upload_files.js"></script>
         <script type="text/javascript" src="js/showtable_for_files.js"></script>
         <script type="text/javascript" src="js/click_event_for_tier.js"></script>
-        <script type="text/javascript" src="js/GenerateProgressBar.js"></script>
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
-        <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        
+        <link rel="stylesheet" href="css/jquery-ui.css">
+        <link rel="stylesheet" href="css/styleui.css">
         <script type="text/javascript" src="js/DataTables/datatables.js"></script>
         <script type="text/javascript" src="js/datatable.js"></script>
-        <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
         <link rel="stylesheet" type="text/css" href="js/DataTables/datatables.css"/>
+        <script src="js/jquery-ui.js"></script>
     </head>
     <body>
         <table border= "0" width= "100%">
@@ -36,24 +37,11 @@
             <tr>
                 <td id="navbar" rowspan="3" width="250px">
                     <div id="navbar-title" class="chinese">全部文件夹</div>
-                    <ul>
-                        <li class="folder chinese">
-                            <img class="folder-icon" src="icons/folder.png">
-                            <label>我的文档</label>
-                        </li>
-                        <li class="folder chinese openfolder">
-                            <img class="folder-icon" src="icons/folder-open.png">
-                            <label>方案书</label>
-                        </li>
-                        <li class="folder chinese">
-                            <img class="folder-icon" src="icons/folder.png">
-                            <label>后督影像</label>
-                        </li>
-                        <li class="folder chinese">
-                            <img class="folder-icon" src="icons/folder.png">
-                            <label>数据库日志</label>
-                        </li>
-                    </ul>
+                    <?php 
+                    // show list of files 
+                    $ans=Select_all_filesets(); 
+                    echo show_folder($ans,'picture', "display()"); 
+                    ?>
                 </td>
                 <td id="opbar" colspan="2" height="50px">
                     <table>
@@ -79,12 +67,103 @@
                     </table>
                 </td>   
             </tr>
-            <tr height="200px">  
-                <td id="statistics"></td>  
-                <td id="logs"></td> 
+            <tr id='statistics'>  
+                <td id="progressbar">
+                     <div id='progressbar_title'>资源池统计
+                    </div>
+                    <div class="all_progress">
+                        <div class="line1" >
+                        </div>
+                        <div class="line2">
+                        </div>
+                        <div id='progressbar1_name'>System
+                        </div>
+                        <div id=progress_bar1>
+                            <div id="progressbar1">
+                                <div class="progress-label-1">
+                                </div>
+                            </div>
+                            <div class='contain1'>
+                                40G
+                            </div>
+                             </div>
+                        <div id='progressbar2_name'>Saspool
+                        </div> 
+                        <div id=progress_bar2>
+                            <div id="progressbar2">
+                                <div class="progress-label-2">
+                                </div>
+                            </div>
+                            <div class='contain2'>50G
+                            </div>
+                        </div>
+                        <div id='progressbar3_name'>Satapool</div>
+                       <div id=progress_bar3>
+                            <div id="progressbar3">
+                                <div class="progress-label-3">
+                                </div>
+                            </div>
+                            <div class='contain3'>60G
+                            </div>
+                        </div>
+                        <div class="line1-tag">30%
+                        </div>
+                        <div class="line2-tag">70%
+                        </div>         
+                    </div>
+                </td>  
+                <td id="logs_td">
+                  <div id="logs">
+                    <div id='log_title'>系统日志
+                    </div>
+                    <div id='log'>Event:<br>
+                    </div>
+                 </div>
+                </td> 
             </tr>
         </table>
         <script type="text/javascript">
+            
+                /* 
+                    GenerateProgressBar：Generate the progressbar for tier information such as GPFS
+                    tier:COS,GPFS,etc..
+                    barID:The ID of progressbar
+                    labelClass:Html sign for class
+                 */
+                function GenerateProgressBar(tier, tier_size, barID, labelClass) {
+                    $.ajax({
+                        url: "get_progressbar_values.php",
+                        data: {
+                            tier: tier,
+                            tier_size: tier_size
+                        },
+                        method: 'POST',
+                        success: function(res) {
+                            var progressbar = $("#" + barID);
+                            progressLabel = $("." + labelClass);
+                            var val = res.perc;
+                            progressbar.progressbar({
+                                value: val,
+                            });
+                            if (val < 60) {
+                                $(".ui-widget-header").css({
+                                    'background': 'green'
+                                });
+                            } else {
+                                $(".ui-widget-header").css({
+                                    'background': 'yellow'
+                                });
+                            }
+                            var label = res.size;
+                            label = String(label);
+                            progressLabel.text("已用" + label + "M");
+                        }
+                    })
+                }
+                GenerateProgressBar("system", 40960, "progressbar1", "progress-label-1");
+                GenerateProgressBar("saspool", 51200, "progressbar2", "progress-label-2");
+                GenerateProgressBar("satapool", 61440, "progressbar3", "progress-label-3");
+          
 
         </script>
     </body>
