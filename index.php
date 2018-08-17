@@ -19,10 +19,13 @@
         <script type="text/javascript" src="js/GenerateProgressBar.js"></script>
         <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
         <script src="//code.jquery.com/ui/1.10.4/jquery-ui.js"></script>
+        <script type="text/javascript" src="js/DataTables/datatables.js"></script>
+        <script type="text/javascript" src="js/datatable.js"></script>
         <link rel="stylesheet" href="http://jqueryui.com/resources/demos/style.css">
+        <link rel="stylesheet" type="text/css" href="js/DataTables/datatables.css"/>
     </head>
     <body>
-        <table border= "0" width= "100%" height="650px">
+        <table border= "0" width= "100%">
             <tr id="header">
                 <th colspan="3">
                     <img id="gpfslogo" src="images/GPFSlogo.png">
@@ -63,15 +66,16 @@
             </tr>
             <tr>  
                 <td id="content" colspan="2">
-                    <table id="myTable" border="1" width="70%">
-                        <tr>
-                            <td id="1">111.txt</td>
-                            <td id="1">10.3M</td>
-                        </tr>
-                        <tr>
-                            <td id="2">123.txt</td>
-                            <td id="2">1.6M</td>
-                        </tr>
+                    <table id="dataTable" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th class="chinese"></th>
+                                <th class="chinese">文件名</th>
+                                <th class="chinese">文件大小</th>
+                                <th class="chinese">创建时间</th>
+                                <th class="chinese">修改时间</th>
+                            </tr>
+                        </thead>
                     </table>
                 </td>   
             </tr>
@@ -81,31 +85,7 @@
             </tr>
         </table>
         <script type="text/javascript">
-            $(document).on("click","#myTable tr",function DisplayFileInfo(e){
-                $("#new").remove();
-                var td_id = e.target.id;
-                var table = document.getElementById("myTable");
-                var row = table.insertRow(td_id);
-                row.id = "new";
-                var cell1 = row.insertCell(0);
-                cell1.colSpan = 2;
-                row.style.cssText = "height:30px";
-                var filename = $(e.target).text();
-                    
-                $.ajax({
-                    url:'show_files_info_table.php',
-                    data: {filename: filename},
-                    method:'POST',
-                    success: function(res) { 
-                        var str = "";
-                        str += "<table id='infotable'>";
-                        str += "<tr><th>tier</th><th>creatime</th><th>modifytime</th></tr>"
-                        str+="<tr><td>" + res.tier + "</td><td>" + res.crtime + "</td><td>" + res.modtime + "</td></tr>" 
-                        str += "</table>";
-                        cell1.innerHTML = str; 
-                    }
-                })
-            })
+
         </script>
     </body>
 </html>
