@@ -19,6 +19,7 @@ function format ( d ) {
 }
     
 $(document).ready(function() {
+<<<<<<< HEAD
     $("li").click(function () {
         // ('#dataTable_wrapper').remove() ; 
         var name_=$(this).attr("id");
@@ -33,6 +34,12 @@ $(document).ready(function() {
                 d.foldername = name_;
             }
         },
+=======
+
+    var table = $('#dataTable').DataTable( {
+        "ajax": "listfiles.php",
+        // "ajax": "testdata/data2.txt",
+>>>>>>> 42025f77e5284008e0cc0686f0216e0074fd6214
         "columns": [
             {
                 "className":      'datatable-checkbox',
@@ -49,7 +56,32 @@ $(document).ready(function() {
         scrollY:        '65vh',
         scrollCollapse: true,
         paging:         false
+<<<<<<< HEAD
     } );   
+=======
+    } );
+
+    // var table = $('#dataTable').DataTable( {
+    //     "ajax": "testdata/data.txt",
+    //     "columns": [
+    //         {
+    //             "className":      'datatable-checkbox',
+    //             "orderable":      false,
+    //             "data":           null,
+    //             "defaultContent": '<input type="checkbox" />'
+    //         },
+    //         { "data": "name", "className": "datatable-data-col" },
+    //         { "data": "position", "className": "datatable-data-col" },
+    //         { "data": "office", "className": "datatable-data-col" },
+    //         { "data": "salary", "className": "datatable-data-col" }
+    //     ],
+    //     "order": [[1, 'asc']],
+    //     scrollY:        '65vh',
+    //     scrollCollapse: true,
+    //     paging:         false
+    // } );
+    
+>>>>>>> 42025f77e5284008e0cc0686f0216e0074fd6214
     // Add event listener for opening and closing details
     $('#dataTable tbody').on('click', 'td.datatable-data-col', function () {
         var tr = $(this).closest('tr');

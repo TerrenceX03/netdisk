@@ -13,9 +13,14 @@ ssh2_auth_password($connection, $user, $pass);
 //query the exist filesets.
 $cmd_ls_files1 = 'cd ..';
 $cmd_ls_files2 = 'cd demofs/';
+<<<<<<< HEAD
 // var_dump( $_POST['foldername']);
 $cmd_ls_files2.= $_POST['foldername'];
 // $cmd_ls_files2.='workshop';
+=======
+// $cmd_ls_files2.= $_POST['Name'];
+$cmd_ls_files2.='png';
+>>>>>>> 42025f77e5284008e0cc0686f0216e0074fd6214
 $cmd_ls_files3 = 'ls';
 $ret_ls_fileset = ssh2_exec($connection, "$cmd_ls_files1;$cmd_ls_files2;$cmd_ls_files3");
 stream_set_blocking($ret_ls_fileset, true);
@@ -30,8 +35,13 @@ $file = array();
 for ($i = 0; $i < count($tmp); $i++) {
     if ($tmp[$i] != '') {
         $file['filename'] = $tmp[$i];
+<<<<<<< HEAD
         // $fileset = explode('.', $tmp[$i])[1];
         $fileset = $_POST['foldername'];
+=======
+        $fileset = explode('.', $tmp[$i])[1];
+
+>>>>>>> 42025f77e5284008e0cc0686f0216e0074fd6214
         $mmlsattr_cmd_prefix = "mmlsattr -L ";
         $mmlsattr_cmd_prefix.= "/demofs/";
         $mmlsattr_cmd_prefix.= $fileset;
