@@ -1,8 +1,8 @@
 <?php
+include 'common/common.php'; 
 /*
 Function:Return the html of files which in specific filesets.
 */
-include 'common/common.php';
 header('Content-type:text/json');
 $user = DB_USER;
 $pass = DB_PWD;
@@ -10,22 +10,12 @@ $ip = DB_IP;
 $port = DB_PORT;
 $connection = ssh2_connect($ip, $port);
 ssh2_auth_password($connection, $user, $pass);
+
 //query the exist filesets.
-$cmd_ls_files1 = 'cd ..';
-$cmd_ls_files2 = 'cd demofs/';
-<<<<<<< HEAD
-// var_dump( $_POST['foldername']);
-$cmd_ls_files2.= $_POST['foldername'];
-// $cmd_ls_files2.='workshop';
-=======
-// $cmd_ls_files2.= $_POST['Name'];
-$cmd_ls_files2.='png';
->>>>>>> 42025f77e5284008e0cc0686f0216e0074fd6214
-$cmd_ls_files3 = 'ls';
-$ret_ls_fileset = ssh2_exec($connection, "$cmd_ls_files1;$cmd_ls_files2;$cmd_ls_files3");
+$cmd_ls_files = str_replace(['FILESYSTEM','FILESET'], [FS_MOUNT_POINT,$_POST['foldername']], 'ls FILESYSTEM/FILESET');
+$ret_ls_fileset = ssh2_exec($connection, $cmd_ls_files);
 stream_set_blocking($ret_ls_fileset, true);
 $ans_ls_fileset = stream_get_contents($ret_ls_fileset);
-// var_dump(strlen($ans_ls_fileset));
 $tmp = explode("\n", $ans_ls_fileset);
 
 $result = array();
@@ -35,24 +25,13 @@ $file = array();
 for ($i = 0; $i < count($tmp); $i++) {
     if ($tmp[$i] != '') {
         $file['filename'] = $tmp[$i];
-<<<<<<< HEAD
+
         // $fileset = explode('.', $tmp[$i])[1];
         $fileset = $_POST['foldername'];
-=======
-        $fileset = explode('.', $tmp[$i])[1];
 
->>>>>>> 42025f77e5284008e0cc0686f0216e0074fd6214
-        $mmlsattr_cmd_prefix = "mmlsattr -L ";
-        $mmlsattr_cmd_prefix.= "/demofs/";
-        $mmlsattr_cmd_prefix.= $fileset;
-        $mmlsattr_cmd_prefix.= "/";
-        $mmlsattr_cmd_prefix.= $tmp[$i];
+        $mmlsattr_cmd_prefix = str_replace(['FILESYSTEM','FILESET','FILENAME'], [FS_MOUNT_POINT,$fileset, $tmp[$i]], 'mmlsattr -L FILESYSTEM/FILESET/FILENAME');
 
-        $stat_cmd_prefix = "stat ";
-        $stat_cmd_prefix.="/demofs/";
-        $stat_cmd_prefix.= $fileset;
-        $stat_cmd_prefix.= "/";
-        $stat_cmd_prefix.= $tmp[$i];
+        $stat_cmd_prefix = str_replace(['FILESYSTEM','FILESET','FILENAME'], [FS_MOUNT_POINT,$fileset, $tmp[$i]], 'stat FILESYSTEM/FILESET/FILENAME');
 
         //path information
         $path_info = $mmlsattr_cmd_prefix;

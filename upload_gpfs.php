@@ -7,7 +7,8 @@ $ip = DB_IP;
 $port = DB_PORT;
 $connection = ssh2_connect($ip, $port);
 //query the exist filesets.
-$cmd_ls_fileset = "curl -k -u admin:passw0rd -XGET -H content-type:application/json 'https://172.16.12.95:443/scalemgmt/v2/filesystems/demofs/filesets'";
+$cmd_template = "curl -k -u GUI_USER:GUI_PWD -XGET -H content-type:application/json 'https://GUI_IP:GUI_PORT/scalemgmt/v2/filesystems/FILESYSTEM/filesets'";
+$cmd_ls_fileset = str_replace(['GUI_USER','GUI_PWD','GUI_IP','GUI_PORT','FILESYSTEM'], [GUI_USER,GUI_PWD,DB_IP,GUI_PORT,FS_NAME], $cmd_template);
 $ret_ls_fileset = ssh2_exec($connection, $cmd_ls_fileset);
 stream_set_blocking($ret_ls_fileset, true);
 $ans_ls_fileset = stream_get_contents($ret_ls_fileset);
@@ -33,20 +34,26 @@ foreach($_FILES as $k) {
             }
         }
         if ($sign == 0) {
-            $cmd_cr_fileset = "mmcrfileset demofs ";
+            $cmd_cr_fileset = "mmcrfileset ";
+            $cmd_cr_fileset.= FS_NAME;
+            $cmd_cr_fileset.=" ";
             $cmd_cr_fileset.= $tmp_type;
-            $cmd_lk_fileset = "mmlinkfileset demofs ";
+            $cmd_lk_fileset = "mmlinkfileset ";
+            $cmd_lk_fileset.= FS_NAME;
+            $cmd_lk_fileset.= " ";
             $cmd_lk_fileset.= $tmp_type;
-            $cmd_lk_fileset.= " -J /demofs/";
+            $cmd_lk_fileset.= " -J ";
+            $cmd_lk_fileset.= FS_MOUNT_POINT;
+            $cmd_lk_fileset.= "/";
             $cmd_lk_fileset.= $tmp_type;
             ssh2_exec($connection, $cmd_cr_fileset);
             ssh2_exec($connection, $cmd_lk_fileset);
         }
-        $tmp_target_path = '/demofs/';
+        $tmp_target_path = FS_MOUNT_POINT;
+        $tmp_target_path.= "/";
         $tmp_target_path.= $tmp_type;
         $tmp_target_path.= '/';
         $tmp_target_path.= $tmp_name;
-        // echo $tmp_target_path;
         ssh2_scp_send($connection, $tmp_path, $tmp_target_path);
     }
 }

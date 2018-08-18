@@ -17,29 +17,24 @@ function format ( d ) {
         '</tr>'+
     '</table>';
 }
-    
-$(document).ready(function() {
-<<<<<<< HEAD
-    $("li").click(function () {
-        // ('#dataTable_wrapper').remove() ; 
-        var name_=$(this).attr("id");
-        var str = '';
-        alert(name_); 
-        var table = $('#dataTable').DataTable( {
 
+function createFileTable ( folderName ) {
+    var table = $('#dataTable').DataTable();
+    if (table) {
+        // Clear all data under tbody
+        table.clear(false);
+        // remove the DataTable
+        table.destroy();
+    }
+
+    table = $('#dataTable').DataTable( {
         "ajax": {
             "url":'listfiles.php',
             "type":"POST",
             "data":function(d){
-                d.foldername = name_;
+                d.foldername = folderName;
             }
         },
-=======
-
-    var table = $('#dataTable').DataTable( {
-        "ajax": "listfiles.php",
-        // "ajax": "testdata/data2.txt",
->>>>>>> 42025f77e5284008e0cc0686f0216e0074fd6214
         "columns": [
             {
                 "className":      'datatable-checkbox',
@@ -53,37 +48,17 @@ $(document).ready(function() {
             { "data": "modtime", "className": "datatable-data-col" }
         ],
         "order": [[1, 'asc']],
-        scrollY:        '65vh',
-        scrollCollapse: true,
-        paging:         false
-<<<<<<< HEAD
-    } );   
-=======
+        "scrollY":        '65vh',
+        "scrollCollapse": true,
+        "paging":         false,
+        "destroy":        true
     } );
 
-    // var table = $('#dataTable').DataTable( {
-    //     "ajax": "testdata/data.txt",
-    //     "columns": [
-    //         {
-    //             "className":      'datatable-checkbox',
-    //             "orderable":      false,
-    //             "data":           null,
-    //             "defaultContent": '<input type="checkbox" />'
-    //         },
-    //         { "data": "name", "className": "datatable-data-col" },
-    //         { "data": "position", "className": "datatable-data-col" },
-    //         { "data": "office", "className": "datatable-data-col" },
-    //         { "data": "salary", "className": "datatable-data-col" }
-    //     ],
-    //     "order": [[1, 'asc']],
-    //     scrollY:        '65vh',
-    //     scrollCollapse: true,
-    //     paging:         false
-    // } );
-    
->>>>>>> 42025f77e5284008e0cc0686f0216e0074fd6214
+    // remove old event (if have) listener for opening and closing details
+    $('#dataTable tbody').prop("onclick",null).off("click");
     // Add event listener for opening and closing details
     $('#dataTable tbody').on('click', 'td.datatable-data-col', function () {
+        var table = $('#dataTable').DataTable();
         var tr = $(this).closest('tr');
         var row = table.row( tr );
  
@@ -91,15 +66,32 @@ $(document).ready(function() {
             // This row is already open - close it
             row.child.hide();
             tr.removeClass('shown');
-        }
-        else {
+        } else {
             // Open this row
             row.child( format(row.data()) ).show();
             tr.addClass('shown');
         }
     } );
-
-
-    });
+}
     
+$(document).ready(function() {
+    // Open the first fileset by default
+    var firstFolder = $("#navbar ul li:first");
+    var firstFolderName = firstFolder.attr("id");
+    $(firstFolder).addClass("openfolder");
+    $("#navbar ul li:first img").attr("src", "icons/folder-open.png");
+    createFileTable(firstFolderName);
+
+    $("#navbar li").click(function () {
+        if ($(this).hasClass("openfolder")) {
+            return;
+        }
+
+        $("#navbar li.openfolder img").attr("src", "icons/folder.png");
+        $("#navbar li.openfolder").removeClass("openfolder");
+        $(this).addClass("openfolder");
+        $(this).children("img").attr("src", "icons/folder-open.png");
+
+        createFileTable($(this).attr("id"))
+    });  
 } );

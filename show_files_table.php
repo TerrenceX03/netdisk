@@ -11,11 +11,9 @@ $port = DB_PORT;
 $connection = ssh2_connect($ip, $port);
 ssh2_auth_password($connection, $user, $pass);
 //query the exist filesets.
-$cmd_ls_files1 = 'cd ..';
-$cmd_ls_files2 = 'cd demofs/';
-$cmd_ls_files2.= $_POST['Name'];
-$cmd_ls_files3 = 'ls';
-$ret_ls_fileset = ssh2_exec($connection, "$cmd_ls_files1;$cmd_ls_files2;$cmd_ls_files3");
+$cmd_ls_files = str_replace(['FILESYSTEM','FILESET'], [FS_MOUNT_POINT,$_POST['Name']], 'ls FILESYSTEM/FILESET');
+$ret_ls_fileset = ssh2_exec($connection, $cmd_ls_files);
+
 stream_set_blocking($ret_ls_fileset, true);
 $ans_ls_fileset = stream_get_contents($ret_ls_fileset);
 // var_dump(strlen($ans_ls_fileset));

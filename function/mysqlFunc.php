@@ -71,22 +71,21 @@ $link：Connect the database and receive the return
 $table：The name of table
 */
 function Select_all_filesets() {
-    $user="root";//远程用户名
-  $pass="root";//远程密码
-  $connection=ssh2_connect('9.181.159.95',22);
-  ssh2_auth_password($connection,$user,$pass);
-  $cmd="curl -k -u admin:passw0rd -XGET -H content-type:application/json 'https://172.16.12.95:443/scalemgmt/v2/filesystems/demofs/filesets'";
+  $connection=ssh2_connect(DB_IP,DB_PORT);
+  ssh2_auth_password($connection,DB_USER,DB_PWD);
+  $cmd_template = "curl -k -u GUI_USER:GUI_PWD -XGET -H content-type:application/json 'https://GUI_IP:GUI_PORT/scalemgmt/v2/filesystems/FILESYSTEM/filesets'";
+  $cmd = str_replace(['GUI_USER','GUI_PWD','GUI_IP','GUI_PORT','FILESYSTEM'], [GUI_USER,GUI_PWD,DB_IP,GUI_PORT,FS_MOUNT_POINT], $cmd_template);
   $ret=ssh2_exec($connection, $cmd);
   stream_set_blocking($ret, true);
   $ans=stream_get_contents($ret);
   $ans_=json_decode($ans,true);
   $result=array();
-
   foreach ($ans_['filesets'] as $key => $value) {
-    # code...
-    array_push($result, $value['filesetName']);
+    if ($value['filesetName'] != "root") {
+        array_push($result, $value['filesetName']);
+    }
   }
-    return $result;
+  return $result;
 }
 /*
 Function:Migration judgement

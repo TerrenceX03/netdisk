@@ -22,7 +22,9 @@ foreach($_POST['id'] as $key => $value) {
     ssh2_auth_password($connection, $user, $pass);
     $cmd_chpool = "mmchattr -P ";
     $cmd_chpool.= $tier;
-    $cmd_chpool.= " /demofs/";
+    $cmd_chpool.= " ";
+    $cmd_chpool.= FS_MOUNT_POINT;
+    $cmd_chpool.= "/"
     $cmd_chpool.= $fileset;
     $cmd_chpool.= "/";
     $cmd_chpool.= $filename;

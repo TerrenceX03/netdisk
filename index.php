@@ -1,4 +1,8 @@
-<?php include 'common/common.php'; ?>
+<?php 
+include 'common/common.php'; 
+include 'function/mysqlFunc.php';
+include 'function/show_list.php';
+?>
 <!DOCTYPE html>
 <html>
     <head>

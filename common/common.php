@@ -1,10 +1,12 @@
 <?php
 session_start();
-// include 'common/config.php';
-include 'function/mysqlFunc.php';
-include 'function/show_list.php';
 define('DB_USER','root');
 define('DB_PWD','root');
 define('DB_IP','9.181.159.95');
 define('DB_PORT',22);
+define('FS_MOUNT_POINT', '/demofs');
+define('FS_NAME', 'demofs');
+define('GUI_USER','admin');
+define('GUI_PWD','passw0rd');
+define('GUI_PORT',443);
 ?>
