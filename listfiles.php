@@ -29,9 +29,15 @@ for ($i = 0; $i < count($tmp); $i++) {
         // $fileset = explode('.', $tmp[$i])[1];
         $fileset = $_POST['foldername'];
 
+<<<<<<< HEAD
         $mmlsattr_cmd_prefix = str_replace(['FILESYSTEM','FILESET','FILENAME'], [FS_MOUNT_POINT,$fileset, $tmp[$i]], "mmlsattr -L 'FILESYSTEM/FILESET/FILENAME'");
 
         $stat_cmd_prefix = str_replace(['FILESYSTEM','FILESET','FILENAME'], [FS_MOUNT_POINT,$fileset, $tmp[$i]], "stat 'FILESYSTEM/FILESET/FILENAME'");
+=======
+        $mmlsattr_cmd_prefix = str_replace(['FILESYSTEM','FILESET','FILENAME'], [FS_MOUNT_POINT,$fileset, $tmp[$i]], 'mmlsattr -L FILESYSTEM/FILESET/FILENAME');
+
+        $stat_cmd_prefix = str_replace(['FILESYSTEM','FILESET','FILENAME'], [FS_MOUNT_POINT,$fileset, $tmp[$i]], 'stat FILESYSTEM/FILESET/FILENAME');
+>>>>>>> 426f18014c68676cbd35a292bcbc8da0609aa72b
 
         //path information
         $path_info = $mmlsattr_cmd_prefix;
