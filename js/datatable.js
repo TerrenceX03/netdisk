@@ -4,12 +4,12 @@ function format ( d ) {
     // `d` is the original data object for the row
     return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
         '<tr>'+
-            '<td>Full name:</td>'+
-            '<td>'+d.name+'</td>'+
+            '<td>tier name:</td>'+
+            '<td>'+d.tier+'</td>'+
         '</tr>'+
         '<tr>'+
-            '<td>Extension number:</td>'+
-            '<td>'+d.extn+'</td>'+
+            '<td>file path:</td>'+
+            '<td>'+d.filepath+'</td>'+
         '</tr>'+
         '<tr>'+
             '<td>Extra info:</td>'+
@@ -17,51 +17,49 @@ function format ( d ) {
         '</tr>'+
     '</table>';
 }
- 
-$(document).ready(function() {
-/*
-    var table = $('#dataTable').DataTable( {
-        "ajax": "listfiles.php",
+
+function createFileTable ( folderName ) {
+    var table = $('#dataTable').DataTable();
+    var str = "<input type='checkbox' id=" +folderName +">" +"<img style='display:none'src='images/migration.gif' />"
+    if (table) {
+        // Clear all data under tbody
+        table.clear(false);
+        // remove the DataTable
+        table.destroy();
+    }
+
+    table = $('#dataTable').DataTable( {
+        "ajax": {
+            "url":'listfiles.php',
+            "type":"POST",
+            "data":function(h){
+                h.foldername = folderName;
+            }
+        },
         "columns": [
             {
                 "className":      'datatable-checkbox',
                 "orderable":      false,
                 "data":           null,
-                "defaultContent": '<input type="checkbox" />'
+                "defaultContent": str
             },
             { "data": "filename", "className": "datatable-data-col" },
             { "data": "filesize", "className": "datatable-data-col" },
             { "data": "crtime", "className": "datatable-data-col" },
-            { "data": "mdtime", "className": "datatable-data-col" }
+            { "data": "modtime", "className": "datatable-data-col" }
         ],
         "order": [[1, 'asc']],
-        scrollY:        '65vh',
-        scrollCollapse: true,
-        paging:         false
+        "scrollY":        '65vh',
+        "scrollCollapse": true,
+        "paging":         false,
+        "destroy":        true
     } );
-*/
-    var table = $('#dataTable').DataTable( {
-        "ajax": "testdata/data.txt",
-        "columns": [
-            {
-                "className":      'datatable-checkbox',
-                "orderable":      false,
-                "data":           null,
-                "defaultContent": '<input type="checkbox" />'
-            },
-            { "data": "name", "className": "datatable-data-col" },
-            { "data": "position", "className": "datatable-data-col" },
-            { "data": "office", "className": "datatable-data-col" },
-            { "data": "salary", "className": "datatable-data-col" }
-        ],
-        "order": [[1, 'asc']],
-        scrollY:        '65vh',
-        scrollCollapse: true,
-        paging:         false
-    } );
-    
+
+    // remove old event (if have) listener for opening and closing details
+    $('#dataTable tbody').prop("onclick",null).off("click");
     // Add event listener for opening and closing details
     $('#dataTable tbody').on('click', 'td.datatable-data-col', function () {
+        var table = $('#dataTable').DataTable();
         var tr = $(this).closest('tr');
         var row = table.row( tr );
  
@@ -69,11 +67,32 @@ $(document).ready(function() {
             // This row is already open - close it
             row.child.hide();
             tr.removeClass('shown');
-        }
-        else {
+        } else {
             // Open this row
             row.child( format(row.data()) ).show();
             tr.addClass('shown');
         }
     } );
+}
+    
+$(document).ready(function() {
+    // Open the first fileset by default
+    var firstFolder = $("#navbar ul li:first");
+    var firstFolderName = firstFolder.attr("id");
+    $(firstFolder).addClass("openfolder");
+    $("#navbar ul li:first img").attr("src", "icons/folder-open.png");
+    createFileTable(firstFolderName);
+
+    $("#navbar li").click(function () {
+        if ($(this).hasClass("openfolder")) {
+            return;
+        }
+
+        $("#navbar li.openfolder img").attr("src", "icons/folder.png");
+        $("#navbar li.openfolder").removeClass("openfolder");
+        $(this).addClass("openfolder");
+        $(this).children("img").attr("src", "icons/folder-open.png");
+
+        createFileTable($(this).attr("id"))
+    });  
 } );
