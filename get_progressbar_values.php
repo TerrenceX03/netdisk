@@ -14,7 +14,9 @@ $port = DB_PORT;
 $connection = ssh2_connect($ip, $port);
 ssh2_auth_password($connection, $user, $pass);
 //specified poolsize
-$cmd_poolsize = "mmlspool demofs|awk '$0~ ";
+$cmd_poolsize = "mmlspool ";
+$cmd_poolsize.= FS_NAME;
+$cmd_poolsize.= "|awk '$0~ ";
 $cmd_poolsize.= "\"";
 $cmd_poolsize.= $tier;
 $cmd_poolsize.= "\"";
@@ -24,7 +26,9 @@ stream_set_blocking($exe_poolsize, true);
 $stream_poolsize = stream_get_contents($exe_poolsize);
 $stream_poolsize = (int) $stream_poolsize / 1024;
 //freesize 
-$cmd_freesize = "mmlspool demofs|awk '$0~ ";
+$cmd_freesize = "mmlspool ";
+$cmd_freesize.= FS_NAME;
+$cmd_freesize.= "|awk '$0~ ";
 $cmd_freesize.= "\"";
 $cmd_freesize.= $tier;
 $cmd_freesize.= "\"";
