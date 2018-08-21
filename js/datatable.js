@@ -4,7 +4,7 @@ function format ( d ) {
     return '<table id="more_fileinfo" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
         '<tr>'+
             '<td>file path:</td>'+
-            '<td>'+d.filepath+'</td>'+
+            '<td>'+d.file_path+'</td>'+
         '</tr>'+
         '<tr>'+
             '<td>Extra info:</td>'+
@@ -37,10 +37,10 @@ function createFileTable ( folderName ) {
                 "defaultContent": str
             },
             { "data": "filename", "className": "datatable-data-col" },
-            { "data": "filesize", "className": "datatable-data-col" },
-            { "data": "crtime", "className": "datatable-data-col" },
-            { "data": "modtime", "className": "datatable-data-col" },
-            { "data": "tier", "className": "datatable-data-col" }
+            { "data": "file_size", "className": "datatable-data-col" },
+            { "data": "creation_time", "className": "datatable-data-col" },
+            { "data": "L_mod_time", "className": "datatable-data-col" },
+            { "data": "storage_pool_name", "className": "datatable-data-col" }
         ],
         "order": [[1, 'asc']],
         "scrollY":        '65vh',

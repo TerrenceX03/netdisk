@@ -24,59 +24,107 @@ $file = array();
 
 for ($i = 0; $i < count($tmp); $i++) {
     if ($tmp[$i] != '') {
-        $file['filename'] = $tmp[$i];
 
-        // $fileset = explode('.', $tmp[$i])[1];
+        $file['filename'] = $tmp[$i];
         $fileset = $_POST['foldername'];
 
         $mmlsattr_cmd_prefix = str_replace(['FILESYSTEM','FILESET','FILENAME'], [FS_MOUNT_POINT,$fileset, $tmp[$i]], "mmlsattr -L 'FILESYSTEM/FILESET/FILENAME'");
+        $stat_cmd_prefix = str_replace(['FILESYSTEM','FILESET','FILENAME'], [FS_MOUNT_POINT,$fileset, $tmp[$i]], "stat -c \"%g,%u,%n,%o,%s,%x,%y,%z \" 'FILESYSTEM/FILESET/FILENAME'");
 
-        $stat_cmd_prefix = str_replace(['FILESYSTEM','FILESET','FILENAME'], [FS_MOUNT_POINT,$fileset, $tmp[$i]], "stat 'FILESYSTEM/FILESET/FILENAME'");
+        //get file information from mmls command
+        $exe_mmls_info = ssh2_exec($connection,$mmlsattr_cmd_prefix);
+        stream_set_blocking($exe_mmls_info, true);
+        $stream_mmls_info = stream_get_contents($exe_mmls_info);
+        $stream_mmls_info=str_replace(array("\r\n", "\n"), ",", $stream_mmls_info);
+        $props = explode(",", $stream_mmls_info);
+        $items_mmls = array();
+        foreach ($props as $prop) {
+            $tmpArray = explode(":", $prop);
+            if (isset($tmpArray[0]) && isset($tmpArray[1])) {
+                if ($tmpArray[0]=='creation time') {
+                    $tmp_str='';
+                    $tmp_str.=trim($tmpArray[1]);
+                    $tmp_str.=':';
+                    $tmp_str.=trim($tmpArray[2]);
+                    $tmp_str.=':';
+                    $tmp_str.=trim($tmpArray[3]);
+                    $items_mmls[trim($tmpArray[0])] = $tmp_str;
+                }
+                else{
+                    $items_mmls[trim($tmpArray[0])] = trim($tmpArray[1]);
+                }
+            }
+        }
+        foreach ($items_mmls as $key => $value) {
+            if ($key=='file name') {
+                $file['file_path'] = $value;
+            }
+            if ($key=='metadata replication') {
+                $file['metadata_replication'] = $value;
+            }
+            if ($key=='data replication') {
+                $file['data_replication'] = $value;
+            }
+            if ($key=='immutable') {
+                $file['immutable'] = $value;
+            }
+            if ($key=='appendOnly') {
+                $file['appendOnly'] = $value;
+            }
+            if ($key=='flags') {
+                $file['flags'] = $value;
+            }
+            if ($key=='storage pool name') {
+                $file['storage_pool_name'] = $value;
+            }
+            if ($key=='snapshot name') {
+                $file['snapshot_name'] = $value;
+            }
+            if ($key=='creation time') {
+                $file['creation_time'] = $value;
+            }
+            if ($key=='Misc attributes') {
+                $file['Misc_attributes'] = $value;
+            }
+            if ($key=='Encrypted') {
+                $file['Encrypted'] = $value;
+            }
+        }
+        /*
+            get file information from stat command
+            command:stat -c "%g,%u,%n,%o,%s,%x,%y,%z" s3-dg.pdf
+            %F--file type
+            %g--File owner's group ID
+            %G--File owner's group name
+            %i--inode number
+            %n--file name
+            %o--System format block size
+            %s--file size(bytes)
+            %t--Main equipment type (hexadecimal)
+            %T--Secondary equipment type (hexadecimal)
+            %u--Owner's user ID
+            %U--Owner's user name
+            %x--Last visit time
+            %X--Time of the last visit (Epoch Times)
+            %y--%Y--Last modified content time
+            %z--%z--Finally change the time (file attributes, permission owners, etc., format Epoch Times)
+        */
+        $exe_stat_info = ssh2_exec($connection,$stat_cmd_prefix);
+        stream_set_blocking($exe_stat_info, true);
+        $stream_stat_info = stream_get_contents($exe_stat_info);
+        $props_stat = explode(",", $stream_stat_info);
+        $items_stat = array();
+        foreach ($props_stat as $key => $value) {
+            $items_stat[$key]=$value;
+        }
+        $file['file_group_id'] = $items_stat[0];
+        $file['user_id'] = $items_stat[1];
+        $file['block_size'] = $items_stat[3];
+        $file['file_size'] = $items_stat[4];
+        $file['L_vist_time'] = $items_stat[5];
+        $file['L_mod_time'] = $items_stat[6];
+        $file['F_chan_time'] = $items_stat[7];
 
-        //path information
-        $path_info = $mmlsattr_cmd_prefix;
-        $path_info .= "|sed s/[[:space:]]//g|cut -d: -f2|awk 'NR==1'";
-        $exe_path_info = ssh2_exec($connection,$path_info);
-        stream_set_blocking($exe_path_info, true);
-        $stream_path_info = stream_get_contents($exe_path_info);
-        $stream_path_info=str_replace(array("\r\n", "\r", "\n"), "", $stream_path_info);
-        $file['filepath'] = $stream_path_info;
-
-        //pool information
-        $pool_info = $mmlsattr_cmd_prefix;
-        $pool_info .= "|sed s/[[:space:]]//g|cut -d: -f2|awk 'NR==7'";
-        $exe_tier_info = ssh2_exec($connection, $pool_info);
-        stream_set_blocking($exe_tier_info, true);
-        $stream_tier_info = stream_get_contents($exe_tier_info);
-        $stream_tier_info=str_replace(array("\r\n", "\r", "\n"), "", $stream_tier_info);
-        $file['tier'] = $stream_tier_info;
-
-        // created time
-        $crtime_info = $mmlsattr_cmd_prefix;
-        $crtime_info .= "|awk '$0~\"creation time\"'|cut -d: -f 2-4|awk '{sub(/^[ \\t]+/,\"\");print $0}'";
-        $exe_crtime_info = ssh2_exec($connection, $crtime_info);
-        stream_set_blocking($exe_crtime_info, true);
-        $stream_crtime_info = stream_get_contents($exe_crtime_info);
-        $stream_crtime_info=str_replace(array("\r\n", "\r", "\n"), "", $stream_crtime_info);
-        $file['crtime'] = $stream_crtime_info;
-
-        //modified time
-        $modtime_info = $stat_cmd_prefix;
-        $modtime_info .= "|awk 'NR==6'|cut -d: -f 2-3";
-        $exe_modtime = ssh2_exec($connection, $modtime_info);
-        stream_set_blocking($exe_modtime, true);
-        $stream_modtime = stream_get_contents($exe_modtime);
-        $stream_modtime=str_replace(array("\r\n", "\r", "\n"), "", $stream_modtime);
-        $file['modtime'] = $stream_modtime;
-
-        //file size
-        $filesize_info = $stat_cmd_prefix;
-        $filesize_info .= "|awk 'NR==2'|awk '{print $2}'";
-        $exe_filesize = ssh2_exec($connection, $filesize_info);
-        stream_set_blocking($exe_filesize, true);
-        $stream_filesize = stream_get_contents($exe_filesize);
-        $stream_filesize=str_replace(array("\r\n", "\r", "\n"), "", $stream_filesize);
-        $file['filesize'] = $stream_filesize;
         array_push($result['data'], $file);
     }
 }
