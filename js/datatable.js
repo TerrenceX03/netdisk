@@ -1,12 +1,7 @@
-
 /* Formatting function for row details - modify as you need */
 function format ( d ) {
     // `d` is the original data object for the row
-    return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
-        '<tr>'+
-            '<td>tier name:</td>'+
-            '<td>'+d.tier+'</td>'+
-        '</tr>'+
+    return '<table id="more_fileinfo" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
         '<tr>'+
             '<td>file path:</td>'+
             '<td>'+d.filepath+'</td>'+
@@ -17,40 +12,21 @@ function format ( d ) {
         '</tr>'+
     '</table>';
 }
-
 function createFileTable ( folderName ) {
     var table = $('#dataTable').DataTable();
-<<<<<<< HEAD
-    var str = "<input type='checkbox' id=" +folderName +">" +"<img style='display:none'src='images/migration.gif' />"
-=======
-<<<<<<< HEAD
-    var str = "<input type='checkbox' id=" +folderName +">" +"<img style='display:none'src='images/migration.gif' />"
-=======
->>>>>>> 426f18014c68676cbd35a292bcbc8da0609aa72b
->>>>>>> 65b2930c4176c70b9b843570534e230069cde29a
+    var str = "<input type='checkbox' id=" +folderName +">";
     if (table) {
         // Clear all data under tbody
         table.clear(false);
         // remove the DataTable
         table.destroy();
     }
-
     table = $('#dataTable').DataTable( {
         "ajax": {
             "url":'listfiles.php',
             "type":"POST",
-<<<<<<< HEAD
             "data":function(h){
                 h.foldername = folderName;
-=======
-<<<<<<< HEAD
-            "data":function(h){
-                h.foldername = folderName;
-=======
-            "data":function(d){
-                d.foldername = folderName;
->>>>>>> 426f18014c68676cbd35a292bcbc8da0609aa72b
->>>>>>> 65b2930c4176c70b9b843570534e230069cde29a
             }
         },
         "columns": [
@@ -63,7 +39,8 @@ function createFileTable ( folderName ) {
             { "data": "filename", "className": "datatable-data-col" },
             { "data": "filesize", "className": "datatable-data-col" },
             { "data": "crtime", "className": "datatable-data-col" },
-            { "data": "modtime", "className": "datatable-data-col" }
+            { "data": "modtime", "className": "datatable-data-col" },
+            { "data": "tier", "className": "datatable-data-col" }
         ],
         "order": [[1, 'asc']],
         "scrollY":        '65vh',
@@ -71,7 +48,6 @@ function createFileTable ( folderName ) {
         "paging":         false,
         "destroy":        true
     } );
-
     // remove old event (if have) listener for opening and closing details
     $('#dataTable tbody').prop("onclick",null).off("click");
     // Add event listener for opening and closing details
@@ -91,7 +67,6 @@ function createFileTable ( folderName ) {
         }
     } );
 }
-    
 $(document).ready(function() {
     // Open the first fileset by default
     var firstFolder = $("#navbar ul li:first");

@@ -67,69 +67,52 @@ include 'function/show_list.php';
                                 <th class="chinese">文件大小</th>
                                 <th class="chinese">创建时间</th>
                                 <th class="chinese">修改时间</th>
+                                <th class="chinese">存储池</th>
                             </tr>
                         </thead>
                     </table>
-                    <img id="more" src="images/menu.jpg" alt="more">
                 </td>   
             </tr>
-            <tr id='statistics'>  
-                <td id="progressbar">
-                     <div id='progressbar_title'>资源池统计
-                    </div>
-                    <div class="all_progress">
-                        <div class="line1" >
-                        </div>
-                        <div class="line2">
-                        </div>
-                        <div id='progressbar1_name'>System
-                        </div>
-                        <div id=progress_bar1>
-                            <div id="progressbar1">
-                                <div class="progress-label-1">
+                <tr id='statistics'>
+                    <td id="progressbar">
+                        <div id='progressbar_title'>资源池统计</div>
+                        <div class="all_progress">
+                            <div class="line1"></div>
+                            <div class="line2"></div>
+                            <div id='progressbar1_name'>System</div>
+                            <div id=progress_bar1>
+                                <div id="progressbar1">
+                                    <div class="progress-label-1"></div>
                                 </div>
+                                <div class='contain1'>40G</div>
                             </div>
-                            <div class='contain1'>
-                                40G
-                            </div>
-                             </div>
-                        <div id='progressbar2_name'>Saspool
-                        </div> 
-                        <div id=progress_bar2>
-                            <div id="progressbar2">
-                                <div class="progress-label-2">
+                            <div id='progressbar2_name'>Saspool</div>
+                            <div id=progress_bar2>
+                                <div id="progressbar2">
+                                    <div class="progress-label-2"></div>
                                 </div>
+                                <div class='contain2'>50G</div>
                             </div>
-                            <div class='contain2'>50G
-                            </div>
-                        </div>
-                        <div id='progressbar3_name'>Satapool</div>
-                       <div id=progress_bar3>
-                            <div id="progressbar3">
-                                <div class="progress-label-3">
+                            <div id='progressbar3_name'>Satapool</div>
+                            <div id=progress_bar3>
+                                <div id="progressbar3">
+                                    <div class="progress-label-3"></div>
                                 </div>
+                                <div class='contain3'>60G</div>
                             </div>
-                            <div class='contain3'>60G
-                            </div>
+                            <div class="line1-tag">30%</div>
+                            <div class="line2-tag">70%</div>
                         </div>
-                        <div class="line1-tag">30%
+                    </td>
+                    <td id="logs_td">
+                        <div id="logs">
+                            <div id='log_title'>系统日志</div>
+                            <div id='log'>Event:<br></div>
                         </div>
-                        <div class="line2-tag">70%
-                        </div>         
-                    </div>
-                </td>  
-                <td id="logs_td">
-                  <div id="logs">
-                    <div id='log_title'>系统日志
-                    </div>
-                    <div id='log'>Event:<br>
-                    </div>
-                 </div>
-                </td> 
-            </tr>
+                    </td>
+                </tr>
         </table>
         <script type="text/javascript">
-            
                 /* 
                     GenerateProgressBar：Generate the progressbar for tier information such as GPFS
                     tier:COS,GPFS,etc..
@@ -169,21 +152,6 @@ include 'function/show_list.php';
                 GenerateProgressBar("system", 40960, "progressbar1", "progress-label-1");
                 GenerateProgressBar("saspool", 51200, "progressbar2", "progress-label-2");
                 GenerateProgressBar("satapool", 61440, "progressbar3", "progress-label-3");
-          
-
-        </script>
-        <script type="text/javascript">
-            $('#more').on('click', function () {
-                
-                var statistics=document.getElementById("statistics");
-                if (statistics.style.display=="block"){
-                    statistics.style.display="none";
-                }
-                else{
-                    statistics.style.display="block";
-                }
-            } );
-            
         </script>
     </body>
 </html>
