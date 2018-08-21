@@ -74,15 +74,7 @@ function Select_all_filesets() {
   $connection=ssh2_connect(DB_IP,DB_PORT);
   ssh2_auth_password($connection,DB_USER,DB_PWD);
   $cmd_template = "curl -k -u GUI_USER:GUI_PWD -XGET -H content-type:application/json 'https://GUI_IP:GUI_PORT/scalemgmt/v2/filesystems/FILESYSTEM/filesets'";
-<<<<<<< HEAD
   $cmd = str_replace(['GUI_USER','GUI_PWD','GUI_IP','GUI_PORT','FILESYSTEM'], [GUI_USER,GUI_PWD,GUI_IP,GUI_PORT,FS_MOUNT_POINT], $cmd_template);
-=======
-<<<<<<< HEAD
-  $cmd = str_replace(['GUI_USER','GUI_PWD','GUI_IP','GUI_PORT','FILESYSTEM'], [GUI_USER,GUI_PWD,GUI_IP,GUI_PORT,FS_MOUNT_POINT], $cmd_template);
-=======
-  $cmd = str_replace(['GUI_USER','GUI_PWD','GUI_IP','GUI_PORT','FILESYSTEM'], [GUI_USER,GUI_PWD,DB_IP,GUI_PORT,FS_MOUNT_POINT], $cmd_template);
->>>>>>> 426f18014c68676cbd35a292bcbc8da0609aa72b
->>>>>>> 65b2930c4176c70b9b843570534e230069cde29a
   $ret=ssh2_exec($connection, $cmd);
   stream_set_blocking($ret, true);
   $ans=stream_get_contents($ret);

@@ -25,7 +25,6 @@ $file = array();
 for ($i = 0; $i < count($tmp); $i++) {
     if ($tmp[$i] != '') {
         $file['filename'] = $tmp[$i];
-<<<<<<< HEAD
 
         // $fileset = explode('.', $tmp[$i])[1];
         $fileset = $_POST['foldername'];
@@ -33,21 +32,6 @@ for ($i = 0; $i < count($tmp); $i++) {
         $mmlsattr_cmd_prefix = str_replace(['FILESYSTEM','FILESET','FILENAME'], [FS_MOUNT_POINT,$fileset, $tmp[$i]], "mmlsattr -L 'FILESYSTEM/FILESET/FILENAME'");
 
         $stat_cmd_prefix = str_replace(['FILESYSTEM','FILESET','FILENAME'], [FS_MOUNT_POINT,$fileset, $tmp[$i]], "stat 'FILESYSTEM/FILESET/FILENAME'");
-=======
-
-        // $fileset = explode('.', $tmp[$i])[1];
-        $fileset = $_POST['foldername'];
-
-<<<<<<< HEAD
-        $mmlsattr_cmd_prefix = str_replace(['FILESYSTEM','FILESET','FILENAME'], [FS_MOUNT_POINT,$fileset, $tmp[$i]], "mmlsattr -L 'FILESYSTEM/FILESET/FILENAME'");
-
-        $stat_cmd_prefix = str_replace(['FILESYSTEM','FILESET','FILENAME'], [FS_MOUNT_POINT,$fileset, $tmp[$i]], "stat 'FILESYSTEM/FILESET/FILENAME'");
-=======
-        $mmlsattr_cmd_prefix = str_replace(['FILESYSTEM','FILESET','FILENAME'], [FS_MOUNT_POINT,$fileset, $tmp[$i]], 'mmlsattr -L FILESYSTEM/FILESET/FILENAME');
-
-        $stat_cmd_prefix = str_replace(['FILESYSTEM','FILESET','FILENAME'], [FS_MOUNT_POINT,$fileset, $tmp[$i]], 'stat FILESYSTEM/FILESET/FILENAME');
->>>>>>> 426f18014c68676cbd35a292bcbc8da0609aa72b
->>>>>>> 65b2930c4176c70b9b843570534e230069cde29a
 
         //path information
         $path_info = $mmlsattr_cmd_prefix;
