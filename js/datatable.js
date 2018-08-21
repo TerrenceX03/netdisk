@@ -23,7 +23,7 @@ function createFileTable ( folderName ) {
     }
     table = $('#dataTable').DataTable( {
         "ajax": {
-            "url":'listfiles.php',
+            "url":'files.php?myaction=LIST',
             "type":"POST",
             "data":function(h){
                 h.foldername = folderName;

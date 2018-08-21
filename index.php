@@ -14,20 +14,25 @@ include 'function/show_list.php';
         <link rel="stylesheet" type="text/css" media="all" href="css/niceforms-default.css">
 
         <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+        <!-- <script type="text/javascript" src="js/jquery-ui.js"></script> -->
         <script type="text/javascript" src="js/ddaccordion.js"></script>
         <script type="text/javascript" src="js/jquery.form.min.js"></script>
         <script type="text/javascript" src="js/jconfirmaction.jquery.js"></script>
-        <script language="javascript" type="text/javascript" src="js/niceforms.js"></script>
+        <script type="text/javascript" src="js/niceforms.js"></script>
         <script type="text/javascript" src="js/upload_files.js"></script>
         <script type="text/javascript" src="js/showtable_for_files.js"></script>
         <script type="text/javascript" src="js/click_event_for_tier.js"></script>
-        
-        <link rel="stylesheet" href="css/jquery-ui.css">
-        <link rel="stylesheet" href="css/styleui.css">
         <script type="text/javascript" src="js/DataTables/datatables.js"></script>
         <script type="text/javascript" src="js/datatable.js"></script>
+        <script type="text/javascript" src="js/jquery-ui.js"></script>
+        <script type="text/javascript" src="js/jQuery-File-Upload/js/jquery.fileupload.js"></script>
+        <script type="text/javascript" src="js/jQuery-File-Upload/js/jquery.iframe-transport.js"></script>
+
+        <link rel="stylesheet" href="css/jquery-ui.css">
+        <link rel="stylesheet" href="css/styleui.css">
         <link rel="stylesheet" type="text/css" href="js/DataTables/datatables.css"/>
-        <script src="js/jquery-ui.js"></script>
+        <link rel="stylesheet" type="text/css" href="js/jQuery-File-Upload/css/jquery.fileupload.css"/>
+        <link rel="stylesheet" type="text/css" href="js/jQuery-File-Upload/css/jquery.fileupload-ui.css"/>
     </head>
     <body>
         <table border= "0" width= "100%">
@@ -50,7 +55,20 @@ include 'function/show_list.php';
                 <td id="opbar" colspan="2" height="50px">
                     <table>
                         <tr>
-                            <td><div class="default-button chinese">上传</div></td>
+                            <td>
+                                <div id="progress" class="progress">
+                                    <div class="progress-bar progress-bar-success"></div>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <span class="btn btn-success fileinput-button default-button chinese">
+                                    <i class="glyphicon glyphicon-plus"></i>
+                                    <span>上传</span>
+                                    <input id="fileupload" type="file" name="newFile" multiple>
+                                </span>
+                            </td>
                             <td><div class="default-button chinese">新建文件夹</div></td>
                             <td><button class="default-button chinese" href = "JavaScript:void(0)" onclick="showTierTable()">迁移</button></td>
                         </tr>
@@ -153,5 +171,6 @@ include 'function/show_list.php';
                 GenerateProgressBar("saspool", 51200, "progressbar2", "progress-label-2");
                 GenerateProgressBar("satapool", 61440, "progressbar3", "progress-label-3");
         </script>
+        <script type="text/javascript" src="js/main.js"></script>
     </body>
 </html>
