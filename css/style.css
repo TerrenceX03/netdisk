@@ -444,10 +444,16 @@ input.search_submit {
 }
 #progressbar_title{
 	position:relative;
+<<<<<<< HEAD
 	left: 220px;
 	top: 50px;
 	font-size: 16px;
 	color:midnightblue;
+=======
+	left: 200px;
+	top: 60px;
+	font-size: 20px;
+>>>>>>> 65b2930c4176c70b9b843570534e230069cde29a
 }
 
 #progressbar1 {
@@ -464,7 +470,11 @@ input.search_submit {
 }
 #progressbar3 {
 	width: 270px;
+<<<<<<< HEAD
 	top: 96px;
+=======
+	top: 90px;
+>>>>>>> 65b2930c4176c70b9b843570534e230069cde29a
 	position: relative;
 	left: -56px;
 }
@@ -541,6 +551,13 @@ input.search_submit {
 	bottom:-20px;
 	font-family:Times New Roman;
 }
+#progressbar1_name{
+	position: relative;
+	left: 8px;
+	top: 45px;
+	font-size: 8px;
+	bottom:-20px;
+}
 .progress-label-2 {
 	position: absolute;
 	left: 35%;
@@ -555,6 +572,13 @@ input.search_submit {
 	font-size: 15px;
 	bottom:35px;
 	font-family:Times New Roman;
+}
+#progressbar2_name{
+	position: relative;
+	left: 8px;
+	top: -40px;
+	font-size: 8px;
+	bottom:35px;
 }
 .progress-label-3 {
 	position: absolute;
@@ -571,33 +595,105 @@ input.search_submit {
 	bottom:35px;
 	font-family:Times New Roman;
 }
+#progressbar3_name{
+	position: relative;
+	left: 8px;
+	top: -55px;
+	font-size: 8px;
+	bottom:35px;
+}
 .contain1 {
 	position:relative;
+<<<<<<< HEAD
 	top: 5px;
 	left:298px;
 	width: 50px;
 	bottom: 25px;
 	font-size: 12px;
+=======
+	top: 0px;
+	left:300px;
+	width: 50px;
+	bottom: 25px;
+	font-size: 8px;
+	color:blue;
+>>>>>>> 65b2930c4176c70b9b843570534e230069cde29a
 	word-break: break-all;
 }
 .contain2 {
 	position:relative;
 	left:220px;
+<<<<<<< HEAD
 	top: 40px;
 	width: 50px;
 	bottom: 25px;
 	font-size: 12px;
+=======
+	top: 45px;
+	width: 50px;
+	bottom: 25px;
+	font-size: 8px;
+	color:blue;
+>>>>>>> 65b2930c4176c70b9b843570534e230069cde29a
 	word-break: break-all;
 }
 .contain3 {
 	position:relative;
 	left:220px;
+<<<<<<< HEAD
 	top: 72px;
 	width: 50px;
 	bottom: 25px;
 	font-size: 12px;
 	word-break: break-all;
 }
+=======
+	top: 70px;
+	width: 50px;
+	bottom: 25px;
+	font-size: 8px;
+	color:blue;
+	word-break: break-all;
+}
+
+#logs_td{
+	width: 400px;
+	 height:300px;
+}
+#logs{
+	position: relative;
+	top:0px;
+}
+#log{
+	overflow: scroll;width:420px;
+	height: 140px;position:relative;
+	left:60px;word-break:keep-all;
+	font-weight: bold;
+	border-top: 1px solid #c6c6c6;
+	border-top-width: 100%;
+}
+#log_title{
+	position:relative;
+	left:40%;bottom:10px;
+	font-size: 20px;
+}
+
+/*
+	all circle
+*/
+.circle1 {
+	display: block;
+	border-radius: 50%;
+	height: 60px;
+	width: 60px;
+	margin: 0;
+	background:green;
+	float: left;
+	position:relative;
+	left:840px;
+	top: -74px;
+}
+>>>>>>> 65b2930c4176c70b9b843570534e230069cde29a
 
 #logs_td{
 	width: 400px;

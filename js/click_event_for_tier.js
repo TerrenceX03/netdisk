@@ -12,6 +12,7 @@ function gettier(){
 
         $("table :checkbox").each(function(key,value){
             if($(value).prop('checked')){
+<<<<<<< HEAD
             
                 // alert(tbodyObj.rows[key+1].cells[0].innerHTML);
                 tbodyObj.rows[key+1].cells[0].innerHTML="<img src='images/migration.gif' />";
@@ -19,6 +20,15 @@ function gettier(){
                 progress_html +="='<span>success</span>'";
                 alert(progress_html);
                 setTimeout(progress_html,4000);
+=======
+            var progress_html=(tbodyObj.rows[key+1].cells[0].innerHTML).toString();
+                progress_html +="='<span>success</span>'";
+            // alert(progress_html);
+
+                // alert(tbodyObj.rows[key+1].cells[0].innerHTML);
+                tbodyObj.rows[key+1].cells[0].innerHTML="<img src='images/migration.gif' />";
+                // setTimeout(progress_html,4000);
+>>>>>>> 65b2930c4176c70b9b843570534e230069cde29a
                 // setTimeout(tbodyObj.rows[key+1].cells[0].innerHTML=input_html,80000);
                 fileid.push(tbodyObj.rows[key+1].cells[1].innerHTML);
                 folderid.push($(value).attr('id'));
@@ -33,6 +43,7 @@ function gettier(){
         if(res.msg==1){
         $("#log").append("<span style='color:#f00'>" +fileid+ "</span><b> has been changed to <b><span style='color:#f00'>" +TargetTier+ "</span><br/>");
         $("#Tiers").remove();
+<<<<<<< HEAD
           $("#progressbar1").remove();
         $("#progress_bar1").prepend("<div id='progressbar1'><div class='progress-label-1'></div></div>");  
           GenerateProgressBar("system", 40960, "progressbar1", "progress-label-1");
@@ -44,6 +55,8 @@ function gettier(){
          $("#progressbar3").remove();
         $("#progress_bar3").prepend("<div id='progressbar3'><div class='progress-label-3'></div></div>");  
           GenerateProgressBar("satapool", 61440, "progressbar3", "progress-label-3");
+=======
+>>>>>>> 65b2930c4176c70b9b843570534e230069cde29a
         };
     }
 });

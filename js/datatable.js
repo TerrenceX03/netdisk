@@ -20,7 +20,14 @@ function format ( d ) {
 
 function createFileTable ( folderName ) {
     var table = $('#dataTable').DataTable();
+<<<<<<< HEAD
     var str = "<input type='checkbox' id=" +folderName +">" +"<img style='display:none'src='images/migration.gif' />"
+=======
+<<<<<<< HEAD
+    var str = "<input type='checkbox' id=" +folderName +">" +"<img style='display:none'src='images/migration.gif' />"
+=======
+>>>>>>> 426f18014c68676cbd35a292bcbc8da0609aa72b
+>>>>>>> 65b2930c4176c70b9b843570534e230069cde29a
     if (table) {
         // Clear all data under tbody
         table.clear(false);
@@ -32,8 +39,18 @@ function createFileTable ( folderName ) {
         "ajax": {
             "url":'listfiles.php',
             "type":"POST",
+<<<<<<< HEAD
             "data":function(h){
                 h.foldername = folderName;
+=======
+<<<<<<< HEAD
+            "data":function(h){
+                h.foldername = folderName;
+=======
+            "data":function(d){
+                d.foldername = folderName;
+>>>>>>> 426f18014c68676cbd35a292bcbc8da0609aa72b
+>>>>>>> 65b2930c4176c70b9b843570534e230069cde29a
             }
         },
         "columns": [
