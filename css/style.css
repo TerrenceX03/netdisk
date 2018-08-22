@@ -102,6 +102,34 @@
 
 /* Statistics */
 #statistics {
+	vertical-align: top;
+}
+
+#statistics .stat_title {
+	text-align: center;
+	padding: 0 0 20px 0;
+}
+
+#statistics .stat_progressbar-name {
+	padding: 0 10px 0 10px;
+}
+
+#statistics .ui-progressbar {
+	position: relative;
+	width: 200px;
+	height: 25px;
+}
+
+#statistics .stat_progressbar-label {
+	position: absolute;
+	right: 5px;
+    top: 5px;
+    text-shadow: 1px 1px 0 #fff;
+    font-size: 13px;
+}
+
+td.stat_progressbar-row {
+	padding: 5px 0;
 }
 
 /* logs */

@@ -99,35 +99,10 @@ include 'function/show_list.php';
                 </td>   
             </tr>
                 <tr id='statistics'>
-                    <td id="progressbar">
-                        <div id='progressbar_title'>资源池统计</div>
-                        <div class="all_progress">
-                            <div class="line1"></div>
-                            <div class="line2"></div>
-                            <div id='progressbar1_name'>System</div>
-                            <div id=progress_bar1>
-                                <div id="progressbar1">
-                                    <div class="progress-label-1"></div>
-                                </div>
-                                <div class='contain1'>40G</div>
-                            </div>
-                            <div id='progressbar2_name'>Saspool</div>
-                            <div id=progress_bar2>
-                                <div id="progressbar2">
-                                    <div class="progress-label-2"></div>
-                                </div>
-                                <div class='contain2'>50G</div>
-                            </div>
-                            <div id='progressbar3_name'>Satapool</div>
-                            <div id=progress_bar3>
-                                <div id="progressbar3">
-                                    <div class="progress-label-3"></div>
-                                </div>
-                                <div class='contain3'>60G</div>
-                            </div>
-                            <div class="line1-tag">30%</div>
-                            <div class="line2-tag">70%</div>
-                        </div>
+                    <td id="stat_progressbar" width="50%">
+                        <table id="stat_progressbar_content" width="100%">
+                            <tr><td colspan="3" class="stat_title chinese">资源池统计</td></tr>
+                        </table>
                     </td>
                     <td id="logs_td">
                         <div id="logs">
@@ -137,47 +112,6 @@ include 'function/show_list.php';
                     </td>
                 </tr>
         </table>
-        <script type="text/javascript">
-                /* 
-                    GenerateProgressBar：Generate the progressbar for tier information such as GPFS
-                    tier:COS,GPFS,etc..
-                    barID:The ID of progressbar
-                    labelClass:Html sign for class
-                 */
-                function GenerateProgressBar(tier, tier_size, barID, labelClass) {
-                    $.ajax({
-                        url: "get_progressbar_values.php",
-                        data: {
-                            tier: tier,
-                            tier_size: tier_size
-                        },
-                        method: 'POST',
-                        success: function(res) {
-                            var progressbar = $("#" + barID);
-                            progressLabel = $("." + labelClass);
-                            var val = res.perc;
-                            progressbar.progressbar({
-                                value: val,
-                            });
-                            if (val < 60) {
-                                $(".ui-widget-header").css({
-                                    'background': 'green'
-                                });
-                            } else {
-                                $(".ui-widget-header").css({
-                                    'background': 'yellow'
-                                });
-                            }
-                            var label = res.size;
-                            label = String(label);
-                            progressLabel.text("已用" + label + "M");
-                        }
-                    })
-                }
-                GenerateProgressBar("system", 40960, "progressbar1", "progress-label-1");
-                GenerateProgressBar("saspool", 51200, "progressbar2", "progress-label-2");
-                GenerateProgressBar("satapool", 61440, "progressbar3", "progress-label-3");
-        </script>
         <script type="text/javascript">
             $('#more').on('click', function () {
                 

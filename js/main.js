@@ -1,3 +1,7 @@
+$(document).ready(function() {
+    GenerateProgressBar();
+});
+
 //input the folder name and create the folder added in the table
 function CreateFolder(){
     var true_name=prompt("请输入文件夹名字","");
@@ -61,4 +65,53 @@ function uploadfile(){
     　      }
         });
     });
+}
+
+/* 
+GenerateProgressBar：Generate the progressbar for tier information such as GPFS
+tier:COS,GPFS,etc..
+barID:The ID of progressbar
+labelClass:Html sign for class
+*/
+function GenerateProgressBar() {
+    $.ajax({
+        url: "pools.php",
+        method: 'GET',
+        success: function(res) {
+            $.each(res ,function(i, pool) {
+                var poolName = pool["name"];
+                var totaldatasize = pool["totaldatasize"];
+                var freedatasize = pool["freedatasize"];
+                var useddatasize = (totaldatasize - freedatasize) / 1024; // MB unit
+                var totalInMB = totaldatasize / 1024;
+                var userdatapercentage = 100 - pool["freedatapercentage"];
+
+                $("#stat_progressbar_content").append(
+                    "<tr>" 
+                    + "<td class='stat_progressbar-name english'>" + poolName.toUpperCase() + "</td>"
+                    + "<td class='stat_progressbar-row'>"
+                    + "<div id='stat_progressbar-" + poolName + "'>"
+                    + "<div class='stat_progressbar-label chinese'>已用" + useddatasize + " MB</div>"
+                    + "</div>"
+                    + "</td>"
+                    + "<td class='stat_progressbar-total chinese'>总容量" + totalInMB + " MB</td>"
+                    + "</tr>"
+                );
+
+                $("#stat_progressbar-" + poolName).progressbar({
+                    value: userdatapercentage
+                });
+
+                if (userdatapercentage < 60) {
+                    $("#stat_progressbar_content .ui-widget-header").css({
+                        'background': 'green'
+                    });
+                } else {
+                    $("#stat_progressbar_content .ui-widget-header").css({
+                        'background': 'yellow'
+                    });
+                }
+            });
+        }
+    })
 }

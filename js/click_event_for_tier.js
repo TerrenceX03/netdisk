@@ -45,19 +45,8 @@ function gettier() {
             success: function(res) {
                     if (res.msg == 1) {
                         $("#log").append("<span style='color:rgba(25, 25, 112, 1)'>" +"&nbsp"+"&nbsp"+"&nbsp"+"&nbsp"+fileid+ "</span><b> has been changed to <b><span style='color:rgba(25, 25, 112, 1)'>" +TargetTier+ ";"+"</span><br/>");
-                        // $("#Tiers").remove();
-                        $("#Tiers").remove();
-                          $("#progressbar1").remove();
-                        $("#progress_bar1").prepend("<div id='progressbar1'><div class='progress-label-1'></div></div>");  
-                          GenerateProgressBar("system", 40960, "progressbar1", "progress-label-1");
-
-                        $("#progressbar2").remove();
-                        $("#progress_bar2").prepend("<div id='progressbar2'><div class='progress-label-2'></div></div>");  
-                          GenerateProgressBar("saspool", 51200, "progressbar2", "progress-label-2");
-                   
-                        $("#progressbar3").remove();
-                        $("#progress_bar3").prepend("<div id='progressbar3'><div class='progress-label-3'></div></div>");  
-                          GenerateProgressBar("satapool", 61440, "progressbar3", "progress-label-3");
+                        $(".stat_progressbar-row").remove();
+                        GenerateProgressBar();
                     };
             }
     });
