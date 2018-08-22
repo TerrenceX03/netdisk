@@ -3,6 +3,7 @@
 function getFile($connection, $filepath) {
 	$mmlsattr_cmd = "mmlsattr -L '" . $filepath . "'";
 	$stat_cmd = "stat -c \"%g,%u,%n,%o,%s,%x,%y,%z\"  '" . $filepath . "'";
+    
     // echo "---------------------------------<br>";
     // echo $mmlsattr_cmd;
     // echo "---------------------------------<br>";
@@ -15,6 +16,15 @@ function getFile($connection, $filepath) {
     $stream_mmls_info=str_replace(array("\r\n", "\n"), ",", $stream_mmls_info);
     $lines = explode(",", $stream_mmls_info);
     $file = array();
+
+    //get fileype from file command
+    $filetype_cmd = "file '" . $filepath .  "'";
+    $exe_filetype = ssh2_exec($connection,$filetype_cmd);
+    stream_set_blocking($exe_filetype, true);
+    $stream_filetype = stream_get_contents($exe_filetype);
+    $filetype = trim(explode(':', $stream_filetype)[1]);
+    $file['filetype'] =  $filetype;
+
     foreach ($lines as $line) {
         $tmpArray = explode(":", $line);
         if (isset($tmpArray[0]) && isset($tmpArray[1])) {
@@ -76,7 +86,7 @@ function getFile($connection, $filepath) {
     $file['file_group_id'] = $items_stat[0];
     $file['user_id'] = $items_stat[1];
     $file['block_size'] = $items_stat[3];
-    $file['file_size'] = $items_stat[4];
+    $file['file_size'] = round($items_stat[4]/1048576,1);
     $file['L_vist_time'] = $items_stat[5];
     $file['L_mod_time'] = $items_stat[6];
     $file['F_chan_time'] = $items_stat[7];

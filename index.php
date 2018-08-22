@@ -174,7 +174,6 @@ include 'function/show_list.php';
         </script>
         <script type="text/javascript">
             $('#more').on('click', function () {
-                
                 var statistics=document.getElementById("statistics");
                 if (statistics.style.display=="block"){
                     statistics.style.display="none";
@@ -195,16 +194,16 @@ include 'function/show_list.php';
                     if(list.getAttribute("class") == "folder chinese openfolder"){
                         var folder=list.getAttribute("id");
                         alert(folder);
-                            $.ajax({
-        url:'CreateFolder.php',
-        data:{folder:folder},
-        method:'POST',
-        success:function(res) {
-            if(res.msg==1){
-               alert("success");
-            };
-          }
-        });
+                        $.ajax({
+                            url:'CreateFolder.php',
+                            data:{folder:folder},
+                            method:'POST',
+                            success:function(res) {
+                                if(res.msg==1){
+                                    alert("success");
+                                };
+                            }
+                        });
                     }
                 }
             }

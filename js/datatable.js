@@ -36,7 +36,7 @@ function createFileTable ( folderName ) {
                 "data":           null,
                 "defaultContent": str
             },
-            { "data": "filename", "className": "datatable-data-col" },
+            { "data": "filename", "className": "datatable-data-col",},
             { "data": "file_size", "className": "datatable-data-col" },
             { "data": "creation_time", "className": "datatable-data-col" },
             { "data": "L_mod_time", "className": "datatable-data-col" },
@@ -54,8 +54,13 @@ function createFileTable ( folderName ) {
     $('#dataTable tbody').on('click', 'td.datatable-data-col', function () {
         var table = $('#dataTable').DataTable();
         var tr = $(this).closest('tr');
-        var row = table.row( tr );
- 
+        var row = table.row(tr);
+        //Only directory can be opened again
+        if (row.data().filetype=="directory"){
+            var folder = row.data().file_path.substr(20);
+            createFileTable (folder);
+        }
+        //Click to show more information
         if ( row.child.isShown() ) {
             // This row is already open - close it
             row.child.hide();
