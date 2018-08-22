@@ -444,9 +444,10 @@ input.search_submit {
 }
 #progressbar_title{
 	position:relative;
-	left: 200px;
-	top: 60px;
-	font-size: 20px;
+	left: 220px;
+	top: 50px;
+	font-size: 16px;
+	color:midnightblue;
 }
 
 #progressbar1 {
@@ -463,7 +464,7 @@ input.search_submit {
 }
 #progressbar3 {
 	width: 270px;
-	top: 90px;
+	top: 96px;
 	position: relative;
 	left: -56px;
 }
@@ -530,68 +531,71 @@ input.search_submit {
 	left: 35%;
 	top: 4px;
 	font-size:10px;
+	color:maroon;
 }
 #progressbar1_name{
 	position: relative;
 	left: 8px;
 	top: 45px;
-	font-size: 8px;
+	font-size: 15px;
 	bottom:-20px;
+	font-family:Times New Roman;
 }
 .progress-label-2 {
 	position: absolute;
 	left: 35%;
 	top: 4px;
 	font-size:10px;
+	color:maroon;
 }
 #progressbar2_name{
 	position: relative;
 	left: 8px;
 	top: -40px;
-	font-size: 8px;
+	font-size: 15px;
 	bottom:35px;
+	font-family:Times New Roman;
 }
 .progress-label-3 {
 	position: absolute;
 	left: 35%;
 	top: 4px;
 	font-size:10px;
+	color:maroon;
 }
 #progressbar3_name{
 	position: relative;
 	left: 8px;
 	top: -55px;
-	font-size: 8px;
+	font-size: 15px;
 	bottom:35px;
+	font-family:Times New Roman;
 }
 .contain1 {
 	position:relative;
-	top: 0px;
-	left:300px;
+	top: 5px;
+	left:298px;
 	width: 50px;
 	bottom: 25px;
-	font-size: 8px;
-	color:blue;
+	font-size: 12px;
 	word-break: break-all;
 }
 .contain2 {
 	position:relative;
 	left:220px;
-	top: 45px;
+	top: 40px;
 	width: 50px;
 	bottom: 25px;
-	font-size: 8px;
-	color:blue;
+	font-size: 12px;
 	word-break: break-all;
 }
 .contain3 {
 	position:relative;
 	left:220px;
-	top: 70px;
+	top: 72px;
 	width: 50px;
 	bottom: 25px;
-	font-size: 8px;
-	color:blue;
+	font-size: 12px;
 	word-break: break-all;
 }
 
@@ -602,97 +606,25 @@ input.search_submit {
 #logs{
 	position: relative;
 	top:0px;
+	left:100px;
 }
 #log{
 	overflow: scroll;width:420px;
 	height: 140px;position:relative;
 	left:60px;word-break:keep-all;
-	font-weight: bold;
 	border-top: 1px solid #c6c6c6;
 	border-top-width: 100%;
+	background: lightgrey;
+	font-size: 13px;
 }
 #log_title{
 	position:relative;
-	left:40%;bottom:10px;
-	font-size: 20px;
+	left:50%;bottom:10px;
+	font-size: 16px;
+	color:darkblue;
 }
 
-/*
-	all circle
-*/
-.circle1 {
-	display: block;
-	border-radius: 50%;
-	height: 60px;
-	width: 60px;
-	margin: 0;
-	background:green;
-	float: left;
-	position:relative;
-	left:840px;
-	top: -74px;
-}
 
-.circle1:hover
- { 	
-	background:#00CC00;
-}
-.circle2 {
-	display: block;
-	border-radius: 50%;
-	height: 60px;
-	width: 60px;
-	margin: 0;
-	background: green;
-	float: left;
-	position:relative;
-	
-	left:860px;
-}
-.circle2:hover
- { 	
-	background:#00CC00;
-}
-.circle3 {
-	display: block;
-	border-radius: 50%;
-	height: 60px;
-	width: 60px;
-	margin: 0;
-	background: green;
-	float: left;
-	top: 68px;
-	left:855px;
-	position:relative;
-}	
-.circle3:hover
- { 	
-	background:#00CC00;
-}
-.label1 {
-	float:left;
-	position: relative;
-	top: 53px;
-	left: -220px;
-	color: green;
-	font-weight: bold;
-}
-.label2 {
-	float:left;
-	color: green;
-	position: relative;
-	top: 53px;
-	left: -300px;
-	font-weight: bold;
-}
-.label3 {
-	float:left;
-	color: green;
-	position: relative;
-	top: 53px;
-	left: -357px;
-	font-weight: bold;
-}
 /*input*/
 .inputfile {
     width: 0.1px; 
@@ -736,6 +668,21 @@ input.search_submit {
 .updatebutton:focus + label,
 .updatebutton + label:hover {
     background-color: rgba(255,0,0,1);}
+img:hover {
+    opacity:0.7;
+    filter:alpha(opacity=70);
+}
+#statistics{
+	width:98%;
+	height:300px;
+	overflow:auto;
+	display:none;
+}
+#more{
+	position:relative;
+	left:45%;
+	bottom:28px;
+}
 /*
 migration pool css
 */

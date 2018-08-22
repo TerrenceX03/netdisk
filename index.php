@@ -69,7 +69,7 @@ include 'function/show_list.php';
                                     <input id="fileupload" type="file" name="newFile" multiple>
                                 </span>
                             </td>
-                            <td><div class="default-button chinese">新建文件夹</div></td>
+                            <td><div class="default-button chinese" onclick="CreateFolder()">新建文件夹</div></td>
                             <td><button class="default-button chinese" href = "JavaScript:void(0)" onclick="showTierTable()">迁移</button></td>
                         </tr>
                     </table>
@@ -82,13 +82,14 @@ include 'function/show_list.php';
                             <tr>
                                 <th class="chinese"></th>
                                 <th class="chinese">文件名</th>
-                                <th class="chinese">文件大小</th>
+                                <th class="chinese">文件大小（M）</th>
                                 <th class="chinese">创建时间</th>
                                 <th class="chinese">修改时间</th>
                                 <th class="chinese">存储池</th>
                             </tr>
                         </thead>
                     </table>
+                    <img id="more" src="images/menu.jpg" alt="more">
                 </td>   
             </tr>
                 <tr id='statistics'>
@@ -125,7 +126,7 @@ include 'function/show_list.php';
                     <td id="logs_td">
                         <div id="logs">
                             <div id='log_title'>系统日志</div>
-                            <div id='log'>Event:<br></div>
+                            <div id='log'><br></div>
                         </div>
                     </td>
                 </tr>
@@ -171,6 +172,43 @@ include 'function/show_list.php';
                 GenerateProgressBar("saspool", 51200, "progressbar2", "progress-label-2");
                 GenerateProgressBar("satapool", 61440, "progressbar3", "progress-label-3");
         </script>
+        <script type="text/javascript">
+            $('#more').on('click', function () {
+                
+                var statistics=document.getElementById("statistics");
+                if (statistics.style.display=="block"){
+                    statistics.style.display="none";
+                }
+                else{
+                    statistics.style.display="block";
+                }
+            } );
+            
+        </script>
         <script type="text/javascript" src="js/main.js"></script>
+        <script type="text/javascript">
+            function CreateFolder(){
+                var lists=document.getElementsByTagName("li");
+                var count=lists.length;
+                for (var i=0;i<count;i++){
+                    var list=lists[i];
+                    if(list.getAttribute("class") == "folder chinese openfolder"){
+                        var folder=list.getAttribute("id");
+                        alert(folder);
+                            $.ajax({
+        url:'CreateFolder.php',
+        data:{folder:folder},
+        method:'POST',
+        success:function(res) {
+            if(res.msg==1){
+               alert("success");
+            };
+          }
+        });
+                    }
+                }
+            }
+
+        </script>
     </body>
 </html>
