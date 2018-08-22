@@ -63,7 +63,7 @@ include 'function/show_list.php';
                         </tr>
                         <tr>
                             <td>
-                                <span class="btn btn-success fileinput-button default-button chinese">
+                                <span onclick="uploadfile()"class="btn btn-success fileinput-button default-button chinese">
                                     <i class="glyphicon glyphicon-plus"></i>
                                     <span>上传</span>
                                     <input id="fileupload" type="file" name="newFile" multiple>
@@ -73,7 +73,13 @@ include 'function/show_list.php';
                             <td><button class="default-button chinese" href = "JavaScript:void(0)" onclick="showTierTable()">迁移</button></td>
                         </tr>
                     </table>
+                    <div id="all_path">
+                    <label id='path' style="font: 18px/1.5 Tahoma,Helvetica,Arial,’宋体’,sans-serif;">当前路径：</label>
+                    <label onclick="back('documents')" id='folder_path' style="font: 18px/1.5 Tahoma,Helvetica,Arial,’宋体’,sans-serif;">documents/</label>
+                    
+                    </div>
                 </td>
+
             </tr>
             <tr>  
                 <td id="content" colspan="2">
@@ -174,6 +180,7 @@ include 'function/show_list.php';
         </script>
         <script type="text/javascript">
             $('#more').on('click', function () {
+                
                 var statistics=document.getElementById("statistics");
                 if (statistics.style.display=="block"){
                     statistics.style.display="none";
@@ -182,32 +189,12 @@ include 'function/show_list.php';
                     statistics.style.display="block";
                 }
             } );
-            
         </script>
         <script type="text/javascript" src="js/main.js"></script>
         <script type="text/javascript">
-            function CreateFolder(){
-                var lists=document.getElementsByTagName("li");
-                var count=lists.length;
-                for (var i=0;i<count;i++){
-                    var list=lists[i];
-                    if(list.getAttribute("class") == "folder chinese openfolder"){
-                        var folder=list.getAttribute("id");
-                        alert(folder);
-                        $.ajax({
-                            url:'CreateFolder.php',
-                            data:{folder:folder},
-                            method:'POST',
-                            success:function(res) {
-                                if(res.msg==1){
-                                    alert("success");
-                                };
-                            }
-                        });
-                    }
-                }
+            function back(folder) {
+                 createFileTable (folder);
             }
-
         </script>
     </body>
 </html>

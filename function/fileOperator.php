@@ -1,14 +1,8 @@
 <?php 
 
 function getFile($connection, $filepath) {
-	$mmlsattr_cmd = "mmlsattr -L '" . $filepath . "'";
-	$stat_cmd = "stat -c \"%g,%u,%n,%o,%s,%x,%y,%z\"  '" . $filepath . "'";
-    
-    // echo "---------------------------------<br>";
-    // echo $mmlsattr_cmd;
-    // echo "---------------------------------<br>";
-    // echo $stat_cmd;
-
+    $mmlsattr_cmd = "mmlsattr -L '" . $filepath . "'";
+    $stat_cmd = "stat -c \"%g,%u,%n,%o,%s,%x,%y,%z\"  '" . $filepath . "'";
     //get file information from mmls command
     $exe_mmls_info = ssh2_exec($connection,$mmlsattr_cmd);
     stream_set_blocking($exe_mmls_info, true);
@@ -16,7 +10,6 @@ function getFile($connection, $filepath) {
     $stream_mmls_info=str_replace(array("\r\n", "\n"), ",", $stream_mmls_info);
     $lines = explode(",", $stream_mmls_info);
     $file = array();
-
     //get fileype from file command
     $filetype_cmd = "file '" . $filepath .  "'";
     $exe_filetype = ssh2_exec($connection,$filetype_cmd);
@@ -37,19 +30,26 @@ function getFile($connection, $filepath) {
                 $tmp_str.=trim($tmpArray[3]);
                 $file['creation_time'] = $tmp_str;
             } elseif ($tmpArray[0]== 'file name') {
-            	$file['file_path'] = $tmpArray[1];
+                $file['file_path'] = $tmpArray[1];
+                $tmp_folder_path = str_replace("/", ",", trim($tmpArray[1]));
+                $tmp_folder_path = explode(',', $tmp_folder_path);
+                array_pop($tmp_folder_path);
+                $tmp_path_str = '';
+                foreach ($tmp_folder_path as $key => $value) {
+                    $tmp_path_str .= $value;
+                    $tmp_path_str .= "/";
+                }
+                $file['folder_path'] = $tmp_path_str;
             } elseif ($tmpArray[0]== 'metadata replication') {
-            	$file['metadata_replication'] = $tmpArray[1];
+                $file['metadata_replication'] = $tmpArray[1];
             } elseif ($tmpArray[0]== 'data replication') {
-            	$file['data_replication'] = $tmpArray[1];
+                $file['data_replication'] = $tmpArray[1];
             } elseif ($tmpArray[0]== 'storage pool name') {
-            	$file['storage_pool_name'] = $tmpArray[1];
+                $file['storage_pool_name'] = $tmpArray[1];
             } elseif ($tmpArray[0]== 'snapshot name') {
-            	$file['snapshot_name'] = $tmpArray[1];
-            } elseif ($tmpArray[0]== 'creation time') {
-            	$file['creation_time'] = $tmpArray[1];
-            } elseif ($tmpArray[0]== 'Misc attributes') {
-            	$file['Misc_attributes'] = $tmpArray[1];
+                $file['snapshot_name'] = $tmpArray[1];
+            }  elseif ($tmpArray[0]== 'Misc attributes') {
+                $file['Misc_attributes'] = $tmpArray[1];
             } else {
                 $props[trim($tmpArray[0])] = trim($tmpArray[1]);
             }
@@ -95,27 +95,26 @@ function getFile($connection, $filepath) {
 }
 
 function listFiles($connection, $dirpath) {
-	//query the exist filesets.
-	$cmd_ls_files = "ls " . $dirpath;
-	$ret_ls_fileset = ssh2_exec($connection, $cmd_ls_files);
-	stream_set_blocking($ret_ls_fileset, true);
-	$ans_ls_fileset = stream_get_contents($ret_ls_fileset);
-	$tmp = explode("\n", $ans_ls_fileset);
+    //query the exist filesets.
+    $cmd_ls_files = "ls " . $dirpath;
+    $ret_ls_fileset = ssh2_exec($connection, $cmd_ls_files);
+    stream_set_blocking($ret_ls_fileset, true);
+    $ans_ls_fileset = stream_get_contents($ret_ls_fileset);
+    $tmp = explode("\n", $ans_ls_fileset);
 
-	$files = array();
-	$files['data'] = array();
-	$file = array();
+    $files = array();
+    $files['data'] = array();
+    $file = array();
 
-	for ($i = 0; $i < count($tmp); $i++) {
-    	if ($tmp[$i] != '') {
-        	$file = getFile($connection, $dirpath . "/" . $tmp[$i]);
-        	$file['filename'] = $tmp[$i];
+    for ($i = 0; $i < count($tmp); $i++) {
+        if ($tmp[$i] != '') {
+            $file = getFile($connection, $dirpath . "/" . $tmp[$i]);
+            $file['filename'] = $tmp[$i];
 
-        	array_push($files['data'], $file);
-    	}
-	}
-
-	return $files;
+            array_push($files['data'], $file);
+        }
+    }
+    return $files;
 }
 
 function postFile($connection, $file, $dirpath) {

@@ -7,12 +7,34 @@ function format ( d ) {
             '<td>'+d.file_path+'</td>'+
         '</tr>'+
         '<tr>'+
+            '<td>folder path:</td>'+
+            '<td>'+d.folder_path+'</td>'+
+        '</tr>'+
+        '<tr>'+
+            '<td>filetype:</td>'+
+            '<td>'+d.filetype+'</td>'+
+        '</tr>'+
+        '<tr>'+
             '<td>Extra info:</td>'+
             '<td>And any further details here (images etc)...</td>'+
         '</tr>'+
     '</table>';
 }
 function createFileTable ( folderName ) {
+    // var el = document.getElementById('folder_path');
+    // for (var j=0; j<el.innerHTML.length; j++){
+    //     $('#folder_path').remove();
+    // }
+    // $('#folder_path').remove();
+    // var tmp_array = folderName.split('/');
+    // for (var i = 0; i < tmp_array.length; i++) {
+    //     var tmp_str = '';
+    //     tmp_str += "<label onclick=\"back("+tmp_array[i]+")\" id='folder_path' style=\"font: 18px/1.5 Tahoma,Helvetica,Arial,’宋体’,sans-serif;\">"+tmp_array[i]+"/</label>";
+    //     $('#all_path').append(tmp_str);
+    // }
+    var label=document.getElementById("folder_path");
+    label.innerText=folderName;
+
     var table = $('#dataTable').DataTable();
     var str = "<input type='checkbox' id=" +folderName +">";
     if (table) {

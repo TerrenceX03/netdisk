@@ -1,7 +1,6 @@
 <?php
 include 'common/common.php';
 include 'function/fileOperator.php'; 
-
 /*
 Function:Return the html of files which in specific filesets.
 */
