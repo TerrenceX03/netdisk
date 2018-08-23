@@ -93,14 +93,15 @@
 	font-size: 10px;
 	margin-left: 5px;
 	cursor: pointer;
-}
+}q
 
 /* Content */
 #content {
 	padding: 0 15px;
 }
 
-/* Statistics */
+
+ /* Statistics */
 #statistics {
 	vertical-align: top;
 }
@@ -642,8 +643,9 @@ input.search_submit {
 	left:60px;word-break:keep-all;
 	border-top: 1px solid #c6c6c6;
 	border-top-width: 100%;
-	background: lightgrey;
+	background: #f1f1f1;
 	font-size: 13px;
+	border-right: 1px solid #c6c6c6;
 }
 #log_title{
 	position:relative;
@@ -800,17 +802,13 @@ input[type=radio]{
 	height: 30px; 
 	background: url(../images/pool_close.jpg) no-repeat center;
 }
-/*
-	current path css
-*/
-.folder_path{
-	font: 18px/1.5 Tahoma,Helvetica,Arial,’宋体’,sans-serif;
-	color: black;
-}
 #backpath{
-	width:50px;
-	height:26px;
+	width:30px;
 	background-color: #C00000;
 	color:white;
-	font-size:14px;
+	font-size:12px;
+	position:relative;
+	top:180px;
+	left:237px;
+	z-index: 100;
 }

@@ -62,11 +62,11 @@ include 'function/show_list.php';
                                 </span>
                             </td>
                             <td><div class="default-button chinese" onclick="CreateFolder()">新建文件夹</div></td>
-                            <td><label class="default-button chinese" href = "JavaScript:void(0)" onclick="showTierTable()">迁移</label></td>
-                            <td><button class="default-button chinese" href = "JavaScript:void(0)" onclick="deletefiles()">删除</button></td>
+                            <td><button class="default-button chinese" href = "JavaScript:void(0)" onclick="showTierTable()">迁移</button></td>
+                             <td><button class="default-button chinese" href = "JavaScript:void(0)" onclick="deletefiles()">删除</button></td>
                         </tr>
                     </table>
-                    <div id="backpath" onclick="exeback()" style="float: left">上一级</div>
+                    
                     <div style="float: left">
                          <label id='path' class='folder_path'>当前路径：</label>
                     </div>
@@ -77,11 +77,9 @@ include 'function/show_list.php';
             <tr> 
                 <div id="backpath" onclick="returnback()" class="">返回
                 </div> 
-            <tr>  
-            <tr>  
                 <td id="content" colspan="2">
                     <table id="dataTable" class="display" style="width:100%">
-                        <thead>
+                    	<thead>
                             <tr>
                                 <th class="chinese"></th>
                                 <th class="chinese">文件名</th>
@@ -110,17 +108,11 @@ include 'function/show_list.php';
                 </tr>
         </table>
         <script type="text/javascript" src="js/hideinfo.js"></script>
-        <script type="text/javascript">
-            $('#more').on('click', function () {
-                var statistics=document.getElementById("statistics");
-                if (statistics.style.display=="block"){
-                    statistics.style.display="none";
-                }
-                else{
-                    statistics.style.display="block";
-                }
-            } );
-        </script>
         <script type="text/javascript" src="js/main.js"></script>
+        <script type="text/javascript">
+            function back(folder) {
+                 createFileTable (folder);
+            }
+        </script>
     </body>
 </html>
