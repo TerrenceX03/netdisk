@@ -9,22 +9,14 @@ include 'function/show_list.php';
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Demo</title>
-        <link rel="stylesheet" href="css/base.css">
         <link rel="stylesheet" href="css/style.css">
-        <link rel="stylesheet" type="text/css" media="all" href="css/niceforms-default.css">
 
-        <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
-        <!-- <script type="text/javascript" src="js/jquery-ui.js"></script> -->
-        <script type="text/javascript" src="js/ddaccordion.js"></script>
-        <script type="text/javascript" src="js/jquery.form.min.js"></script>
-        <script type="text/javascript" src="js/jconfirmaction.jquery.js"></script>
-        <script type="text/javascript" src="js/niceforms.js"></script>
-        <script type="text/javascript" src="js/upload_files.js"></script>
-        <script type="text/javascript" src="js/showtable_for_files.js"></script>
+        <script type="text/javascript" src="js/jQuery/jquery-3.3.1.min.js"></script>
+        <script type="text/javascript" src="js/jQuery/jquery.form.min.js"></script>
         <script type="text/javascript" src="js/click_event_for_tier.js"></script>
         <script type="text/javascript" src="js/DataTables/datatables.js"></script>
         <script type="text/javascript" src="js/datatable.js"></script>
-        <script type="text/javascript" src="js/jquery-ui.js"></script>
+        <script type="text/javascript" src="js/jQuery/jquery-ui.js"></script>
         <script type="text/javascript" src="js/jQuery-File-Upload/js/jquery.fileupload.js"></script>
         <script type="text/javascript" src="js/jQuery-File-Upload/js/jquery.iframe-transport.js"></script>
 
@@ -71,21 +63,23 @@ include 'function/show_list.php';
                             </td>
                             <td><div class="default-button chinese" onclick="CreateFolder()">新建文件夹</div></td>
                             <td><button class="default-button chinese" href = "JavaScript:void(0)" onclick="showTierTable()">迁移</button></td>
+                             <td><button class="default-button chinese" href = "JavaScript:void(0)" onclick="deletefiles()">删除</button></td>
                         </tr>
                     </table>
-                    <div id="all_path">
-                    <label id='path' style="font: 18px/1.5 Tahoma,Helvetica,Arial,’宋体’,sans-serif;">当前路径：</label>
-                    <label onclick="back('documents')" id='folder_path' style="font: 18px/1.5 Tahoma,Helvetica,Arial,’宋体’,sans-serif;">documents/</label>
                     
+                    <div style="float: left">
+                         <label id='path' class='folder_path'>当前路径：</label>
                     </div>
+                    <div id="all_path" style="float:left"></div>
                 </td>
 
             </tr>
-            <tr>  
+            <tr> 
+                <div id="backpath" onclick="returnback()" class="">返回
+                </div> 
                 <td id="content" colspan="2">
                     <table id="dataTable" class="display" style="width:100%">
-                    	<div id="backpath" onclick="exeback()">返回</div>
-                        <thead>
+                    	<thead>
                             <tr>
                                 <th class="chinese"></th>
                                 <th class="chinese">文件名</th>
@@ -113,18 +107,7 @@ include 'function/show_list.php';
                     </td>
                 </tr>
         </table>
-        <script type="text/javascript">
-            $('#more').on('click', function () {
-                
-                var statistics=document.getElementById("statistics");
-                if (statistics.style.display=="block"){
-                    statistics.style.display="none";
-                }
-                else{
-                    statistics.style.display="block";
-                }
-            } );
-        </script>
+        <script type="text/javascript" src="js/hideinfo.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
         <script type="text/javascript">
             function back(folder) {

@@ -36,8 +36,10 @@ function getFile($connection, $filepath) {
                 array_pop($tmp_folder_path);
                 $tmp_path_str = '';
                 foreach ($tmp_folder_path as $key => $value) {
-                    $tmp_path_str .= $value;
-                    $tmp_path_str .= "/";
+                    if ($value != '') {
+                        $tmp_path_str .= $value;
+                        $tmp_path_str .= "/";
+                    }
                 }
                 $file['folder_path'] = $tmp_path_str;
             } elseif ($tmpArray[0]== 'metadata replication') {
@@ -145,6 +147,54 @@ function postFile($connection, $file, $dirpath) {
 
     array_push($result["files"], $tmpfile);
 
+    return $result;
+}
+
+/* 
+Modify the storage tier of the file with the specified ID
+
+$id：An array,it contains IDs of the files to be modified
+
+$tier：The storage tier where files will be moved in.
+*/
+function movePool($connection,$id,$tier,$folder){
+    $result = array();
+    $result['msg'] = 1;
+    foreach($id as $key => $value) {
+        $filename = $value;
+        $filename=preg_replace('/ /','\ ',$filename);
+        // $tier = $tier;
+        $fileset = $folder[0];
+        // $user = DB_USER;
+        // $pass = DB_PWD;
+        // $ip = DB_IP;
+        // $port = DB_PORT;
+        // $connection = ssh2_connect($ip, $port);
+        // ssh2_auth_password($connection, $user, $pass);
+        $cmd_chpool = "mmchattr -P ";
+        $cmd_chpool.= $tier;
+        $cmd_chpool.= " /demofs/";
+        $cmd_chpool.= $fileset;
+        $cmd_chpool.= "/";
+        $cmd_chpool.= $filename;
+        $exe_chpool = ssh2_exec($connection, $cmd_chpool);
+    }
+    return $result;
+}
+
+/* 
+Delete files with specofic filepath
+
+$filepath:Absolute filepath without /demofs/.
+*/
+function deleteFiles($connection,$filepath){
+    $result = array();
+    $result['msg'] = 1;
+    //Delete cammand
+    $cmd_delete = "rm -rf /demofs/";
+    $cmd_delete.= $filepath;
+
+    $exe_delete = ssh2_exec($connection, $cmd_delete);
     return $result;
 }
 

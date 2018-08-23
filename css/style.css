@@ -643,8 +643,9 @@ input.search_submit {
 	left:60px;word-break:keep-all;
 	border-top: 1px solid #c6c6c6;
 	border-top-width: 100%;
-	background: lightgrey;
+	background: #f1f1f1;
 	font-size: 13px;
+	border-right: 1px solid #c6c6c6;
 }
 #log_title{
 	position:relative;
@@ -806,4 +807,8 @@ input[type=radio]{
 	background-color: #C00000;
 	color:white;
 	font-size:12px;
+	position:relative;
+	top:180px;
+	left:237px;
+	z-index: 100;
 }

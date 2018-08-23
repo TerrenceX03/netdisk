@@ -5,15 +5,19 @@ $(document).ready(function() {
 //input the folder name and create the folder added in the table
 function CreateFolder(){
     var true_name=prompt("请输入文件夹名字","");
-    var label=document.getElementById("folder_path");
-    var true_filepath='/demofs/'+label.innerText + '/';
+    var label=document.getElementById("all_path");
+    var true_filepath='/demofs/'+label.innerText+'/';
     $.ajax({
-        url:'CreateFolder.php',
-        data:{foldername:true_name,folderpath:true_filepath},
-        method:'POST',
-        success:function(res) {
-            //pass
-        }
+            url: "folder.php?myaction=CREATE_FOLDER",
+            dataType: 'json',
+            data: {
+                foldername:true_name,
+                folderpath:true_filepath
+            },
+            method: 'POST',
+            success: function(res) {
+                //pass
+            }
     });
     $.ajax({
         url: "files.php?myaction=GET&filepath=" + true_filepath+true_name,
@@ -35,7 +39,7 @@ function CreateFolder(){
 }
 //add the new uploaded files in table
 function uploadfile(){
-    var label=document.getElementById("folder_path");
+    var label=document.getElementById("all_path");
     var true_filepath=label.innerText;
     $(document).ready(function() {
         $('#fileupload').fileupload({
@@ -65,6 +69,13 @@ function uploadfile(){
     　      }
         });
     });
+}
+
+/*
+    return to display file information of clicked floder
+*/
+function back_to_click_folder(folder) {
+    createFileTable (folder);
 }
 
 /* 
@@ -115,3 +126,4 @@ function GenerateProgressBar() {
         }
     })
 }
+

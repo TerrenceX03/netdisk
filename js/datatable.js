@@ -20,23 +20,42 @@ function format ( d ) {
         '</tr>'+
     '</table>';
 }
-function createFileTable ( folderName ) {
-    // var el = document.getElementById('folder_path');
-    // for (var j=0; j<el.innerHTML.length; j++){
-    //     $('#folder_path').remove();
-    // }
-    // $('#folder_path').remove();
-    // var tmp_array = folderName.split('/');
-    // for (var i = 0; i < tmp_array.length; i++) {
-    //     var tmp_str = '';
-    //     tmp_str += "<label onclick=\"back("+tmp_array[i]+")\" id='folder_path' style=\"font: 18px/1.5 Tahoma,Helvetica,Arial,’宋体’,sans-serif;\">"+tmp_array[i]+"/</label>";
-    //     $('#all_path').append(tmp_str);
-    // }
-    var label=document.getElementById("folder_path");
-    label.innerText=folderName;
 
+function createFileTable ( folderName ) {
+    //add the file information to table and modify the foderName to the correct format.
+    var elem = document.getElementById('all_path').innerHTML = "";
+    var tmp_array = folderName.split('/');
+    var new_foldername = '';
+
+    for (var i = 0; i < tmp_array.length; i++) {
+        if (tmp_array[i] != '') {
+            var tmp_str = '';
+            var back_str = '';
+
+            for (var j = 0; j <= i; j++) {
+                if (j == i) {
+                    back_str += tmp_array[j];  
+                } else {
+                    back_str += tmp_array[j]; 
+                    back_str += '/';
+                }
+            }
+
+            if (i == (tmp_array.length - 1)) {                
+                new_foldername += tmp_array[i]; 
+                tmp_str += "<label onclick=\"back_to_click_folder(\'"+back_str+"\')\" class='folder_path'>"+tmp_array[i]+"</label>";
+            } else {
+                new_foldername += tmp_array[i]; 
+                new_foldername += '/'; 
+                tmp_str += "<label onclick=\"back_to_click_folder(\'"+back_str+"\')\" class='folder_path'>"+tmp_array[i]+"/</label>";
+            }
+
+            $('#all_path').append(tmp_str);
+        }
+    }
+    //create the file information table
     var table = $('#dataTable').DataTable();
-    var str = "<input type='checkbox' id=" +folderName +">";
+    var str = "<input type='checkbox' id=" + new_foldername + ">";
     if (table) {
         // Clear all data under tbody
         table.clear(false);
@@ -70,10 +89,12 @@ function createFileTable ( folderName ) {
         "paging":         false,
         "destroy":        true
     } );
+    
     // remove old event (if have) listener for opening and closing details
     $('#dataTable tbody').prop("onclick",null).off("click");
+    
     // Add event listener for opening and closing details
-     $('#dataTable tbody').on('click', 'td.datatable-data-col', function () {
+    $('#dataTable tbody').on('click', 'td.datatable-data-col', function () {
         var table = $('#dataTable').DataTable();
         var tr = $(this).closest('tr');
         var row = table.row(tr);
@@ -86,7 +107,6 @@ function createFileTable ( folderName ) {
             backfolder = backfolder.join('/');
             //set classname for return button.
             $('#backpath').attr("class", backfolder);
-            alert($('#backpath').attr("class"));
             $("#navbar li.openfolder").removeClass("openfolder");
         }
         //Click to show more information
@@ -96,15 +116,15 @@ function createFileTable ( folderName ) {
             tr.removeClass('shown');
         } else {
             // Open this row
-            row.child( format(row.data()) ).show();
+            row.child(format(row.data()) ).show();
             tr.addClass('shown');
         }
     } );
 }
-//Click the "返回" button to return back.
-function exeback(){
+
+/*Click the "返回" button to return back*/
+function returnback(){
     var backfolder = $('#backpath').attr('class');
-    alert(backfolder); 
     createFileTable(backfolder);
     backfolder = backfolder.split("/");
     backfolder.pop();
@@ -132,3 +152,25 @@ $(document).ready(function() {
         createFileTable($(this).attr("id"))
     });  
 } );
+
+/*Delete*/
+function deletefiles(){
+    var tbodyObj = document.getElementById('dataTable');
+    $("table :checkbox").each(function(key, value) {
+        if ($(value).prop('checked')) {
+            var label=document.getElementById("all_path");
+            filepath = label.innerText + "/" + tbodyObj.rows[key+1].cells[1].innerHTML;
+            tbodyObj.rows[key+1].innerHTML="";
+            $.ajax({
+                url: "files.php?myaction=DELETE_FILE&filepath=" + filepath,
+                dataType: 'json',                
+                success: function(res) {
+                    if (res.msg == 1) {
+                        //pass
+                    };
+                }
+            });
+            
+        }
+    })   
+}

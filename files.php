@@ -1,6 +1,7 @@
 <?php
 include 'common/common.php';
 include 'function/fileOperator.php'; 
+include 'function/folderOperator.php';
 /*
 Function:Return the html of files which in specific filesets.
 */
@@ -18,6 +19,9 @@ if ($_GET["myaction"] == "LIST") { // List a folder
 	echo json_encode(getFile($connection, $_GET['filepath']));
 } elseif($_GET['myaction'] == "POST") { // Upload a new file
 	echo json_encode(postFile($connection, $_FILES["newFile"], FS_MOUNT_POINT . "/" . $_GET["parent"]));
-}
-
+} elseif($_GET['myaction'] == "DELETE_FILE") { // Upload a new file
+	echo json_encode(deleteFiles($connection, $_GET["filepath"]));
+} elseif($_GET['myaction'] == "MOVE_POOL") { // Migration
+	echo json_encode(movePool($connection, $_POST['id'], $_POST['tier'], $_POST['folder']));
+} 
 ?> 

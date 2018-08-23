@@ -35,7 +35,8 @@ function gettier() {
         }
     })
     $.ajax({
-            url: 'click_to_movetier.php',
+            url: "files.php?myaction=MOVE_POOL",
+            dataType: 'json',
             data: {
                 id: fileid,
                 tier: TargetTier,
