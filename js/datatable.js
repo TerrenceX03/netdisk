@@ -70,23 +70,32 @@ function createFileTable ( folderName ) {
                 h.foldername = folderName;
             }
         },
+        "columnDefs": [
+            {
+                "render": function (data, type, row) {
+                    return main_formatDataSizeWithUnit(data);
+                },
+                "targets": 2  // file size column
+            }
+        ],
         "columns": [
             {
                 "className":      'datatable-checkbox',
                 "orderable":      false,
                 "data":           null,
-                "defaultContent": str
+                "defaultContent": str,
+                "width": "2%"
             },
-            { "data": "filename", "className": "datatable-data-col",},
+            { "data": "filename", "className": "datatable-data-col" },
             { "data": "file_size", "className": "datatable-data-col" },
             { "data": "creation_time", "className": "datatable-data-col" },
             { "data": "L_mod_time", "className": "datatable-data-col" },
             { "data": "storage_pool_name", "className": "datatable-data-col" }
         ],
         "order": [[1, 'asc']],
-        "scrollY":        '65vh',
-        "scrollCollapse": true,
-        "paging":         false,
+        // "scrollY":        '65vh', // KEEP THE COMMENTS HERE!
+        // "scrollCollapse": true,   // KEEP THIS LINE HERE!
+        "paging":         true,
         "destroy":        true
     } );
     

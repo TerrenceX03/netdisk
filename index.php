@@ -9,6 +9,7 @@ include 'function/show_list.php';
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Demo</title>
+        <link rel="stylesheet" href="css/base.css">
         <link rel="stylesheet" href="css/style.css">
 
         <script type="text/javascript" src="js/jQuery/jquery-3.3.1.min.js"></script>
@@ -83,31 +84,46 @@ include 'function/show_list.php';
                             <tr>
                                 <th class="chinese"></th>
                                 <th class="chinese">文件名</th>
-                                <th class="chinese">文件大小（M）</th>
+                                <th class="chinese">文件大小</th>
                                 <th class="chinese">创建时间</th>
                                 <th class="chinese">修改时间</th>
                                 <th class="chinese">存储池</th>
                             </tr>
                         </thead>
                     </table>
-                    <img id="more" src="images/menu.jpg" alt="more">
                 </td>   
             </tr>
-                <tr id='statistics'>
-                    <td id="stat_progressbar" width="50%">
-                        <table id="stat_progressbar_content" width="100%">
-                            <tr><td colspan="3" class="stat_title chinese">资源池统计</td></tr>
-                        </table>
-                    </td>
-                    <td id="logs_td">
-                        <div id="logs">
-                            <div id='log_title'>系统日志</div>
-                            <div id='log'><br></div>
+            <tr>
+                <td colspan="2" id="stat_panel">
+                    <div id="more">
+                        <!-- <img src="images/more.jpg" /> -->
+                        <div class="stat_line"><img src="images/arrow-up.png" />查看统计信息</div>
+                    
+                        <div id="statistics">
+                            <table width="100%">
+                                <tr>
+                                    <td width="50%">
+                                        <div id="stat_progressbar">
+                                            <table id="stat_progressbar_content" width="100%">
+                                                <tr><td colspan="3" class="stat_title chinese">资源池统计</td></tr>
+                                            </table>
+                                        </div>
+                                    </td>
+                                    <td width="50%">
+                                        <div id="logs_td">
+                                            <div id="logs">
+                                                <div id='log_title' class="chinese">系统日志</div>
+                                                <div id='log'><br></div>
+                                          </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
                         </div>
-                    </td>
-                </tr>
+                    </div>
+                </td>
+            </tr>
         </table>
-        <script type="text/javascript" src="js/hideinfo.js"></script>
         <script type="text/javascript" src="js/main.js"></script>
         <script type="text/javascript">
             function back(folder) {

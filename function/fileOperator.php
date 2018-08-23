@@ -28,7 +28,7 @@ function getFile($connection, $filepath) {
                 $tmp_str.=trim($tmpArray[2]);
                 $tmp_str.=':';
                 $tmp_str.=trim($tmpArray[3]);
-                $file['creation_time'] = $tmp_str;
+                $file['creation_time'] = date("Y-m-d H:i:s", strtotime($tmp_str));
             } elseif ($tmpArray[0]== 'file name') {
                 $file['file_path'] = $tmpArray[1];
                 $tmp_folder_path = str_replace("/", ",", trim($tmpArray[1]));
@@ -88,10 +88,10 @@ function getFile($connection, $filepath) {
     $file['file_group_id'] = $items_stat[0];
     $file['user_id'] = $items_stat[1];
     $file['block_size'] = $items_stat[3];
-    $file['file_size'] = round($items_stat[4]/1048576,1);
-    $file['L_vist_time'] = $items_stat[5];
-    $file['L_mod_time'] = explode(".",$items_stat[6])[0];
-    $file['F_chan_time'] = $items_stat[7];
+    $file['file_size'] = round($items_stat[4]/1024,1);
+    $file['L_vist_time'] = date("Y-m-d H:i:s", strtotime($items_stat[5]));
+    $file['L_mod_time'] = date("Y-m-d H:i:s", strtotime(explode(".",$items_stat[6])[0]));
+    $file['F_chan_time'] = date("Y-m-d H:i:s", strtotime($items_stat[7]));
 
     return $file;
 }

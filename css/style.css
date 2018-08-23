@@ -100,10 +100,49 @@
 	padding: 0 15px;
 }
 
+.datatable-data-col {
+	white-space: nowrap;
+	font-size: 13px;
+}
 
  /* Statistics */
 #statistics {
 	vertical-align: top;
+	height:300px;
+	overflow:auto;
+	display:none;
+	border-top: 5px #077DF1 solid;
+	background: #FFF;
+}
+
+#more{
+	position: absolute;
+	bottom: 0;
+	z-index: 1;
+}
+
+#more .stat_line {
+	padding-top: 5px;
+    width: 130px;
+    background: #077DF1;
+    text-align: center;
+    color: white;
+    margin: 0 auto;
+    padding-left: 8px;
+    position: relative;
+    vertical-align: middle;
+    border-top-left-radius: 4px;
+    border-top-right-radius: 4px;
+}
+
+#more .stat_line:hover {
+	cursor: pointer;
+}
+
+#more .stat_line img {
+	left: 5px;
+    width: 15px;
+    position: absolute;
 }
 
 #statistics .stat_title {
@@ -111,29 +150,76 @@
 	padding: 0 0 20px 0;
 }
 
-#statistics .stat_progressbar-name {
-	padding: 0 10px 0 10px;
-}
-
 #statistics .ui-progressbar {
 	position: relative;
-	width: 200px;
-	height: 25px;
+	height: 10px;
+}
+
+.stat_progressbar-name {
+	position: relative;
+}
+
+.stat_progressbar-name label {
+	font-size: 10px;
+	color: gray;
+}
+
+.stat_progressbar-name label.right {
+	text-align: right;
+	position: absolute;
+	right: 0;
+	top: 5px;
+}
+
+#statistics .bottom {
+	padding: 0 0 20px 0;
 }
 
 #statistics .stat_progressbar-label {
-	position: absolute;
-	right: 5px;
-    top: 5px;
-    text-shadow: 1px 1px 0 #fff;
-    font-size: 13px;
+	width: 25px;
+	text-align: right;
+	padding-left: 5px;
+	font-size: 10px;
+	color: gray;
 }
 
 td.stat_progressbar-row {
 	padding: 5px 0;
 }
 
+#stat_progressbar {
+	width: 250px;
+	margin: 0 auto;
+}
+
 /* logs */
+#logs_td{
+	width: 400px;
+	height: 300px;
+	margin: 0 auto;
+	padding-right: 10px;
+}
+
+#logs{
+}
+
+#log{
+	overflow: :hidden;
+	height: 205px;
+	word-break: keep-all;
+	border: solid 1px #f6f6f6;
+	background: #FFFFFF;
+	font-size: 10px;
+}
+
+#log:hover {
+	overflow: scroll;
+}
+
+#log_title{
+	text-align: center;
+	padding: 10px 0 30px 0;
+}
 
 
 /********************************/
@@ -451,208 +537,6 @@ input.search_submit {
 	top: -25px;
 	position:relative;
 }
-/*
-	all progressbar
-*/
-#statistics{
-	width: 800px;
-	 height:300px;
-	 overflow: auto;
-}
-
-.all_progress{
-	position: relative;
-	width: 400px;
-	height: 300px;
-	top:30px;
-	left:70px;
-}
-#progressbar{
-	width:400px;
-	height:300px;
-}
-#progressbar_title{
-	position:relative;
-	left: 220px;
-	top: 50px;
-	font-size: 16px;
-	color:midnightblue;
-}
-
-#progressbar1 {
-	width: 270px;
-	top: 30px;
-	position: relative;
-	left: 20px;
-}
-#progressbar2 {
-	width: 270px;
-	top: 67px;
-	position: relative;
-	left: -56px;
-}
-#progressbar3 {
-	width: 270px;
-	top: 96px;
-	position: relative;
-	left: -56px;
-}
-#progress_bar1 {
-	width: 320px;
-	margin-top: 70px;
-	left: 10%;
-	top: -80px;
-	position: relative;
-}
-#progress_bar2 {
-	left: 30px;
-	width: 320px;
-	position: relative;
-	top: -130px;
-	left: 30%;
-}
-#progress_bar3 {
-	left: 38px;
-	position: relative;
-	width: 320px;
-	top: -170px;
-	z-index: 1;
-	left: 30%;
-}
-.line1 {
-	position: absolute;
-	display: none;
-	z-index: 2;
-	left: 28%;
-	margin-top: 30px;
-	height: 220px;
-	/*竖线高度*/
-	border:1px dashed rgba(128, 128, 128, 1);
-}
-.line2 {
-	position: absolute;
-	display: none;
-	margin-top: 30px;
-	z-index: 2;
-	left: 57%;
-	height: 220px;
-	/*竖线高度*/
-	border:1px dashed rgba(128, 128, 128, 1);
-}
-.line1-tag {
-	position: absolute;
-	display: none;
-	z-index: 2;
-	left: 25%;
-	color:rgba(128, 128, 128, 1);
-	margin-top: -70px;
-}
-.line2-tag {
-	margin-top: -70px;
-	position: absolute;
-	display: none;
-	z-index: 2;
-	left: 57%;
-	color: rgba(128, 128, 128, 1);
-}
-.progress-label-1 {
-	position: absolute;
-	left: 35%;
-	top: 4px;
-	font-size:10px;
-	color:maroon;
-}
-#progressbar1_name{
-	position: relative;
-	left: 8px;
-	top: 45px;
-	font-size: 15px;
-	bottom:-20px;
-	font-family:Times New Roman;
-}
-.progress-label-2 {
-	position: absolute;
-	left: 35%;
-	top: 4px;
-	font-size:10px;
-	color:maroon;
-}
-#progressbar2_name{
-	position: relative;
-	left: 8px;
-	top: -40px;
-	font-size: 15px;
-	bottom:35px;
-	font-family:Times New Roman;
-}
-.progress-label-3 {
-	position: absolute;
-	left: 35%;
-	top: 4px;
-	font-size:10px;
-	color:maroon;
-}
-#progressbar3_name{
-	position: relative;
-	left: 8px;
-	top: -55px;
-	font-size: 15px;
-	bottom:35px;
-	font-family:Times New Roman;
-}
-.contain1 {
-	position:relative;
-	top: 5px;
-	left:298px;
-	width: 50px;
-	bottom: 25px;
-	font-size: 12px;
-	word-break: break-all;
-}
-.contain2 {
-	position:relative;
-	left:220px;
-	top: 40px;
-	width: 50px;
-	bottom: 25px;
-	font-size: 12px;
-	word-break: break-all;
-}
-.contain3 {
-	position:relative;
-	left:220px;
-	top: 72px;
-	width: 50px;
-	bottom: 25px;
-	font-size: 12px;
-	word-break: break-all;
-}
-
-#logs_td{
-	width: 400px;
-	 height:300px;
-}
-#logs{
-	position: relative;
-	top:0px;
-	left:100px;
-}
-#log{
-	overflow: scroll;width:420px;
-	height: 140px;position:relative;
-	left:60px;word-break:keep-all;
-	border-top: 1px solid #c6c6c6;
-	border-top-width: 100%;
-	background: #f1f1f1;
-	font-size: 13px;
-	border-right: 1px solid #c6c6c6;
-}
-#log_title{
-	position:relative;
-	left:50%;bottom:10px;
-	font-size: 16px;
-	color:darkblue;
-}
 
 
 /*input*/
@@ -702,17 +586,7 @@ img:hover {
     opacity:0.7;
     filter:alpha(opacity=70);
 }
-#statistics{
-	width:98%;
-	height:300px;
-	overflow:auto;
-	display:none;
-}
-#more{
-	position:relative;
-	left:45%;
-	bottom:28px;
-}
+
 /*
 migration pool css
 */

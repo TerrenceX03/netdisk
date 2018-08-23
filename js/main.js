@@ -1,5 +1,6 @@
 $(document).ready(function() {
     GenerateProgressBar();
+    main_initStatInfo();
 });
 
 //input the folder name and create the folder added in the table
@@ -93,20 +94,12 @@ function GenerateProgressBar() {
                 var poolName = pool["name"];
                 var totaldatasize = pool["totaldatasize"];
                 var freedatasize = pool["freedatasize"];
-                var useddatasize = (totaldatasize - freedatasize) / 1024; // MB unit
-                var totalInMB = totaldatasize / 1024;
                 var userdatapercentage = 100 - pool["freedatapercentage"];
 
                 $("#stat_progressbar_content").append(
-                    "<tr>" 
-                    + "<td class='stat_progressbar-name english'>" + poolName.toUpperCase() + "</td>"
-                    + "<td class='stat_progressbar-row'>"
-                    + "<div id='stat_progressbar-" + poolName + "'>"
-                    + "<div class='stat_progressbar-label chinese'>已用" + useddatasize + " MB</div>"
-                    + "</div>"
-                    + "</td>"
-                    + "<td class='stat_progressbar-total chinese'>总容量" + totalInMB + " MB</td>"
-                    + "</tr>"
+                    "<tr><td class='stat_progressbar-name english' colspan='2'><label class='left'>" + poolName.toUpperCase() + "</label><label class='right'>FREE: " + main_formatDataSizeWithUnit(freedatasize) + "</label></td></tr>"
+                    + "<tr><td class='stat_progressbar-row'><div id='stat_progressbar-" + poolName + "'></div></td><td class='stat_progressbar-label english'><div>" + userdatapercentage + "%</div></td></tr>"
+                    + "<tr><td class='stat_progressbar-name english bottom' colspan='2'><label class='left'>USED: " + main_formatDataSizeWithUnit(totaldatasize - freedatasize) + "</label><label class='right'>CAPACITY: " + main_formatDataSizeWithUnit(totaldatasize) + "</label></td></tr>"
                 );
 
                 $("#stat_progressbar-" + poolName).progressbar({
@@ -127,3 +120,35 @@ function GenerateProgressBar() {
     })
 }
 
+/*
+    Format the data size to well unit, KB, MB, GB, TB
+    var size - unit must be KB
+*/
+function main_formatDataSizeWithUnit(size) {
+    var result;
+    if (size >= 1024 && size < 1024 * 1024) {
+        result = (size / 1024).toFixed(2) + "MB";
+    } else if (size >= 1024 * 1024 && size < 1024 * 1024 * 1024) {
+        result = (size / 1024 / 1024).toFixed(2) + "GB";
+    } else if (size >= 1024 * 1024 * 1024) {
+        result = (size / 1024 / 1024 / 1024).toFixed(2) + "TB";
+    } else {
+        result = (size).toFixed(2) + "KB";
+    }
+
+    return result;
+}
+
+function main_initStatInfo() {
+    $("#more").css("width", $("#content").outerWidth(true));
+    $('#more .stat_line').on('click', function () {
+        if ($("#statistics").css("display")=="block"){
+            $("#statistics").css("display", "none");
+            $("#more img").attr("src", "images/arrow-up.png");
+        } else{
+            $("#more").css("width", $("#content").outerWidth(true));
+            $("#more img").attr("src", "images/arrow-down.png");
+            $("#statistics").css("display", "block");
+        }
+    } );
+}
