@@ -111,29 +111,75 @@
 	padding: 0 0 20px 0;
 }
 
-#statistics .stat_progressbar-name {
-	padding: 0 10px 0 10px;
-}
-
 #statistics .ui-progressbar {
 	position: relative;
-	width: 200px;
-	height: 25px;
+	height: 10px;
+}
+
+.stat_progressbar-name {
+	position: relative;
+}
+
+.stat_progressbar-name label {
+	font-size: 10px;
+	color: gray;
+}
+
+.stat_progressbar-name label.right {
+	text-align: right;
+	position: absolute;
+	right: 0;
+	top: 5px;
+}
+
+#statistics .bottom {
+	padding: 0 0 20px 0;
 }
 
 #statistics .stat_progressbar-label {
-	position: absolute;
-	right: 5px;
-    top: 5px;
-    text-shadow: 1px 1px 0 #fff;
-    font-size: 13px;
+	width: 25px;
+	text-align: right;
+	padding-left: 5px;
+	font-size: 10px;
+	color: gray;
 }
 
 td.stat_progressbar-row {
 	padding: 5px 0;
 }
 
+#stat_progressbar {
+	width: 250px;
+	margin: 0 auto;
+}
+
 /* logs */
+#logs_td{
+	width: 400px;
+	height: 300px;
+	margin: 0 auto;
+}
+
+#logs{
+}
+
+#log{
+	overflow: :hidden;
+	height: 205px;
+	word-break: keep-all;
+	border: solid 1px #f6f6f6;
+	background: #FFFFFF;
+	font-size: 10px;
+}
+
+#log:hover {
+	overflow: scroll;
+}
+
+#log_title{
+	text-align: center;
+	padding: 10px 0 30px 0;
+}
 
 
 /********************************/
@@ -627,32 +673,6 @@ input.search_submit {
 	font-size: 12px;
 	word-break: break-all;
 }
-
-#logs_td{
-	width: 400px;
-	 height:300px;
-}
-#logs{
-	position: relative;
-	top:0px;
-	left:100px;
-}
-#log{
-	overflow: scroll;width:420px;
-	height: 140px;position:relative;
-	left:60px;word-break:keep-all;
-	border-top: 1px solid #c6c6c6;
-	border-top-width: 100%;
-	background: lightgrey;
-	font-size: 13px;
-}
-#log_title{
-	position:relative;
-	left:50%;bottom:10px;
-	font-size: 16px;
-	color:darkblue;
-}
-
 
 /*input*/
 .inputfile {

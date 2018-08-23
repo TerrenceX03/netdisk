@@ -99,23 +99,34 @@ include 'function/show_list.php';
                     <img id="more" src="images/menu.jpg" alt="more">
                 </td>   
             </tr>
-                <tr id='statistics'>
-                    <td id="stat_progressbar" width="50%">
-                        <table id="stat_progressbar_content" width="100%">
-                            <tr><td colspan="3" class="stat_title chinese">资源池统计</td></tr>
+            <tr>
+                <td colspan="2" id="stat_panel">
+                    <div id="statistics">
+                        <table width="100%">
+                            <tr>
+                                <td width="50%">
+                                    <div id="stat_progressbar">
+                                        <table id="stat_progressbar_content" width="100%">
+                                            <tr><td colspan="3" class="stat_title chinese">资源池统计</td></tr>
+                                        </table>
+                                    </div>
+                                </td>
+                                <td width="50%">
+                                    <div id="logs_td">
+                                        <div id="logs">
+                                            <div id='log_title' class="chinese">系统日志</div>
+                                            <div id='log'><br></div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
                         </table>
-                    </td>
-                    <td id="logs_td">
-                        <div id="logs">
-                            <div id='log_title'>系统日志</div>
-                            <div id='log'><br></div>
-                        </div>
-                    </td>
-                </tr>
+                    </div>
+                </td>
+            </tr>
         </table>
         <script type="text/javascript">
             $('#more').on('click', function () {
-                
                 var statistics=document.getElementById("statistics");
                 if (statistics.style.display=="block"){
                     statistics.style.display="none";

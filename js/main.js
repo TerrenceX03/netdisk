@@ -84,18 +84,13 @@ function GenerateProgressBar() {
                 var freedatasize = pool["freedatasize"];
                 var useddatasize = (totaldatasize - freedatasize) / 1024; // MB unit
                 var totalInMB = totaldatasize / 1024;
+                var freedataInMB = freedatasize / 1024;
                 var userdatapercentage = 100 - pool["freedatapercentage"];
 
                 $("#stat_progressbar_content").append(
-                    "<tr>" 
-                    + "<td class='stat_progressbar-name english'>" + poolName.toUpperCase() + "</td>"
-                    + "<td class='stat_progressbar-row'>"
-                    + "<div id='stat_progressbar-" + poolName + "'>"
-                    + "<div class='stat_progressbar-label chinese'>已用" + useddatasize + " MB</div>"
-                    + "</div>"
-                    + "</td>"
-                    + "<td class='stat_progressbar-total chinese'>总容量" + totalInMB + " MB</td>"
-                    + "</tr>"
+                    "<tr><td class='stat_progressbar-name english' colspan='2'><label class='left'>" + poolName.toUpperCase() + "</label><label class='right'>FREE: " + freedataInMB + "MB</label></td></tr>"
+                    + "<tr><td class='stat_progressbar-row'><div id='stat_progressbar-" + poolName + "'></div></td><td class='stat_progressbar-label english'><div>" + userdatapercentage + "%</div></td></tr>"
+                    + "<tr><td class='stat_progressbar-name english bottom' colspan='2'><label class='left'>USED: " + useddatasize + "MB</label><label class='right'>CAPACITY: " + totalInMB + "MB</label></td></tr>"
                 );
 
                 $("#stat_progressbar-" + poolName).progressbar({
