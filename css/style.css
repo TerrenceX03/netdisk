@@ -100,7 +100,8 @@
 	padding: 0 15px;
 }
 
-/* Statistics */
+
+ /* Statistics */
 #statistics {
 	vertical-align: top;
 }
@@ -799,4 +800,10 @@ input[type=radio]{
 	width: 30px; 
 	height: 30px; 
 	background: url(../images/pool_close.jpg) no-repeat center;
+}
+#backpath{
+	width:30px;
+	background-color: #C00000;
+	color:white;
+	font-size:12px;
 }

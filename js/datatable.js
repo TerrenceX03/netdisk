@@ -73,14 +73,21 @@ function createFileTable ( folderName ) {
     // remove old event (if have) listener for opening and closing details
     $('#dataTable tbody').prop("onclick",null).off("click");
     // Add event listener for opening and closing details
-    $('#dataTable tbody').on('click', 'td.datatable-data-col', function () {
+     $('#dataTable tbody').on('click', 'td.datatable-data-col', function () {
         var table = $('#dataTable').DataTable();
         var tr = $(this).closest('tr');
         var row = table.row(tr);
         //Only directory can be opened again
-        if (row.data().filetype=="directory"){
+        if (row.data().filetype == "directory"){
             var folder = row.data().file_path.substr(20);
             createFileTable (folder);
+            var backfolder = folder.split("/");
+            backfolder.pop();
+            backfolder = backfolder.join('/');
+            //set classname for return button.
+            $('#backpath').attr("class", backfolder);
+            alert($('#backpath').attr("class"));
+            $("#navbar li.openfolder").removeClass("openfolder");
         }
         //Click to show more information
         if ( row.child.isShown() ) {
@@ -93,6 +100,16 @@ function createFileTable ( folderName ) {
             tr.addClass('shown');
         }
     } );
+}
+//Click the "返回" button to return back.
+function exeback(){
+    var backfolder = $('#backpath').attr('class');
+    alert(backfolder); 
+    createFileTable(backfolder);
+    backfolder = backfolder.split("/");
+    backfolder.pop();
+    backfolder = backfolder.join('/');
+    $('#backpath').attr("class", backfolder);
 }
 $(document).ready(function() {
     // Open the first fileset by default

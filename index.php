@@ -84,6 +84,7 @@ include 'function/show_list.php';
             <tr>  
                 <td id="content" colspan="2">
                     <table id="dataTable" class="display" style="width:100%">
+                    	<div id="backpath" onclick="exeback()">返回</div>
                         <thead>
                             <tr>
                                 <th class="chinese"></th>

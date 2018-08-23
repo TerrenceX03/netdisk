@@ -88,7 +88,7 @@ function getFile($connection, $filepath) {
     $file['block_size'] = $items_stat[3];
     $file['file_size'] = round($items_stat[4]/1048576,1);
     $file['L_vist_time'] = $items_stat[5];
-    $file['L_mod_time'] = $items_stat[6];
+    $file['L_mod_time'] = explode(".",$items_stat[6])[0];
     $file['F_chan_time'] = $items_stat[7];
 
     return $file;
