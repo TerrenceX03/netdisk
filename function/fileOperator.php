@@ -183,7 +183,7 @@ function movePool($connection,$id,$tier,$folder){
 }
 
 /* 
-Delete files with specofic filepath
+Delete files with specific filepath
 
 $filepath:Absolute filepath without /demofs/.
 */
@@ -191,11 +191,8 @@ function deleteFiles($connection,$filepath){
     $result = array();
     $result['msg'] = 1;
     //Delete cammand
-    $cmd_delete = "rm -rf /demofs/";
-    $cmd_delete.= $filepath;
-
+    $cmd_delete = "rm -rf \"/demofs/" . $filepath . "\"";
     $exe_delete = ssh2_exec($connection, $cmd_delete);
     return $result;
 }
-
 ?>
