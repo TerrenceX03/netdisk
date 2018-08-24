@@ -47,37 +47,39 @@ include 'function/show_list.php';
                 </td>
                 <td id="opbar" colspan="2" height="50px">
                     <table>
-                        <tr>
-                            <td>
-                                <div id="progress" class="progress">
-                                    <div class="progress-bar progress-bar-success"></div>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <span onclick="uploadfile()"class="btn btn-success fileinput-button default-button chinese">
-                                    <i class="glyphicon glyphicon-plus"></i>
-                                    <span>上传</span>
-                                    <input id="fileupload" type="file" name="newFile" multiple>
-                                </span>
-                            </td>
-                            <td><div class="default-button chinese" onclick="CreateFolder()">新建文件夹</div></td>
-                            <td><button class="default-button chinese" href = "JavaScript:void(0)" onclick="showTierTable()">迁移</button></td>
-                             <td><button class="default-button chinese" href = "JavaScript:void(0)" onclick="deletefiles()">删除</button></td>
-                        </tr>
+                        <div class="nav_menu3">
+                            <ul>
+                                <li class='nav-has-sub'>
+                                    <a>
+                                        <span onclick="uploadfile()" class="btn btn-success fileinput-button default-button chinese" href = "JavaScript:void(0)">
+                                        <i class="glyphicon glyphicon-plus"></i>
+                                        <span style='color: white'>上传</span>
+                                        <input id="fileupload" type="file" name="newFile" multiple>
+                                        </span>
+                                    </a>
+                                </li>
+                                <li class='nav-has-sub'>
+                                    <a href = "JavaScript:void(0)" onclick="CreateFolder()">新建文件夹</a>
+                                </li>
+                                <li class='nav-has-sub'>
+                                    <a href = "JavaScript:void(0)" onclick="showTierTable()">迁移</a>
+                                </li>
+                                <li class='nav-has-sub'>
+                                    <a href = "JavaScript:void(0)" onclick="deletefiles()">删除</a>
+                                </li>
+                                <li class='nav-has-sub'>
+                                    <a id="backpath" onclick="returnback()" href = "JavaScript:void(0)">返回</a>
+                                </li>
+                            </ul>
+                        </div>
                     </table>
-                    
-                    <div style="float: left">
+                    <div class="nav_menu3" style="float: left;font-size:16px;color: #eee;">
                          <label id='path' class='folder_path'>当前路径：</label>
                     </div>
-                    <div id="all_path" style="float:left"></div>
+                    <div class="nav_menu3" id="all_path" style="float: left;font-size:16px;color: #eee;"></div>
                 </td>
-
             </tr>
-            <tr> 
-                <div id="backpath" onclick="returnback()" class="">返回
-                </div> 
+            <tr>  
                 <td id="content" colspan="2">
                     <table id="dataTable" class="display" style="width:100%">
                     	<thead>
