@@ -1,9 +1,5 @@
 <?php 
-/* 
-  Get fileinfo of a file and return to files.php.
-  
-  $filepath:Absolute filepath. 
-*/
+
 function getFile($connection, $filepath) {
     $mmlsattr_cmd = "mmlsattr -L '" . $filepath . "'";
     $stat_cmd = "stat -c \"%g,%u,%n,%o,%s,%x,%y,%z\"  '" . $filepath . "'";
@@ -11,7 +7,7 @@ function getFile($connection, $filepath) {
     $exe_mmls_info = ssh2_exec($connection,$mmlsattr_cmd);
     stream_set_blocking($exe_mmls_info, true);
     $stream_mmls_info = stream_get_contents($exe_mmls_info);
-    $stream_mmls_info = str_replace(array("\r\n", "\n"), ",", $stream_mmls_info);
+    $stream_mmls_info=str_replace(array("\r\n", "\n"), ",", $stream_mmls_info);
     $lines = explode(",", $stream_mmls_info);
     $file = array();
     //get fileype from file command
@@ -25,15 +21,15 @@ function getFile($connection, $filepath) {
     foreach ($lines as $line) {
         $tmpArray = explode(":", $line);
         if (isset($tmpArray[0]) && isset($tmpArray[1])) {
-            if ($tmpArray[0] == 'creation time') {
-                $tmp_str = '';
-                $tmp_str .= trim($tmpArray[1]);
-                $tmp_str .= ':';
-                $tmp_str .= trim($tmpArray[2]);
-                $tmp_str .= ':';
-                $tmp_str .= trim($tmpArray[3]);
+            if ($tmpArray[0]=='creation time') {
+                $tmp_str='';
+                $tmp_str.=trim($tmpArray[1]);
+                $tmp_str.=':';
+                $tmp_str.=trim($tmpArray[2]);
+                $tmp_str.=':';
+                $tmp_str.=trim($tmpArray[3]);
                 $file['creation_time'] = date("Y-m-d H:i:s", strtotime($tmp_str));
-            } elseif ($tmpArray[0] == 'file name') {
+            } elseif ($tmpArray[0]== 'file name') {
                 $file['file_path'] = $tmpArray[1];
                 $tmp_folder_path = str_replace("/", ",", trim($tmpArray[1]));
                 $tmp_folder_path = explode(',', $tmp_folder_path);
@@ -46,15 +42,15 @@ function getFile($connection, $filepath) {
                     }
                 }
                 $file['folder_path'] = $tmp_path_str;
-            } elseif ($tmpArray[0] == 'metadata replication') {
+            } elseif ($tmpArray[0]== 'metadata replication') {
                 $file['metadata_replication'] = $tmpArray[1];
-            } elseif ($tmpArray[0] == 'data replication') {
+            } elseif ($tmpArray[0]== 'data replication') {
                 $file['data_replication'] = $tmpArray[1];
-            } elseif ($tmpArray[0] == 'storage pool name') {
+            } elseif ($tmpArray[0]== 'storage pool name') {
                 $file['storage_pool_name'] = $tmpArray[1];
-            } elseif ($tmpArray[0] == 'snapshot name') {
+            } elseif ($tmpArray[0]== 'snapshot name') {
                 $file['snapshot_name'] = $tmpArray[1];
-            }  elseif ($tmpArray[0] == 'Misc attributes') {
+            }  elseif ($tmpArray[0]== 'Misc attributes') {
                 $file['Misc_attributes'] = $tmpArray[1];
             } else {
                 $props[trim($tmpArray[0])] = trim($tmpArray[1]);
@@ -87,7 +83,7 @@ function getFile($connection, $filepath) {
     $props_stat = explode(",", $stream_stat_info);
     $items_stat = array();
     foreach ($props_stat as $key => $value) {
-        $items_stat[$key] = $value;
+        $items_stat[$key]=$value;
     }
     $file['file_group_id'] = $items_stat[0];
     $file['user_id'] = $items_stat[1];
@@ -100,11 +96,6 @@ function getFile($connection, $filepath) {
     return $file;
 }
 
-/* 
-   Get files information in specific dirpath.
-   
-   $dirpath:Absolute path.
-*/
 function listFiles($connection, $dirpath) {
     //query the exist filesets.
     $cmd_ls_files = "ls " . $dirpath;
@@ -128,9 +119,6 @@ function listFiles($connection, $dirpath) {
     return $files;
 }
 
-/*
-   Upload file to dirpath.
-*/
 function postFile($connection, $file, $dirpath) {
     $success = false;
     $filepath = $dirpath . "/" . $file["name"];
@@ -174,7 +162,7 @@ function movePool($connection,$id,$tier,$folder){
     $result['msg'] = 1;
     foreach($id as $key => $value) {
         $filename = $value;
-        $filename = preg_replace('/ /','\ ',$filename);
+        $filename=preg_replace('/ /','\ ',$filename);
         // $tier = $tier;
         $fileset = $folder[0];
         // $user = DB_USER;
@@ -184,18 +172,18 @@ function movePool($connection,$id,$tier,$folder){
         // $connection = ssh2_connect($ip, $port);
         // ssh2_auth_password($connection, $user, $pass);
         $cmd_chpool = "mmchattr -P ";
-        $cmd_chpool .= $tier;
-        $cmd_chpool .= " /demofs/";
-        $cmd_chpool .= $fileset;
-        $cmd_chpool .= "/";
-        $cmd_chpool .= $filename;
+        $cmd_chpool.= $tier;
+        $cmd_chpool.= " /demofs/";
+        $cmd_chpool.= $fileset;
+        $cmd_chpool.= "/";
+        $cmd_chpool.= $filename;
         $exe_chpool = ssh2_exec($connection, $cmd_chpool);
     }
     return $result;
 }
 
 /* 
-Delete files with specfic filepaith
+Delete files with specific filepath
 
 $filepath:Absolute filepath without /demofs/.
 */
@@ -204,9 +192,7 @@ function deleteFiles($connection,$filepath){
     $result['msg'] = 1;
     //Delete cammand
     $cmd_delete = "rm -rf \"/demofs/" . $filepath . "\"";
-
     $exe_delete = ssh2_exec($connection, $cmd_delete);
     return $result;
 }
-
 ?>

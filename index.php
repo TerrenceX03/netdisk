@@ -98,6 +98,7 @@ include 'function/show_list.php';
             <tr>
                 <td colspan="2" id="stat_panel">
                     <div id="more">
+                        <!-- <img src="images/more.jpg" /> -->
                         <div class="stat_line"><img src="images/arrow-up.png" />查看统计信息</div>
                     
                         <div id="statistics">
@@ -113,8 +114,8 @@ include 'function/show_list.php';
                                     <td width="50%">
                                         <div id="logs_td">
                                             <div id="logs">
-                                                <div id="log_title" class="chinese">系统日志</div>
-                                                <div id="log"><br></div>
+                                                <div id='log_title' class="chinese">系统日志</div>
+                                                <div id='log'><br></div>
                                           </div>
                                         </div>
                                     </td>

@@ -1,9 +1,7 @@
 <?php
 include 'common/common.php';
 include 'function/folderOperator.php'; 
-/*
-Function:Get information from function/folderOperator.php and retrun.
-*/
+
 header('Content-type:text/json');
 $user = DB_USER;
 $pass = DB_PWD;
