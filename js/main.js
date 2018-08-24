@@ -3,11 +3,11 @@ $(document).ready(function() {
     main_initStatInfo();
 });
 
-//input the folder name and create the folder added in the table
+/* input the folder name and create the folder added in the table */
 function CreateFolder(){
-    var true_name=prompt("请输入文件夹名字","");
-    var label=document.getElementById("all_path");
-    var true_filepath='/demofs/'+label.innerText+'/';
+    var true_name = prompt("请输入文件夹名字","");
+    var label = document.getElementById("all_path");
+    var true_filepath = '/demofs/' + label.innerText + '/';
     $.ajax({
             url: "folder.php?myaction=CREATE_FOLDER",
             dataType: 'json',
@@ -21,7 +21,7 @@ function CreateFolder(){
             }
     });
     $.ajax({
-        url: "files.php?myaction=GET&filepath=" + true_filepath+true_name,
+        url: "files.php?myaction=GET&filepath=" + true_filepath + true_name,
         dataType: 'json',
         success:function(res){
             var t = $('#dataTable').DataTable();
@@ -38,10 +38,11 @@ function CreateFolder(){
         }
     });
 }
-//add the new uploaded files in table
+
+/* add the new uploaded files in table */
 function uploadfile(){
-    var label=document.getElementById("all_path");
-    var true_filepath=label.innerText;
+    var label = document.getElementById("all_path");
+    var true_filepath = label.innerText;
     $(document).ready(function() {
         $('#fileupload').fileupload({
             url: "files.php?myaction=POST&parent=" + true_filepath,
@@ -142,7 +143,7 @@ function main_formatDataSizeWithUnit(size) {
 function main_initStatInfo() {
     $("#more").css("width", $("#content").outerWidth(true));
     $('#more .stat_line').on('click', function () {
-        if ($("#statistics").css("display")=="block"){
+        if ($("#statistics").css("display") == "block"){
             $("#statistics").css("display", "none");
             $("#more img").attr("src", "images/arrow-up.png");
         } else{

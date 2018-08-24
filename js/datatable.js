@@ -21,8 +21,10 @@ function format ( d ) {
     '</table>';
 }
 
+/* Create new filelist;
+   folderName:Absolute filepath;*/
 function createFileTable ( folderName ) {
-    //add the file information to table and modify the foderName to the correct format.
+    /*add the file information to table and modify the foderName to the correct format.*/
     var elem = document.getElementById('all_path').innerHTML = "";
     var tmp_array = folderName.split('/');
     var new_foldername = '';
@@ -53,13 +55,13 @@ function createFileTable ( folderName ) {
             $('#all_path').append(tmp_str);
         }
     }
-    //create the file information table
+    /* create the file information table */
     var table = $('#dataTable').DataTable();
     var str = "<input type='checkbox' id=" + new_foldername + ">";
     if (table) {
-        // Clear all data under tbody
+        // Clear all data under tbody 
         table.clear(false);
-        // remove the DataTable
+        // remove the DataTable 
         table.destroy();
     }
     table = $('#dataTable').DataTable( {
@@ -73,7 +75,7 @@ function createFileTable ( folderName ) {
         "columnDefs": [
             {
                 "render": function (data, type, row) {
-                return main_formatDataSizeWithUnit(data);
+                    return main_formatDataSizeWithUnit(data);
                 },
                 "targets": 2  // file size column
             }
@@ -102,7 +104,7 @@ function createFileTable ( folderName ) {
     // remove old event (if have) listener for opening and closing details
     $('#dataTable tbody').prop("onclick",null).off("click");
     
-    // Add event listener for opening and closing details
+    /* Add event listener for opening and closing details */
     $('#dataTable tbody').on('click', 'td.datatable-data-col', function () {
         var table = $('#dataTable').DataTable();
         var tr = $(this).closest('tr');
@@ -165,9 +167,9 @@ $(document).ready(function() {
 /*Delete*/
 function deletefiles(){
     var tbodyObj = document.getElementById('dataTable');
+    /* Delete files one by one */
     $("table :checkbox").each(function(key, value) {
         if ($(value).prop('checked')) {
-
             var table = $('#dataTable').DataTable();
             var tr = $(this).closest('tr');
             var row = table.row(tr);
@@ -181,7 +183,6 @@ function deletefiles(){
             //delete the file in information table
             filepath = label.innerText + "/" + tbodyObj.rows[key+1].cells[1].innerHTML;
             tbodyObj.rows[key+1].innerHTML="";
-
             $.ajax({
                 url: "files.php?myaction=DELETE_FILE&filepath=" + filepath,
                 dataType: 'json',                
