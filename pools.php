@@ -1,9 +1,8 @@
 <?php
 include 'common/common.php';
 include 'function/poolOperator.php'; 
-
 /*
-Function:Return the html of files which in specific filesets.
+Function:Get information from function/poolOperator.php and retrun.
 */
 header('Content-type:text/json');
 $user = DB_USER;

@@ -1,9 +1,8 @@
 <?php
 include 'common/common.php';
 include 'function/fileOperator.php'; 
-include 'function/folderOperator.php';
 /*
-Function:Return the html of files which in specific filesets.
+Function:Get information from function/fileOperator.php and retrun.
 */
 header('Content-type:text/json');
 $user = DB_USER;
@@ -18,9 +17,9 @@ if ($_GET["myaction"] == "LIST") { // List a folder
 } elseif ($_GET['myaction'] == "GET") { // Get a file information
 	echo json_encode(getFile($connection, $_GET['filepath']));
 } elseif($_GET['myaction'] == "POST") { // Upload a new file
-	echo json_encode(postFile($connection, $_FILES["newFile"], FS_MOUNT_POINT . "/" . $_GET["parent"]));
-} elseif($_GET['myaction'] == "DELETE_FILE") { // Upload a new file
-	echo json_encode(deleteFiles($connection, $_GET["filepath"]));
+	echo json_encode(postFile($connection, $_FILES["newFile"], FS_MOUNT_POINT . "/" . $_GET['parent']));
+} elseif($_GET['myaction'] == "DELETE_FILE") { // Delete file
+	echo json_encode(deleteFiles($connection, $_GET['filepath']));
 } elseif($_GET['myaction'] == "MOVE_POOL") { // Migration
 	echo json_encode(movePool($connection, $_POST['id'], $_POST['tier'], $_POST['folder']));
 } 

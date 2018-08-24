@@ -1,5 +1,6 @@
-//migrate to other pools.
+/*migrate to other pools.*/
 function gettier() {
+    /*Judge which tier is selected*/
     var radio = document.getElementsByName("tier");
     for (i = 0; i < radio.length; i++) {
         if (radio[i].checked) {
@@ -8,6 +9,8 @@ function gettier() {
     }
     $("#Tiers").remove();
     var input_html = "<input type='checkbox' id=" + TargetTier + ">";
+    
+    /* Judge which files or folders are checked */
     var fileid = new Array();
     var folderid = new Array();
     var tbodyObj = document.getElementById('dataTable');
@@ -15,8 +18,9 @@ function gettier() {
         if ($(value).prop('checked')) {
             fileid.push(tbodyObj.rows[key + 1].cells[1].innerHTML);
             folderid.push($(value).attr('id'));
+            
+            /* Migration action:the time of migration_image is different according to filesize */
             var time = (tbodyObj.rows[key + 1].cells[2].innerHTML / (1024 * 1014)) * 1000
-            //migrated action
             var orignal_checkbox_str = "<input type='checkbox' id=" + folderid[0] + ">"
             var pool_str = "<td class='datatable-data-col'>" + TargetTier + "</td>"
             tbodyObj.rows[key + 1].cells[0].innerHTML = "<img src='images/migration.gif'/><span>migrating</span>";
@@ -52,6 +56,7 @@ function gettier() {
             }
     });
 }
+/* Show tier list which can be selected*/
 function showTierTable() {
     var str = "";
     str += "<div id='Tiers'>"+
@@ -63,6 +68,7 @@ function showTierTable() {
     $('#content').prepend(str);
     document.getElementById('Tiers').style.display = 'block';
 }
+/* Close tier list*/
 function closeDialog() {
     document.getElementById('Tiers').style.display = 'none';
 }
