@@ -153,6 +153,7 @@ function postFile($connection, $file, $dirpath) {
 
         $serverSideFile = getFile($connection, $filepath);
         $tmpfile = array_merge($tmpfile, $serverSideFile);
+        $tmpfile["size"] = $tmpfile["file_size"];
     } else {
         $tmpfile["error"] = "Failed to upload!";
     }

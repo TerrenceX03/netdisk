@@ -73,7 +73,7 @@ function createFileTable ( folderName ) {
         "columnDefs": [
             {
                 "render": function (data, type, row) {
-                return main_formatDataSizeWithUnit(data);
+                    return main_formatDataSizeWithUnit(data);
                 },
                 "targets": 2  // file size column
             }
@@ -107,26 +107,28 @@ function createFileTable ( folderName ) {
         var table = $('#dataTable').DataTable();
         var tr = $(this).closest('tr');
         var row = table.row(tr);
+
         //Only directory can be opened again
         if (row.data().filetype == "directory"){
-            var folder = row.data().file_path.substr(20);
-            createFileTable (folder);
-            var backfolder = folder.split("/");
-            backfolder.pop();
-            backfolder = backfolder.join('/');
+            var folderAbsolutePath = main_trim(row.data().file_path);
+            var folders = folderAbsolutePath.substr(1).split("/"); // remove the first '/'
+            folders.shift(); // remove the first element from Array, which is the storage pool name.
+            var folderRelativePath = folders.join("/");
+            createFileTable (folderRelativePath);
+            folders.pop(); // remove the last element from Array, which is current folder name.
+            backfolder = folders.join('/');
+
             //set classname for return button.
             $('#backpath').attr("class", backfolder);
             $("#navbar li.openfolder").removeClass("openfolder");
-        }
-        //Click to show more information
-        if ( row.child.isShown() ) {
-            // This row is already open - close it
-            row.child.hide();
-            tr.removeClass('shown');
         } else {
-            // Open this row
-            row.child(format(row.data()) ).show();
-            tr.addClass('shown');
+            if ( row.child.isShown() ) {
+                row.child.hide();
+                tr.removeClass('shown');
+            } else {
+                row.child(format(row.data()) ).show();
+                tr.addClass('shown');
+            }
         }
     } );
 }

@@ -153,3 +153,7 @@ function main_initStatInfo() {
         }
     } );
 }
+
+function main_trim( string ) {
+    return string.replace(/(^\s*)|(\s*$)/g, "");
+}
