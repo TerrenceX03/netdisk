@@ -4,7 +4,7 @@ include 'function/mysqlFunc.php';
 include 'function/show_list.php';
 ?>
 <!DOCTYPE html>
-<html>
+<html style="height:100%">
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -27,8 +27,8 @@ include 'function/show_list.php';
         <link rel="stylesheet" type="text/css" href="js/jQuery-File-Upload/css/jquery.fileupload.css"/>
         <link rel="stylesheet" type="text/css" href="js/jQuery-File-Upload/css/jquery.fileupload-ui.css"/>
     </head>
-    <body>
-        <table border= "0" width= "100%">
+    <body style="height:100%">
+        <table border= "0" width= "100%" style="height:100%">
             <tr id="header">
                 <th colspan="3">
                     <img id="gpfslogo" src="images/GPFSlogo.png">
