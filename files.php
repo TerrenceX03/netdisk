@@ -20,7 +20,7 @@ if ($_GET["myaction"] == "LIST") { // List a folder
 	echo json_encode(postFile($connection, $_FILES["newFile"], FS_MOUNT_POINT . "/" . $_GET['parent']));
 } elseif($_GET['myaction'] == "DELETE_FILE") { // Delete file
 	echo json_encode(deleteFiles($connection, $_GET['filepath']));
-} elseif($_GET['myaction'] == "MOVE_POOL") { // Migration
-	echo json_encode(movePool($connection, $_POST['id'], $_POST['tier'], $_POST['folder']));
+} elseif($_GET['myaction'] == "MIGRATE") { // Migration
+	echo json_encode(migrate($connection, json_decode($_POST['files']), $_POST['target']));
 } 
 ?> 

@@ -47,15 +47,15 @@ function getFile($connection, $filepath) {
                 }
                 $file['folder_path'] = $tmp_path_str;
             } elseif ($tmpArray[0] == 'metadata replication') {
-                $file['metadata_replication'] = $tmpArray[1];
+                $file['metadata_replication'] = trim($tmpArray[1]);
             } elseif ($tmpArray[0] == 'data replication') {
-                $file['data_replication'] = $tmpArray[1];
+                $file['data_replication'] = trim($tmpArray[1]);
             } elseif ($tmpArray[0] == 'storage pool name') {
-                $file['storage_pool_name'] = $tmpArray[1];
+                $file['storage_pool_name'] = trim($tmpArray[1]);
             } elseif ($tmpArray[0] == 'snapshot name') {
-                $file['snapshot_name'] = $tmpArray[1];
+                $file['snapshot_name'] =trim($tmpArray[1]);
             }  elseif ($tmpArray[0] == 'Misc attributes') {
-                $file['Misc_attributes'] = $tmpArray[1];
+                $file['Misc_attributes'] = trim($tmpArray[1]);
             } else {
                 $props[trim($tmpArray[0])] = trim($tmpArray[1]);
             }
@@ -96,6 +96,7 @@ function getFile($connection, $filepath) {
     $file['L_vist_time'] = date("Y-m-d H:i:s", strtotime($items_stat[5]));
     $file['L_mod_time'] = date("Y-m-d H:i:s", strtotime(explode(".",$items_stat[6])[0]));
     $file['F_chan_time'] = date("Y-m-d H:i:s", strtotime($items_stat[7]));
+    $file["action"] = "GET";
 
     return $file;
 }
@@ -142,6 +143,7 @@ function postFile($connection, $file, $dirpath) {
     $result = array();
     $result["files"] = array();
     $tmpfile = array();
+    $tmpfile["action"] = "POST";
     $tmpfile["name"] = $file["name"];
     $tmpfile["size"] = $file["size"];
     
@@ -166,20 +168,28 @@ function postFile($connection, $file, $dirpath) {
 /* 
 Modify the storage tier of the file with the specified ID
 
-$id：An array,it contains IDs of the files to be modified
+$files：An array,it contains filepath of the files to be migrated
 
-$tier：The storage tier where files will be moved in.
+$target:  storage pool where files will be migrated to.
 */
-function movePool($connection,$id,$tier,$folder){
+function migrate($connection, $files, $target){
     $result = array();
-    $result['msg'] = 1;
-    foreach($id as $key => $value) {
-        $filename = $value;
-        $filename = preg_replace('/ /','\ ',$filename);
-        $fileset = $folder[0];
-        $cmd_chpool = "mmchattr -P " . $tier . " " . FS_MOUNT_POINT . "/" . $fileset . "/" . $filename;
-        $exe_chpool = ssh2_exec($connection, $cmd_chpool);
+
+    foreach($files as $key => $filepath) {
+        $ret_migrate = ssh2_exec($connection, "mmchattr -P " . $target . " " . $filepath);
+        stream_set_blocking($ret_migrate, true);
+        $ans_migrate = stream_get_contents($ret_migrate);
+        $file = array();
+        if (trim($ans_migrate) == "") {
+            $file["result"] = 1;    
+        } else {
+            $file["result"] = 0;
+            $file["error"] = trim($ans_migrate);
+        }
+        
+        array_push($result, $file);
     }
+
     return $result;
 }
 

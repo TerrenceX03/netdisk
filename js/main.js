@@ -1,6 +1,6 @@
 $(document).ready(function() {
-    GenerateProgressBar();
-    main_initStatInfo();
+    generateProgressBar();
+    initStatInfo();
 });
 
 /* input the folder name and create the folder added in the table */
@@ -86,18 +86,20 @@ tier:COS,GPFS,etc..
 barID:The ID of progressbar
 labelClass:Html sign for class
 */
-function GenerateProgressBar() {
+function generateProgressBar() {
     $.ajax({
         url: "pools.php",
         method: 'GET',
         success: function(res) {
+            $("#stat_progressbar_content tbody").empty();
+
             $.each(res ,function(i, pool) {
                 var poolName = pool["name"];
                 var totaldatasize = pool["totaldatasize"];
                 var freedatasize = pool["freedatasize"];
                 var userdatapercentage = 100 - pool["freedatapercentage"];
 
-                $("#stat_progressbar_content").append(
+                $("#stat_progressbar_content tbody").append(
                     "<tr><td class='stat_progressbar-name english' colspan='2'><label class='left'>" + poolName.toUpperCase() + "</label><label class='right'>FREE: " + main_formatDataSizeWithUnit(freedatasize) + "</label></td></tr>"
                     + "<tr><td class='stat_progressbar-row'><div id='stat_progressbar-" + poolName + "'></div></td><td class='stat_progressbar-label english'><div>" + userdatapercentage + "%</div></td></tr>"
                     + "<tr><td class='stat_progressbar-name english bottom' colspan='2'><label class='left'>USED: " + main_formatDataSizeWithUnit(totaldatasize - freedatasize) + "</label><label class='right'>CAPACITY: " + main_formatDataSizeWithUnit(totaldatasize) + "</label></td></tr>"
@@ -107,18 +109,151 @@ function GenerateProgressBar() {
                     value: userdatapercentage
                 });
 
-                if (userdatapercentage < 60) {
-                    $("#stat_progressbar_content .ui-widget-header").css({
-                        'background': 'green'
-                    });
-                } else {
-                    $("#stat_progressbar_content .ui-widget-header").css({
-                        'background': 'yellow'
-                    });
+                var backgroundColor = "green";
+                if (userdatapercentage > 50 && userdatapercentage <= 90) {
+                    backgroundColor = "yellow";
+                } else if (userdatapercentage > 90) {
+                    backgroundColor = "red";
                 }
+                $("#stat_progressbar-" + poolName + " .ui-widget-header").css({
+                    'background': backgroundColor
+                });
             });
         }
     })
+}
+
+function main_generateMigrationDialog() {
+    var table = $("#dataTable").DataTable();
+    var checkedLines = $("#dataTable input[type=checkbox]:checked");
+
+    if (checkedLines.length == 0) {
+        $("#migration-dialog p.selectedFiles").append("You must select at least one file!");
+
+        var dialog = $("#migration-dialog").dialog({
+            resizable: false,
+            height: "auto",
+            width: 400,
+            modal: true,
+            buttons: {
+                "OK": function() {
+                    $("#migration-dialog p").empty();
+                    $("#migration-dialog ul").empty();
+                    $(this).dialog("destroy");
+                }
+            }
+        });
+    } else {
+        var files = new Array();
+        files["pool"] = new Array();
+
+        $.each(checkedLines, function (i, line) {
+            var tr = $(line).closest('tr');
+            var row = table.row(tr);
+            var poolName = row.data().storage_pool_name;
+            var filePath = row.data().file_path;
+
+            if (!files[poolName]) {
+                files[poolName] =  new Array();
+                files[poolName + "_tr"] = new Array();
+                files["pool"].push(poolName);
+            }
+
+            files[poolName].push(main_trim(filePath));
+            files[poolName + "_tr"].push(tr);
+        });
+
+        $("#migration-dialog p.selectedFiles").append("You have selected ");
+        $.each(files["pool"], function (j, poolName) {
+            $("#migration-dialog p.selectedFiles").append(files[poolName].length + " files in pool " + poolName + ", ");
+        });
+        $("#migration-dialog p.selectedFiles").append("please select target pool:");
+
+        $.ajax({
+            url: "pools.php",
+            method: 'GET',
+            success: function(res) {
+                $.each(res ,function(i, pool) {
+                    var poolName = pool["name"];
+                    $("#migration-dialog ul").append("<li><label><input type='radio' name='targetPool' value='" + poolName + "' />" + poolName + "</label></li>");
+                });
+
+                var dialog = $("#migration-dialog").dialog({
+                    resizable: false,
+                    height: "auto",
+                    width: 400,
+                    modal: true,
+                    buttons: {
+                        "Migrate": function() {
+                            var selectedTarget = $("#migration-dialog input[type=radio]:checked");
+
+                            if (selectedTarget.length == 0) {
+                                $("#migration-dialog p.message").append("Please select your target pool!");
+                            } else {
+                                var target = selectedTarget[0].value;
+                                var filepaths = new Array();
+                                var trs = new Array();
+
+                                $.each(files["pool"], function (j, poolName) {
+                                    if (poolName != target) {
+                                        filepaths = filepaths.concat(files[poolName]);
+                                        trs = trs.concat(files[poolName + "_tr"]);
+                                    }
+                                });
+
+                                $.each(trs, function (i, r) {
+                                    $(r).children(".pool-col").append("&nbsp;&nbsp;<img src='images/arrow-migrate2.gif' style='height:12px' />&nbsp;&nbsp;<label style='color:green'>" + target.toUpperCase() + "</label>");
+                                    $(r).find("input[type=checkbox]").prop("disabled", true);
+                                });
+
+                                $("#migration-dialog p").empty();
+                                $("#migration-dialog ul").empty();
+                                $(this).dialog("destroy");
+
+                                $.ajax({
+                                    url: "files.php?myaction=MIGRATE",
+                                    dataType: 'json',
+                                    data: {
+                                        files: JSON.stringify(filepaths),
+                                        target: target
+                                    },
+                                    method: 'POST',
+                                    success: function(res) {
+                                        $.each(res, function(i, j) {
+                                            var tmp = $(trs[i]).children(".pool-col");
+                                            var tmp2 = $(trs[i]).find("input[type=checkbox]");
+                                            var tmp3 = table.row(trs[i]);
+                                            tmp.empty();
+                                            tmp2.prop("checked", false);
+                                            tmp2.prop("disabled", false);
+
+                                            if (j.result == 1) { // migrate sucessfully
+                                                tmp.append("<label style='color:green'>" + target.toUpperCase() + "</label>");
+                                                $("#log").append("<span>" + tmp3.data().filename + " has been migrated to " + target + " pool.</span><br/>");
+                                            } else {
+                                                tmp.append("<label style='color:green'>" + trs[i].data().storage_pool_name + "</label>");
+                                                $("#log").append("<span>" + tmp3.data().filename + " hasn't been migrated to " + target + " pool with error.</span><br/>");
+                                                alert(tmp3.data().filename + " migrated failed, because of " + j.error);
+                                            }
+                                        });
+
+                                        // $("#log").append("<span style='color:rgba(25, 25, 112, 1)'>" +"&nbsp"+"&nbsp"+"&nbsp"+"&nbsp"+fileid+ "</span><b> has been changed to <b><span style='color:rgba(25, 25, 112, 1)'>" +TargetTier+ ";"+"</span><br/>");
+                                        // $(".stat_progressbar-row").remove();
+                                        generateProgressBar();
+                                    }
+                                });
+                            }
+                        },
+                        Cancel: function() {
+                            $("#migration-dialog p").empty();
+                            $("#migration-dialog ul").empty();
+                            $(this).dialog("destroy");
+                        }
+                    }
+                });
+            }
+        })
+    }
 }
 
 /*
@@ -127,7 +262,9 @@ function GenerateProgressBar() {
 */
 function main_formatDataSizeWithUnit(size) {
     var result;
-    if (size >= 1024 && size < 1024 * 1024) {
+    if (size <= 0) {
+        result = size + "KB";
+    } else if (size >= 1024 && size < 1024 * 1024) {
         result = (size / 1024).toFixed(2) + "MB";
     } else if (size >= 1024 * 1024 && size < 1024 * 1024 * 1024) {
         result = (size / 1024 / 1024).toFixed(2) + "GB";
@@ -140,7 +277,7 @@ function main_formatDataSizeWithUnit(size) {
     return result;
 }
 
-function main_initStatInfo() {
+function initStatInfo() {
     $("#more").css("width", $("#content").outerWidth(true));
     $('#more .stat_line').on('click', function () {
         if ($("#statistics").css("display") == "block"){

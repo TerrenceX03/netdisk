@@ -76,6 +76,12 @@ function createFileTable ( folderName ) {
                     return main_formatDataSizeWithUnit(data);
                 },
                 "targets": 2  // file size column
+            },
+            {
+                "render": function (data, type, row) {
+                    return "<label style='color:green'>" + data.toUpperCase() + "</label>";
+                },
+                "targets": 5
             }
         ],
         "columns": [
@@ -90,9 +96,9 @@ function createFileTable ( folderName ) {
             { "data": "file_size", "className": "datatable-data-col" },
             { "data": "creation_time", "className": "datatable-data-col" },
             { "data": "L_mod_time", "className": "datatable-data-col" },
-            { "data": "storage_pool_name", "className": "datatable-data-col" }
+            { "data": "storage_pool_name", "className": "datatable-data-col pool-col" }
         ],
-        "order": [[1, 'asc']],
+        "order": [[3, 'desc']],
         // "scrollY":        '65vh', // KEEP THE COMMENTS HERE!
         // "scrollCollapse": true,   // KEEP THIS LINE HERE!
         "paging":         true,

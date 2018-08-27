@@ -17,11 +17,11 @@ include 'function/show_list.php';
         <script type="text/javascript" src="js/click_event_for_tier.js"></script>
         <script type="text/javascript" src="js/DataTables/datatables.js"></script>
         <script type="text/javascript" src="js/datatable.js"></script>
-        <script type="text/javascript" src="js/jQuery/jquery-ui.js"></script>
+        <script type="text/javascript" src="js/jquery-ui-1.12.1/jquery-ui.js"></script>
         <script type="text/javascript" src="js/jQuery-File-Upload/js/jquery.fileupload.js"></script>
         <script type="text/javascript" src="js/jQuery-File-Upload/js/jquery.iframe-transport.js"></script>
 
-        <link rel="stylesheet" href="css/jquery-ui.css">
+        <link rel="stylesheet" href="js/jquery-ui-1.12.1/jquery-ui.css">
         <link rel="stylesheet" href="css/styleui.css">
         <link rel="stylesheet" type="text/css" href="js/DataTables/datatables.css"/>
         <link rel="stylesheet" type="text/css" href="js/jQuery-File-Upload/css/jquery.fileupload.css"/>
@@ -62,7 +62,7 @@ include 'function/show_list.php';
                                     <a href = "JavaScript:void(0)" onclick="CreateFolder()">新建文件夹</a>
                                 </li>
                                 <li class='nav-has-sub'>
-                                    <a href = "JavaScript:void(0)" onclick="showTierTable()">迁移</a>
+                                    <a href = "JavaScript:void(0)" onclick="main_generateMigrationDialog()">迁移</a>
                                 </li>
                                 <li class='nav-has-sub'>
                                     <a href = "JavaScript:void(0)" onclick="deletefiles()">删除</a>
@@ -107,7 +107,10 @@ include 'function/show_list.php';
                                     <td width="50%">
                                         <div id="stat_progressbar">
                                             <table id="stat_progressbar_content" width="100%">
-                                                <tr><td colspan="3" class="stat_title chinese">资源池统计</td></tr>
+                                                <thead>
+                                                    <tr><td colspan="3" class="stat_title chinese">资源池统计</td></tr>
+                                                </thead>
+                                                <tbody></tbody>
                                             </table>
                                         </div>
                                     </td>
@@ -126,6 +129,14 @@ include 'function/show_list.php';
                 </td>
             </tr>
         </table>
+
+        <div id="migration-dialog" title="Migration..." style="display: none">
+            <p>Migrate your selected file(s) to another storage pool</p>
+            <p class="selectedFiles"></p>
+            <ul></ul>
+            <p class="message"></p>
+        </div>
+
         <script type="text/javascript" src="js/main.js"></script>
         <script type="text/javascript">
             function back(folder) {
