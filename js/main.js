@@ -278,13 +278,13 @@ function main_formatDataSizeWithUnit(size) {
 }
 
 function initStatInfo() {
-    $("#more").css("width", $("#content").outerWidth(true));
+    // $("#more").css("width", $("#content").outerWidth(true));
     $('#more .stat_line').on('click', function () {
         if ($("#statistics").css("display") == "block"){
             $("#statistics").css("display", "none");
             $("#more img").attr("src", "images/arrow-up.png");
         } else{
-            $("#more").css("width", $("#content").outerWidth(true));
+            // $("#more").css("width", $("#content").outerWidth(true));
             $("#more img").attr("src", "images/arrow-down.png");
             $("#statistics").css("display", "block");
         }

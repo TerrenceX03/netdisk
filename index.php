@@ -14,7 +14,6 @@ include 'function/show_list.php';
 
         <script type="text/javascript" src="js/jQuery/jquery-3.3.1.min.js"></script>
         <script type="text/javascript" src="js/jQuery/jquery.form.min.js"></script>
-        <script type="text/javascript" src="js/click_event_for_tier.js"></script>
         <script type="text/javascript" src="js/DataTables/datatables.js"></script>
         <script type="text/javascript" src="js/datatable.js"></script>
         <script type="text/javascript" src="js/jquery-ui-1.12.1/jquery-ui.js"></script>
@@ -46,37 +45,31 @@ include 'function/show_list.php';
                     ?>
                 </td>
                 <td id="opbar" colspan="2" height="50px">
-                    <table>
-                        <div class="nav_menu3">
-                            <ul>
-                                <li class='nav-has-sub'>
-                                    <a>
-                                        <span onclick="uploadfile()" class="btn btn-success fileinput-button default-button chinese" href = "JavaScript:void(0)">
+                    <div>
+                        <ul>
+                            <li class="uploadbtn">
+                                <a>
+                                    <span onclick="uploadfile()" class="btn btn-success fileinput-button default-button chinese" href = "JavaScript:void(0)">
                                         <i class="glyphicon glyphicon-plus"></i>
-                                        <span style='color: white'>上传</span>
+                                        <span>上传</span>
                                         <input id="fileupload" type="file" name="newFile" multiple>
-                                        </span>
-                                    </a>
-                                </li>
-                                <li class='nav-has-sub'>
-                                    <a href = "JavaScript:void(0)" onclick="CreateFolder()">新建文件夹</a>
-                                </li>
-                                <li class='nav-has-sub'>
-                                    <a href = "JavaScript:void(0)" onclick="main_generateMigrationDialog()">迁移</a>
-                                </li>
-                                <li class='nav-has-sub'>
-                                    <a href = "JavaScript:void(0)" onclick="deletefiles()">删除</a>
-                                </li>
-                                <li class='nav-has-sub'>
-                                    <a id="backpath" onclick="returnback()" href = "JavaScript:void(0)">返回</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </table>
-                    <div class="nav_menu3" style="float: left;font-size:16px;color: #eee;">
-                         <label id='path' class='folder_path'>当前路径：</label>
+                                    </span>
+                                </a>
+                            </li>
+                            <li><a href = "JavaScript:void(0)" onclick="CreateFolder()">新建文件夹</a></li>
+                            <li><a href = "JavaScript:void(0)" onclick="main_generateMigrationDialog()">迁移</a></li>
+                            <li><a href = "JavaScript:void(0)" onclick="deletefiles()">删除</a></li>
+                            <li><a id="backpath" onclick="returnback()" href = "JavaScript:void(0)">返回</a></li>
+                        </ul>
                     </div>
-                    <div class="nav_menu3" id="all_path" style="float: left;font-size:16px;color: #eee;"></div>
+                </td>
+            </tr>
+            <tr>
+                <td id="returnpath" colspan="2">
+                    <div class="returnlabel">
+                         <label id='path' class='chinese'>当前路径：</label>
+                    </div>
+                    <div class="fullpath chinese" id="all_path"></div>
                 </td>
             </tr>
             <tr>  
@@ -95,40 +88,37 @@ include 'function/show_list.php';
                     </table>
                 </td>   
             </tr>
-            <tr>
-                <td colspan="2" id="stat_panel">
-                    <div id="more">
-                        <!-- <img src="images/more.jpg" /> -->
-                        <div class="stat_line"><img src="images/arrow-up.png" />查看统计信息</div>
-                    
-                        <div id="statistics">
-                            <table width="100%">
-                                <tr>
-                                    <td width="50%">
-                                        <div id="stat_progressbar">
-                                            <table id="stat_progressbar_content" width="100%">
-                                                <thead>
-                                                    <tr><td colspan="3" class="stat_title chinese">资源池统计</td></tr>
-                                                </thead>
-                                                <tbody></tbody>
-                                            </table>
-                                        </div>
-                                    </td>
-                                    <td width="50%">
-                                        <div id="logs_td">
-                                            <div id="logs">
-                                                <div id='log_title' class="chinese">系统日志</div>
-                                                <div id='log'><br></div>
-                                          </div>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </td>
-            </tr>
         </table>
+
+        <div colspan="2" id="stat_panel">
+            <div id="more">
+                <div class="stat_line"><img src="images/arrow-up.png" />查看统计信息</div>
+                <div id="statistics">
+                    <table width="100%">
+                        <tr>
+                            <td width="50%">
+                                <div id="stat_progressbar">
+                                    <table id="stat_progressbar_content" width="100%">
+                                        <thead>
+                                            <tr><td colspan="3" class="stat_title chinese">资源池统计</td></tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </td>
+                            <td width="50%">
+                                <div id="logs_td">
+                                    <div id="logs">
+                                        <div id='log_title' class="chinese">系统日志</div>
+                                        <div id='log'><br></div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
 
         <div id="migration-dialog" title="Migration..." style="display: none">
             <p>Migrate your selected file(s) to another storage pool</p>

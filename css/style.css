@@ -84,12 +84,60 @@
 #opbar {
 	background-color: white;
 	padding: 3px 10px;
+	position: relative;
 }
 
+#opbar li {
+	float: left;
+	margin-right: 5px;
+}
+
+#opbar li a {
+	text-align: center;
+	vertical-align: middle;
+	border-radius: 5px;
+	padding: 8px 10px;
+	background: #0074E8;
+	cursor: pointer;
+	border: 1px solid #FFF;
+}
+
+#opbar li a:hover {
+	background: #FFF;
+	border: 1px solid #0074E8;
+}
+
+#opbar li a, #opbar li a span {
+	color: #FFF;
+}
+
+#opbar li a:hover, #opbar li a:hover span {
+	color: #0074E8;
+}
+
+#opbar li.uploadbtn a span.btn {
+	height: 15px;
+	width: 50px;
+}
+
+/* Return Path*/
+#returnpath {
+	height: 15px;
+	padding: 0 0 30px 15px;
+}
+
+#returnpath .returnlabel {
+	float: left;
+}
+
+#returnpath .fullpath {
+	float: left;
+}
 
 /* Content */
 #content {
 	padding: 0 15px;
+	vertical-align: top;
 }
 
 .datatable-data-col {
@@ -111,6 +159,7 @@
 	position: absolute;
 	bottom: 0;
 	z-index: 1;
+	width: 100%;
 }
 
 #more .stat_line {
@@ -431,7 +480,10 @@ input[type=radio] {
 }
 
 /*navigation bar*/
-.nav_menu3,
+
+
+
+/*.nav_menu3,
 .nav_menu3 ul,
 .nav_menu3 ul li,
 .nav_menu3 ul li a,
@@ -656,3 +708,4 @@ input[type=radio] {
 .nav_menu3 ul ul li.nav-has-sub:hover > a::after {
 	border-color: #990B2C;
 }
+*/
