@@ -10,7 +10,6 @@ include 'function/show_list.php';
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <title>Demo</title>
         <link rel="stylesheet" href="css/base.css">
-        <link rel="stylesheet" href="css/style.css">
 
         <script type="text/javascript" src="js/jQuery/jquery-3.3.1.min.js"></script>
         <script type="text/javascript" src="js/jQuery/jquery.form.min.js"></script>
@@ -26,6 +25,7 @@ include 'function/show_list.php';
         <link rel="stylesheet" type="text/css" href="js/DataTables/datatables.css"/>
         <link rel="stylesheet" type="text/css" href="js/jQuery-File-Upload/css/jquery.fileupload.css"/>
         <link rel="stylesheet" type="text/css" href="js/jQuery-File-Upload/css/jquery.fileupload-ui.css"/>
+        <link rel="stylesheet" href="css/style.css">
     </head>
     <body style="height:100%">
         <table border= "0" width= "100%" style="height:100%">
@@ -33,7 +33,6 @@ include 'function/show_list.php';
                 <th colspan="3">
                     <img id="gpfslogo" src="images/GPFSlogo.png">
                     <div id="title" class="english">IBM Spectrum Scale</div>
-                    <div id="subtitle" class="chinese">针对云计算、大数据、分析、对象等的高级非结构化数据存储管理解决方案</div>
                 </th> 
             </tr>
             <tr>

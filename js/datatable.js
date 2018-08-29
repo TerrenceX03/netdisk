@@ -1,24 +1,20 @@
 /* Formatting function for row details - modify as you need */
 function format ( d ) {
     // `d` is the original data object for the row
-    return '<table id="more_fileinfo" cellpadding="5" cellspacing="0" border="0" style="margin-left:50px;">'+
-        '<tr>'+
-            '<td>file path:</td>'+
-            '<td>'+d.file_path+'</td>'+
-        '</tr>'+
-        '<tr>'+
-            '<td>folder path:</td>'+
-            '<td>'+d.folder_path+'</td>'+
-        '</tr>'+
-        '<tr>'+
-            '<td>filetype:</td>'+
-            '<td>'+d.filetype+'</td>'+
-        '</tr>'+
-        '<tr>'+
-            '<td>Extra info:</td>'+
-            '<td>And any further details here (images etc)...</td>'+
-        '</tr>'+
-    '</table>';
+    return '<ul id=\"more_fileinfo\">'+
+        '<li>'+
+            '<p class=\"fileinfo_label\">文件路径:</p>'+
+            '<p class=\"fileinfo_value\">'+d.file_path+'</p>'+
+        '</li>'+
+        '<li>'+
+            '<p class=\"fileinfo_label\">元数据副本数:</p>'+
+            '<p class=\"fileinfo_value\">'+d.metadata_replication+'</p>'+
+        '</li>'+
+        '<li>'+
+            '<p class=\"fileinfo_label\">数据副本数:</p>'+
+            '<p class=\"fileinfo_value\">'+d.data_replication+'</p>'+
+        '</li>'
+    '</ul>';
 }
 
 function createFileTable ( folderName ) {
@@ -113,7 +109,7 @@ function createFileTable ( folderName ) {
                 "className":      'datatable-checkbox',
                 "orderable":      false,
                 "data":           null,
-                "defaultContent": "<input type='checkbox' id=" + new_foldername + ">",
+                "defaultContent": "<input type='checkbox' />",
                 "width": "2%"
             },
             { "data": "filename", "className": "datatable-data-col" },
@@ -142,12 +138,12 @@ function createFileTable ( folderName ) {
         },
         "orderFixed": [ 6, 'asc' ],
         "order": [3, 'desc'],
-        // "scrollY":        '65vh', // KEEP THE COMMENTS HERE!
-        // "scrollCollapse": true,   // KEEP THIS LINE HERE!
-        "paging":         true,
-        "lengthChange":   false,
-        "pagingType":     "first_last_numbers",
-        "pageLength":     15,
+        "scrollY":        '65vh', // KEEP THE COMMENTS HERE!
+        "scrollCollapse": true,   // KEEP THIS LINE HERE!
+        "paging":         false,
+        // "lengthChange":   false,
+        // "pagingType":     "first_last_numbers",
+        // "pageLength":     15,
         "destroy":        true
     } );
 
