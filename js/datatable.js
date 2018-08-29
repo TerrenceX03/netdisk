@@ -1,7 +1,7 @@
 /* Formatting function for row details - modify as you need */
 function format ( d ) {
     // `d` is the original data object for the row
-    return '<table id="more_fileinfo" cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'+
+    return '<table id="more_fileinfo" cellpadding="5" cellspacing="0" border="0" style="margin-left:50px;">'+
         '<tr>'+
             '<td>file path:</td>'+
             '<td>'+d.file_path+'</td>'+
@@ -55,13 +55,17 @@ function createFileTable ( folderName ) {
     }
     //create the file information table
     var table = $('#dataTable').DataTable();
-    var str = "<input type='checkbox' id=" + new_foldername + ">";
     if (table) {
         // Clear all data under tbody
         table.clear(false);
         // remove the DataTable
         table.destroy();
     }
+
+    var folderType = $.fn.dataTable.absoluteOrder( [
+        { value: 'directory', position: 'top' }
+    ] );
+
     table = $('#dataTable').DataTable( {
         "ajax": {
             "url":'files.php?myaction=LIST',
@@ -73,7 +77,21 @@ function createFileTable ( folderName ) {
         "columnDefs": [
             {
                 "render": function (data, type, row) {
-                    return main_formatDataSizeWithUnit(data);
+                    if (row.type == "directory") {
+                        return "<img class='data-icon' src='images/folder-min.png' /><span class='data-label'>" + data + "</span>";
+                    } else {
+                        return data;
+                    }
+                },
+                "targets": 1  // file size column
+            },
+            {
+                "render": function (data, type, row) {
+                    if (row.type == "directory") {
+                        return " - ";
+                    } else {
+                        return main_formatDataSizeWithUnit(data);
+                    }
                 },
                 "targets": 2  // file size column
             },
@@ -82,6 +100,12 @@ function createFileTable ( folderName ) {
                     return "<label style='color:green'>" + data.toUpperCase() + "</label>";
                 },
                 "targets": 5
+            },
+            {
+                "type": folderType,
+                "visible": false,
+                "searchable": false,
+                "targets": 6
             }
         ],
         "columns": [
@@ -89,14 +113,15 @@ function createFileTable ( folderName ) {
                 "className":      'datatable-checkbox',
                 "orderable":      false,
                 "data":           null,
-                "defaultContent": str,
+                "defaultContent": "<input type='checkbox' id=" + new_foldername + ">",
                 "width": "2%"
             },
             { "data": "filename", "className": "datatable-data-col" },
             { "data": "file_size", "className": "datatable-data-col" },
             { "data": "creation_time", "className": "datatable-data-col" },
             { "data": "L_mod_time", "className": "datatable-data-col" },
-            { "data": "storage_pool_name", "className": "datatable-data-col pool-col" }
+            { "data": "storage_pool_name", "className": "datatable-data-col pool-col" },
+            { "data": "type", "className": "datatable-data-col" }
         ],
         initComplete: function () {
             this.api().columns([5]).every( function () {
@@ -115,13 +140,19 @@ function createFileTable ( folderName ) {
                 } );
             } );
         },
-        "order": [[3, 'desc']],
+        "orderFixed": [ 6, 'asc' ],
+        "order": [3, 'desc'],
         // "scrollY":        '65vh', // KEEP THE COMMENTS HERE!
         // "scrollCollapse": true,   // KEEP THIS LINE HERE!
         "paging":         true,
+        "lengthChange":   false,
+        "pagingType":     "first_last_numbers",
+        "pageLength":     15,
         "destroy":        true
     } );
-    
+
+    $('#dataTable th.datatable-checkbox').prop("onclick",null).off("click");
+
     // remove old event (if have) listener for opening and closing details
     $('#dataTable tbody').prop("onclick",null).off("click");
     

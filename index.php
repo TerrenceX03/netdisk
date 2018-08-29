@@ -15,6 +15,7 @@ include 'function/show_list.php';
         <script type="text/javascript" src="js/jQuery/jquery-3.3.1.min.js"></script>
         <script type="text/javascript" src="js/jQuery/jquery.form.min.js"></script>
         <script type="text/javascript" src="js/DataTables/datatables.js"></script>
+        <script type="text/javascript" src="js/DataTables/absolute.js"></script>
         <script type="text/javascript" src="js/datatable.js"></script>
         <script type="text/javascript" src="js/jquery-ui-1.12.1/jquery-ui.js"></script>
         <script type="text/javascript" src="js/jQuery-File-Upload/js/jquery.fileupload.js"></script>
@@ -75,15 +76,16 @@ include 'function/show_list.php';
             </tr>
             <tr>  
                 <td id="content" colspan="2">
-                    <table id="dataTable" class="display" style="width:100%">
+                    <table id="dataTable" class="hover row-border" style="width:100%">
                     	<thead>
                             <tr>
-                                <th class="chinese"></th>
+                                <th class="chinese" style="background: none"></th>
                                 <th class="chinese">文件名</th>
                                 <th class="chinese">文件大小</th>
                                 <th class="chinese">创建时间</th>
                                 <th class="chinese">修改时间</th>
                                 <th class="chinese">存储池</th>
+                                <th class="chinese">类型</th>
                             </tr>
                         </thead>
                     </table>

@@ -33,7 +33,8 @@ function CreateFolder(){
                     "storage_pool_name": res.storage_pool_name,
                     "file_path":res.file_path,
                     "folder_path":res.folder_path,
-                    "filetype":res.filetype
+                    "filetype":res.filetype,
+                    "type":res.type
                 }).draw(false);
         }
     });
@@ -58,7 +59,8 @@ function uploadfile(){
                         "storage_pool_name": file.storage_pool_name,
                         "file_path":file.file_path,
                         "folder_path":file.folder_path,
-                        "filetype":file.filetype
+                        "filetype":file.filetype,
+                        "type":file.type
                     }).draw(false);
                 });
             },

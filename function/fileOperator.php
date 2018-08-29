@@ -6,7 +6,7 @@
 */
 function getFile($connection, $filepath) {
     $mmlsattr_cmd = "mmlsattr -L '" . $filepath . "'";
-    $stat_cmd = "stat -c \"%g,%u,%n,%o,%s,%x,%y,%z\"  '" . $filepath . "'";
+    $stat_cmd = "stat -c \"%g,%u,%n,%o,%s,%x,%y,%z,%F\"  '" . $filepath . "'";
     //get file information from mmls command
     $exe_mmls_info = ssh2_exec($connection,$mmlsattr_cmd);
     stream_set_blocking($exe_mmls_info, true);
@@ -96,6 +96,7 @@ function getFile($connection, $filepath) {
     $file['L_vist_time'] = date("Y-m-d H:i:s", strtotime($items_stat[5]));
     $file['L_mod_time'] = date("Y-m-d H:i:s", strtotime(explode(".",$items_stat[6])[0]));
     $file['F_chan_time'] = date("Y-m-d H:i:s", strtotime($items_stat[7]));
+    $file['type'] = trim($items_stat[8]);
     $file["action"] = "GET";
 
     return $file;

@@ -131,7 +131,7 @@
 /* Return Path*/
 #returnpath {
 	height: 15px;
-	padding: 0 0 30px 15px;
+	padding: 0 0 15px 15px;
 }
 
 #returnpath .returnlabel {
@@ -151,6 +151,29 @@
 .datatable-data-col {
 	white-space: nowrap;
 	font-size: 13px;
+	position: relative;
+}
+
+.datatable-data-col .data-icon {
+	position: absolute;
+	height: 30px;
+	top: 1px;
+}
+
+.datatable-data-col .data-label {
+	margin-left: 35px;
+}
+
+#dataTable_filter {
+	display: none;
+}
+
+#more_fileinfo {
+	font-size: 12px;
+}
+
+#more_fileinfo tr {
+
 }
 
  /* Statistics */
