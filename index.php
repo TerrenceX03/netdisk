@@ -60,6 +60,7 @@ include 'function/show_list.php';
                             <li><a href = "JavaScript:void(0)" onclick="main_generateMigrationDialog()">迁移</a></li>
                             <li><a href = "JavaScript:void(0)" onclick="deletefiles()">删除</a></li>
                             <li><a id="backpath" onclick="returnback()" href = "JavaScript:void(0)">返回</a></li>
+                            <li class="align-right"><span>请选择存储池：</span><div id="poolfilter"></div></li>
                         </ul>
                     </div>
                 </td>

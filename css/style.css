@@ -120,6 +120,14 @@
 	width: 50px;
 }
 
+#opbar li.align-right {
+	float: right;
+}
+
+#opbar li.align-right div {
+	float: right;
+}
+
 /* Return Path*/
 #returnpath {
 	height: 15px;

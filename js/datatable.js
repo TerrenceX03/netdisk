@@ -98,6 +98,23 @@ function createFileTable ( folderName ) {
             { "data": "L_mod_time", "className": "datatable-data-col" },
             { "data": "storage_pool_name", "className": "datatable-data-col pool-col" }
         ],
+        initComplete: function () {
+            this.api().columns([5]).every( function () {
+                var column = this;
+                var select = $('<select><option value="">È«²¿</option></select>')
+                    .appendTo( $("#poolfilter").empty() )
+                    .on( 'change', function () {
+                        var val = $.fn.dataTable.util.escapeRegex(
+                            $(this).val()
+                        );
+ 
+                        column.search( val ? '^'+val+'$' : '', true, false ).draw();
+                    } );
+                column.data().unique().sort().each( function ( d, j ) {
+                    select.append( '<option value="'+d+'">'+d+'</option>' )
+                } );
+            } );
+        },
         "order": [[3, 'desc']],
         // "scrollY":        '65vh', // KEEP THE COMMENTS HERE!
         // "scrollCollapse": true,   // KEEP THIS LINE HERE!
@@ -139,7 +156,7 @@ function createFileTable ( folderName ) {
     } );
 }
 
-/*Click the "è¿”å›ž" button to return back*/
+/*Click the "·µ»Ø" button to return back*/
 function returnback(){
     var backfolder = $('#backpath').attr('class');
     createFileTable(backfolder);
