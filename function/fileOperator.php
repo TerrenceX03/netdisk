@@ -34,7 +34,7 @@ function getFile($connection, $filepath) {
                 $tmp_str .= trim($tmpArray[3]);
                 $file['creation_time'] = date("Y-m-d H:i:s", strtotime($tmp_str));
             } elseif ($tmpArray[0] == 'file name') {
-                $file['file_path'] = $tmpArray[1];
+                $file['file_path'] = trim($tmpArray[1]);
                 $tmp_folder_path = str_replace("/", ",", trim($tmpArray[1]));
                 $tmp_folder_path = explode(',', $tmp_folder_path);
                 array_pop($tmp_folder_path);

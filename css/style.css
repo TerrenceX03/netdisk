@@ -157,7 +157,10 @@ body {
 	vertical-align: top;
 }
 
-table.dataTable thead th.datatable-data-col, table.dataTable thead th.datatable-checkbox, .dataTables_wrapper.no-footer .dataTables_scrollBody {
+table.dataTable thead th.datatable-data-col, 
+table.dataTable thead th.datatable-checkbox, 
+.dataTables_wrapper.no-footer .dataTables_scrollBody,
+table.dataTable.no-footer  {
 	border-bottom: 1px solid  #dee2e6;
 	/*#e3e3e3;*/
 }
@@ -176,6 +179,11 @@ table.dataTable thead th.datatable-data-col, table.dataTable thead th.datatable-
 
 .datatable-data-col .data-label {
 	margin-left: 35px;
+}
+
+.datatable-data-col .inline-icon {
+	margin-left: 5px;
+	cursor: pointer;
 }
 
 #dataTable_filter {

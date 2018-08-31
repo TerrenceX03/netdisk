@@ -5,39 +5,57 @@ $(document).ready(function() {
 
 /* input the folder name and create the folder added in the table */
 function CreateFolder(){
-    var true_name = prompt("请输入文件夹名字","");
-    var label = document.getElementById("all_path");
-    var true_filepath = '/' + label.innerText + '/';
-    $.ajax({
-            url: "folder.php?myaction=CREATE_FOLDER",
-            dataType: 'json',
-            data: {
-                foldername:true_name,
-                folderpath:true_filepath
-            },
-            method: 'POST',
-            success: function(res) {
-                //pass
+    if ($("#new_foldername").length > 0) {
+        $("#new_foldername").css("border", "1px solid red");
+    } else {
+        var t = $('#dataTable').DataTable();
+        t.row.add({
+            "filename": "-",
+            "file_size": "-",
+            "creation_time": "-",
+            "L_mod_time": "-",
+            "storage_pool_name": "-",
+            "file_path": "-",
+            "folder_path": "-",
+            "filetype": "directory",
+            "type": "0_directory",
+            "action": ""
+        }).draw(false);
+
+        $("#dataTable i.newfolder-yes").on("click", function () {
+            var foldername = $("#new_foldername").val();
+            if (main_trim(foldername) == "") {
+                $("#new_foldername").css("border", "1px solid red");
+            } else {
+                var tr = $(this).closest('tr');
+                var label = document.getElementById("all_path");
+                var true_filepath = '/' + label.innerText + '/';
+                $.ajax({
+                    url: "folder.php?myaction=POST",
+                    dataType: 'json',
+                    data: {
+                        foldername: foldername,
+                        folderpath: true_filepath
+                    },
+                    method: 'POST',
+                    success: function(res) {
+                        console.log(res);
+                        if (res.result == 1) {
+                            t.row(tr).data(res.files);
+                            t.draw(false);
+                        } else {
+                            alert(res.error);
+                        }
+                    }
+                });
             }
-    });
-    $.ajax({
-        url: "files.php?myaction=GET&filepath=" + true_filepath + true_name,
-        dataType: 'json',
-        success:function(res){
-            var t = $('#dataTable').DataTable();
-                t.row.add({
-                    "filename": true_name,
-                    "file_size": res.file_size,
-                    "creation_time": res.creation_time,
-                    "L_mod_time": res.L_mod_time,
-                    "storage_pool_name": res.storage_pool_name,
-                    "file_path":res.file_path,
-                    "folder_path":res.folder_path,
-                    "filetype":res.filetype,
-                    "type":res.type
-                }).draw(false);
-        }
-    });
+        });
+
+        $("#dataTable i.newfolder-no").on("click", function () {
+            var tr = $(this).closest('tr');
+            t.row(tr).remove().draw(false);
+        });
+    }
 }
 
 /* add the new uploaded files in table */

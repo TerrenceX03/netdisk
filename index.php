@@ -14,7 +14,6 @@ include 'function/show_list.php';
         <script type="text/javascript" src="js/jQuery/jquery-3.3.1.min.js"></script>
         <script type="text/javascript" src="js/jQuery/jquery.form.min.js"></script>
         <script type="text/javascript" src="js/DataTables/datatables.js"></script>
-        <script type="text/javascript" src="js/DataTables/absolute.js"></script>
         <script type="text/javascript" src="js/datatable.js"></script>
         <script type="text/javascript" src="js/jquery-ui-1.12.1/jquery-ui.js"></script>
         <script type="text/javascript" src="js/jQuery-File-Upload/js/jquery.fileupload.js"></script>

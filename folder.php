@@ -12,7 +12,7 @@ $port = DB_PORT;
 $connection = ssh2_connect($ip, $port);
 ssh2_auth_password($connection, $user, $pass);
 
-if($_GET['myaction'] == "CREATE_FOLDER") { // Create folder
-	echo json_encode(createFolder($connection, FS_MOUNT_POINT . $_POST['folderpath'], $_POST['foldername']));
+if($_GET['myaction'] == "POST") { // Create folder
+	echo json_encode(postFolder($connection, FS_MOUNT_POINT . $_POST['folderpath'], $_POST['foldername']));
 }
 ?>

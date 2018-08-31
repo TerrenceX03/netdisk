@@ -58,10 +58,6 @@ function createFileTable ( folderName ) {
         table.destroy();
     }
 
-    var folderType = $.fn.dataTable.absoluteOrder( [
-        { value: 'directory', position: 'top' }
-    ] );
-
     table = $('#dataTable').DataTable( {
         "ajax": {
             "url":'files.php?myaction=LIST',
@@ -73,17 +69,24 @@ function createFileTable ( folderName ) {
         "columnDefs": [
             {
                 "render": function (data, type, row) {
-                    if (row.type == "directory") {
+                    if (isNaN(row) && row.type == "0_directory") {
+                        return "<img class='data-icon' src='images/folder-min.png' />"
+                                + "<span class='data-label'>"
+                                + "<input id='new_foldername' type='text' />" 
+                                + "<i class=\"fa fa-check fa-lg inline-icon newfolder-yes\"  aria-hidden=\"true\" ></i>"
+                                + "<i class=\"fa fa-times fa-lg inline-icon newfolder-no\"  aria-hidden=\"true\" ></i>"
+                                + "</span>";
+                    } else if (row.type == "directory") {
                         return "<img class='data-icon' src='images/folder-min.png' /><span class='data-label'>" + data + "</span>";
                     } else {
                         return data;
                     }
                 },
-                "targets": 1  // file size column
+                "targets": 1  // file name column
             },
             {
                 "render": function (data, type, row) {
-                    if (row.type == "directory") {
+                    if (row.type == "directory" || row.type == "0_directory") {
                         return " - ";
                     } else {
                         return main_formatDataSizeWithUnit(data);
@@ -93,12 +96,25 @@ function createFileTable ( folderName ) {
             },
             {
                 "render": function (data, type, row) {
-                    return "<label style='color:green'>" + data.toUpperCase() + "</label>";
+                    if (isNaN(row) && row.type == "0_directory") {
+                        return " - ";
+                    } else {
+                        return data;
+                    }
+                },
+                "targets": [3, 4]
+            },
+            {
+                "render": function (data, type, row) {
+                    if (isNaN(row) && row.type == "0_directory") {
+                        return " - ";
+                    } else {
+                        return "<label style='color:green'>" + data.toUpperCase() + "</label>";
+                    }
                 },
                 "targets": 5
             },
             {
-                "type": folderType,
                 "visible": false,
                 "searchable": false,
                 "targets": 6
@@ -152,12 +168,12 @@ function createFileTable ( folderName ) {
         },
         "orderFixed": [ 6, 'asc' ],
         "order": [3, 'desc'],
-        "scrollY":        '65vh', // KEEP THE COMMENTS HERE!
-        "scrollCollapse": true,   // KEEP THIS LINE HERE!
-        "paging":         false,
-        // "lengthChange":   false,
-        // "pagingType":     "first_last_numbers",
-        // "pageLength":     15,
+        // "scrollY":        '65vh', // KEEP THE COMMENTS HERE!
+        // "scrollCollapse": true,   // KEEP THIS LINE HERE!
+        "paging":         true,
+        "lengthChange":   false,
+        "pagingType":     "first_last_numbers",
+        "pageLength":     15,
         "destroy":        true
     } );
 
@@ -172,8 +188,8 @@ function createFileTable ( folderName ) {
         var tr = $(this).closest('tr');
         var row = table.row(tr);
 
-        //Only directory can be opened again
-        if (row.data().filetype == "directory"){
+        
+        if (row.data().type == "directory"){
             var folderAbsolutePath = main_trim(row.data().file_path);
             var folders = folderAbsolutePath.substr(1).split("/"); // remove the first '/'
             folders.shift(); // remove the first element from Array, which is the storage pool name.
@@ -185,7 +201,7 @@ function createFileTable ( folderName ) {
             //set classname for return button.
             $('#backpath').attr("class", backfolder);
             $("#navbar li.openfolder").removeClass("openfolder");
-        } else {
+        } else if (row.data().type != "directory" && row.data().type != "0_directory") {
             if ( row.child.isShown() ) {
                 row.child.hide();
                 tr.removeClass('shown');
