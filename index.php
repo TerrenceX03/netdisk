@@ -134,6 +134,12 @@ include 'function/show_list.php';
             <p class="message"></p>
         </div>
 
+        <div id="delete-dialog" title="Delete..." style="display: none">
+            <p>Delete your selected file(s)</p>
+            <p class="selectedFiles"></p>
+            <p class="message"></p>
+        </div>
+
         <script type="text/javascript" src="js/main.js"></script>
         <script type="text/javascript">
             function back(folder) {

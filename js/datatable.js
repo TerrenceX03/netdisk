@@ -243,37 +243,3 @@ $(document).ready(function() {
         createFileTable($(this).attr("id"))
     });  
 } );
-
-/*Delete*/
-function deletefiles(){
-    var tbodyObj = document.getElementById('dataTable');
-    $("table :checkbox").each(function(key, value) {
-        if ($(value).prop('checked')) {
-
-            var table = $('#dataTable').DataTable();
-            var tr = $(this).closest('tr');
-            var row = table.row(tr);
-            var label=document.getElementById("all_path");
-
-            if ( row.child.isShown() ) {
-                // This row is already open - close it
-                row.child.hide();
-                tr.removeClass('shown');
-            }
-            //delete the file in information table
-            filepath = label.innerText + "/" + tbodyObj.rows[key+1].cells[1].innerHTML;
-            tbodyObj.rows[key+1].innerHTML="";
-
-            $.ajax({
-                url: "files.php?myaction=DELETE_FILE&filepath=" + filepath,
-                dataType: 'json',                
-                success: function(res) {
-                    if (res.msg == 1) {
-                        //pass
-                    };
-                }
-            });
-            
-        }
-    })   
-}

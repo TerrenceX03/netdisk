@@ -199,13 +199,33 @@ Delete files with specfic filepaith
 
 $filepath:Absolute filepath without FS_MOUNT_POINT.
 */
-function deleteFiles($connection,$filepath){
+function deleteFiles($connection, $filepaths){
     $result = array();
-    $result['msg'] = 1;
-    //Delete cammand
-    $cmd_delete = "rm -rf \"".FS_MOUNT_POINT."/" . $filepath . "\"";
+    
+    foreach($filepaths as $key => $filepath) {
+        $stream = ssh2_exec($connection, "rm -f '" . $filepath . "'");
+        $errorStream = ssh2_fetch_stream($stream, SSH2_STREAM_STDERR);
 
-    $exe_delete = ssh2_exec($connection, $cmd_delete);
+        stream_set_blocking($stream, true);
+        stream_set_blocking($errorStream, true);
+
+        $output = stream_get_contents($stream);
+        $error = stream_get_contents($errorStream);
+
+        fclose($stream);
+        fclose($errorStream);
+
+        $file = array();
+        if (trim($error) == "") {
+            $file["result"] = 1;    
+        } else {
+            $file["result"] = 0;
+            $file["error"] = trim($error);
+        }
+        
+        array_push($result, $file);
+    }
+
     return $result;
 }
 

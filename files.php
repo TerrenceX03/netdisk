@@ -18,8 +18,8 @@ if ($_GET["myaction"] == "LIST") { // List a folder
 	echo json_encode(getFile($connection, FS_MOUNT_POINT . $_GET['filepath']));
 } elseif($_GET['myaction'] == "POST") { // Upload a new file
 	echo json_encode(postFile($connection, $_FILES["newFile"], FS_MOUNT_POINT . "/" . $_GET['parent']));
-} elseif($_GET['myaction'] == "DELETE_FILE") { // Delete file
-	echo json_encode(deleteFiles($connection, $_GET['filepath']));
+} elseif($_GET['myaction'] == "DELETE") { // Delete file
+	echo json_encode(deleteFiles($connection, json_decode($_POST['files'])));
 } elseif($_GET['myaction'] == "MIGRATE") { // Migration
 	echo json_encode(migrate($connection, json_decode($_POST['files']), $_POST['target']));
 } 

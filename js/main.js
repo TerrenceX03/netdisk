@@ -93,6 +93,11 @@ function uploadfile(){
     });
 }
 
+/* Delete files */
+function deletefiles(){
+    main_generateDeleteDialog();
+}
+
 /*
     return to display file information of clicked floder
 */
@@ -141,6 +146,85 @@ function generateProgressBar() {
             });
         }
     })
+}
+
+function main_generateDeleteDialog() {
+    var table = $("#dataTable").DataTable();
+    var checkedLines = $("#dataTable input[type=checkbox]:checked");
+
+    if (checkedLines.length == 0) {
+        $("#delete-dialog p.selectedFiles").append("You must select at least one file!");
+
+        var dialog = $("#delete-dialog").dialog({
+            resizable: false,
+            height: "auto",
+            width: 400,
+            modal: true,
+            buttons: {
+                "OK": function() {
+                    $("#delete-dialog p").empty();
+                    $(this).dialog("destroy");
+                }
+            }
+        });
+    } else {
+        $("#delete-dialog p.selectedFiles").append("You have selected " + checkedLines.length + " files. Do you confirm to delete these files");
+
+        var dialog = $("#delete-dialog").dialog({
+            resizable: false,
+            height: "auto",
+            width: 400,
+            modal: true,
+            buttons: {
+                "Confirm": function() {
+                    var trs = new Array();
+                    var filepaths = new Array();
+
+                    $.each(checkedLines, function (i, line) {
+                        var tr = $(line).closest('tr');
+                        trs.push(tr);
+                        filepaths.push(table.row(tr).data().file_path);
+                        $(tr).children(".pool-col").append("<img src='images/recycling.gif' style='margin-left:10px;height:17px'/>");
+                        $(tr).find("input[type=checkbox]").prop("disabled", true);
+                    });
+
+                    $("#delete-dialog p").empty();
+                    $(this).dialog("destroy");
+
+                    $.ajax({
+                        url: "files.php?myaction=DELETE",
+                        dataType: 'json',
+                        data: {
+                            files: JSON.stringify(filepaths)
+                        },
+                        method: 'POST',
+                        success: function(res) {
+                            $.each(res, function(i, j) {
+                                var row = table.row(trs[i]);
+                                if (j.result == 1) { // migrate sucessfully
+                                    row.remove();
+                                    $("#log").append("<span>" + row.data().filename + " has been deleted</span><br/>");
+                                } else {
+                                    $(trs[i]).children(".pool-col").children("img").remove();
+                                    $(trs[i]).find("input[type=checkbox]").prop("disabled", false);
+                                    $("#log").append("<span>" + row.data().filename + " hasn't been deleted with error.</span><br/>");
+                                    alert(row.data().filename + " delete failed, because of " + j.error);
+                                }
+                            });
+
+                            table.draw(false);
+                            generateProgressBar();
+                        }
+                    });
+                },
+                Cancel: function() {
+                    $("#delete-dialog p").empty();
+                    $("#delete-dialog ul").empty();
+                    $(this).dialog("destroy");
+                }
+            }
+        });
+    }
 }
 
 function main_generateMigrationDialog() {
