@@ -25,6 +25,7 @@ include 'function/show_list.php';
         <link rel="stylesheet" type="text/css" href="js/DataTables/datatables.css"/>
         <link rel="stylesheet" type="text/css" href="js/jQuery-File-Upload/css/jquery.fileupload.css"/>
         <link rel="stylesheet" type="text/css" href="js/jQuery-File-Upload/css/jquery.fileupload-ui.css"/>
+        <link rel="stylesheet" href="css/font-awesome-4.7.0/css/font-awesome.css">
         <link rel="stylesheet" href="css/style.css">
     </head>
     <body style="height:100%">
@@ -47,7 +48,7 @@ include 'function/show_list.php';
                 <td id="opbar" colspan="2" height="50px">
                     <div>
                         <ul>
-                            <li class="uploadbtn">
+                            <li class="uploadbtn button">
                                 <a>
                                     <span onclick="uploadfile()" class="btn btn-success fileinput-button default-button chinese" href = "JavaScript:void(0)">
                                         <i class="glyphicon glyphicon-plus"></i>
@@ -56,11 +57,16 @@ include 'function/show_list.php';
                                     </span>
                                 </a>
                             </li>
-                            <li><a href = "JavaScript:void(0)" onclick="CreateFolder()">新建文件夹</a></li>
-                            <li><a href = "JavaScript:void(0)" onclick="main_generateMigrationDialog()">迁移</a></li>
-                            <li><a href = "JavaScript:void(0)" onclick="deletefiles()">删除</a></li>
-                            <li><a id="backpath" onclick="returnback()" href = "JavaScript:void(0)">返回</a></li>
-                            <li class="align-right"><span>请选择存储池：</span><div id="poolfilter"></div></li>
+                            <li class="button"><a href = "JavaScript:void(0)" onclick="CreateFolder()">新建文件夹</a></li>
+                            <li class="button"><a href = "JavaScript:void(0)" onclick="main_generateMigrationDialog()">迁移</a></li>
+                            <li class="button"><a href = "JavaScript:void(0)" onclick="deletefiles()">删除</a></li>
+                            <li class="button"><a id="backpath" onclick="returnback()" href = "JavaScript:void(0)">返回</a></li>
+                            <li class="align-right button">
+                                <div class="select">
+                                    <span class="placeholder">请选择存储池</span>
+                                    <ul id="poolfilter"></ul>
+                                </div>
+                            </li>
                         </ul>
                     </div>
                 </td>

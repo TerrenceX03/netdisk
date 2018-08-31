@@ -122,18 +122,32 @@ function createFileTable ( folderName ) {
         initComplete: function () {
             this.api().columns([5]).every( function () {
                 var column = this;
-                var select = $('<select><option value="">全部</option></select>')
-                    .appendTo( $("#poolfilter").empty() )
-                    .on( 'change', function () {
-                        var val = $.fn.dataTable.util.escapeRegex(
-                            $(this).val()
-                        );
- 
-                        column.search( val ? '^'+val+'$' : '', true, false ).draw();
-                    } );
+                
+                var poolFilter = $("#poolfilter").empty().append("<li value=\"\">全部存储池</li>");
                 column.data().unique().sort().each( function ( d, j ) {
-                    select.append( '<option value="'+d+'">'+d+'</option>' )
+                    poolFilter.append( '<li value="'+d+'">'+d+'&nbsp;存储池</li>' )
                 } );
+
+                $('.select').on('click', '.placeholder', function(e) {
+                    var parent = $(this).closest('.select');
+                    if (!parent.hasClass('is-open')) {
+                        parent.addClass('is-open');
+                        $('.select.is-open').not(parent).removeClass('is-open');
+                    } else {
+                        parent.removeClass('is-open');
+                    }
+                        e.stopPropagation();
+                }).on('click', 'ul>li', function() {
+                    var parent = $(this).closest('.select');
+                    var placeholder = parent.removeClass('is-open').find('.placeholder');
+                    placeholder.text($(this).text());
+                    var val = $.fn.dataTable.util.escapeRegex($(this).attr("value"));
+                    column.search( val ? '^'+val+'$' : '', true, false ).draw();
+                });
+ 
+                $('body').on('click', function() {
+                    $('.select.is-open').removeClass('is-open');
+                });
             } );
         },
         "orderFixed": [ 6, 'asc' ],
