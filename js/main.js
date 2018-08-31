@@ -248,17 +248,17 @@ function main_generateMigrationDialog() {
                                             tmp2.prop("disabled", false);
 
                                             if (j.result == 1) { // migrate sucessfully
-                                                tmp.append("<label style='color:green'>" + target.toUpperCase() + "</label>");
+                                                var f = tmp3.data();
+                                                f.storage_pool_name = target;
+                                                tmp3.data(f);
                                                 $("#log").append("<span>" + tmp3.data().filename + " has been migrated to " + target + " pool.</span><br/>");
                                             } else {
-                                                tmp.append("<label style='color:green'>" + trs[i].data().storage_pool_name + "</label>");
                                                 $("#log").append("<span>" + tmp3.data().filename + " hasn't been migrated to " + target + " pool with error.</span><br/>");
                                                 alert(tmp3.data().filename + " migrated failed, because of " + j.error);
                                             }
                                         });
 
-                                        // $("#log").append("<span style='color:rgba(25, 25, 112, 1)'>" +"&nbsp"+"&nbsp"+"&nbsp"+"&nbsp"+fileid+ "</span><b> has been changed to <b><span style='color:rgba(25, 25, 112, 1)'>" +TargetTier+ ";"+"</span><br/>");
-                                        // $(".stat_progressbar-row").remove();
+                                        table.draw(false);
                                         generateProgressBar();
                                     }
                                 });
