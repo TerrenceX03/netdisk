@@ -9,19 +9,16 @@ function postFolder($connection,$folderpath,$foldername){
 	$result = array();
 
     if ($folderpath && $foldername) {
-    	$cmd_create="mkdir " . $folderpath . $foldername;
-		$ret_mkdir = ssh2_exec($connection, $cmd_create);
-		stream_set_blocking($ret_mkdir, true);
-        $ans_mkdir = stream_get_contents($ret_mkdir);
-        
-        if (trim($ans_mkdir) == "") {
+        $response = basic_exec($connection, "mkdir " . $folderpath . $foldername);
+
+        if (trim($response["error"]) == "") {
             $result["result"] = 1;
             $serverSideFile = getFile($connection, $folderpath . $foldername);
             $serverSideFile["filename"] = $foldername;
         	$result["files"] = $serverSideFile;
         } else {
             $result["result"] = 0;
-            $result["error"] = "Failed to create new folder: " . $folderpath . $foldername . " - " . trim($ans_mkdir);
+            $result["error"] = "Failed to create new folder: " . $folderpath . $foldername . " - " . trim($response["error"]);
         }
     } else {
     	$result["result"] = 0;

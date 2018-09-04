@@ -1,4 +1,5 @@
-<?php 
+<?php
+include 'function/basic.php';
 /* 
   Get fileinfo of a file and return to files.php.
   
@@ -7,20 +8,17 @@
 function getFile($connection, $filepath) {
     $mmlsattr_cmd = "mmlsattr -L '" . $filepath . "'";
     $stat_cmd = "stat -c \"%g,%u,%n,%o,%s,%x,%y,%z,%F\"  '" . $filepath . "'";
-    //get file information from mmls command
-    $exe_mmls_info = ssh2_exec($connection,$mmlsattr_cmd);
-    stream_set_blocking($exe_mmls_info, true);
-    $stream_mmls_info = stream_get_contents($exe_mmls_info);
-    $stream_mmls_info = str_replace(array("\r\n", "\n"), ",", $stream_mmls_info);
-    $lines = explode(",", $stream_mmls_info);
-    $file = array();
-    //get fileype from file command
     $filetype_cmd = "file '" . $filepath .  "'";
-    $exe_filetype = ssh2_exec($connection,$filetype_cmd);
-    stream_set_blocking($exe_filetype, true);
-    $stream_filetype = stream_get_contents($exe_filetype);
-    $filetype = trim(explode(':', $stream_filetype)[1]);
-    $file['filetype'] =  $filetype;
+
+    $file = array();
+
+    //get file information from mmlsattr command
+    $response1 = basic_exec($connection, $mmlsattr_cmd);
+    $lines = explode(",", str_replace(array("\r\n", "\n"), ",", $response1["output"]));
+
+    //get fileype from file command
+    $response2 = basic_exec($connection, $filetype_cmd);
+    $file['filetype'] =  trim(explode(':', $response2["output"])[1]);
 
     foreach ($lines as $line) {
         $tmpArray = explode(":", $line);
@@ -81,14 +79,14 @@ function getFile($connection, $filepath) {
         %y--%Y--Last modified content time
         %z--%z--Finally change the time (file attributes, permission owners, etc., format Epoch Times)
     */
-    $exe_stat_info = ssh2_exec($connection,$stat_cmd);
-    stream_set_blocking($exe_stat_info, true);
-    $stream_stat_info = stream_get_contents($exe_stat_info);
-    $props_stat = explode(",", $stream_stat_info);
+    $response3 = basic_exec($connection, $stat_cmd);
+    $props_stat = explode(",", $response3["output"]);
     $items_stat = array();
+
     foreach ($props_stat as $key => $value) {
         $items_stat[$key] = $value;
     }
+
     $file['file_group_id'] = $items_stat[0];
     $file['user_id'] = $items_stat[1];
     $file['block_size'] = $items_stat[3];
@@ -108,12 +106,8 @@ function getFile($connection, $filepath) {
    $dirpath:Absolute path.
 */
 function listFiles($connection, $dirpath) {
-    //query the exist filesets.
-    $cmd_ls_files = "ls " . $dirpath;
-    $ret_ls_fileset = ssh2_exec($connection, $cmd_ls_files);
-    stream_set_blocking($ret_ls_fileset, true);
-    $ans_ls_fileset = stream_get_contents($ret_ls_fileset);
-    $tmp = explode("\n", $ans_ls_fileset);
+    $response = basic_exec($connection, "ls " . $dirpath);
+    $tmp = explode("\n", $response["output"]);
 
     $files = array();
     $files['data'] = array();
@@ -177,15 +171,14 @@ function migrate($connection, $files, $target){
     $result = array();
 
     foreach($files as $key => $filepath) {
-        $ret_migrate = ssh2_exec($connection, "mmchattr -P " . $target . " " . $filepath);
-        stream_set_blocking($ret_migrate, true);
-        $ans_migrate = stream_get_contents($ret_migrate);
+        $response = basic_exec($connection, "mmchattr -P " . $target . " " . $filepath);
         $file = array();
-        if (trim($ans_migrate) == "") {
+
+        if (trim($response["error"]) == "") {
             $file["result"] = 1;    
         } else {
             $file["result"] = 0;
-            $file["error"] = trim($ans_migrate);
+            $file["error"] = trim($response["error"]);
         }
         
         array_push($result, $file);
@@ -203,24 +196,14 @@ function deleteFiles($connection, $filepaths){
     $result = array();
     
     foreach($filepaths as $key => $filepath) {
-        $stream = ssh2_exec($connection, "rm -f '" . $filepath . "'");
-        $errorStream = ssh2_fetch_stream($stream, SSH2_STREAM_STDERR);
-
-        stream_set_blocking($stream, true);
-        stream_set_blocking($errorStream, true);
-
-        $output = stream_get_contents($stream);
-        $error = stream_get_contents($errorStream);
-
-        fclose($stream);
-        fclose($errorStream);
-
+        $response = basic_exec($connection, "rm -f '" . $filepath . "'");
         $file = array();
-        if (trim($error) == "") {
+
+        if (trim($response["error"]) == "") {
             $file["result"] = 1;    
         } else {
             $file["result"] = 0;
-            $file["error"] = trim($error);
+            $file["error"] = trim($response["error"]);
         }
         
         array_push($result, $file);

@@ -1,17 +1,13 @@
 <?php
-
+include 'function/basic.php';
 /*
 	List all pools under particular filesystem
 	$fsname - filesystem name
 	$connection - ssh2 connection
 */
 function listPools($connection, $fsname) {
-	$cmd_ls_pools = "mmlspool " . $fsname;
-	$ret_ls_pools = ssh2_exec($connection, $cmd_ls_pools);
-	stream_set_blocking($ret_ls_pools, true);
-	$ans_ls_pools = stream_get_contents($ret_ls_pools);
-	$ans_ls_pools = str_replace(array("\r\n", "\n"), ";", $ans_ls_pools);
-	$tmp = explode(";", $ans_ls_pools);
+    $response = basic_exec($connection, "mmlspool " . $fsname);
+    $tmp = explode(";", str_replace(array("\r\n", "\n"), ";", $response["output"]));
 
 	$pools = array();
 	$pool = array();
