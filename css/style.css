@@ -312,6 +312,25 @@ table.dataTable.no-footer  {
 	color: green;
 }
 
+.pool-col label:before {
+    font-family: 'FontAwesome';
+    content: '\f1c0';
+    margin-right: 10px;
+    font-size: 15px;
+}
+
+.pool-col label.system:before {
+	color: #FED230;
+}
+
+.pool-col label.silver:before {
+	color: #CFCFCF;
+}
+
+.pool-col label.bronze:before {
+	color: #FE7916;
+}
+
  /* Statistics */
 #statistics {
 	vertical-align: top;
