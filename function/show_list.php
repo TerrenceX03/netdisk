@@ -40,7 +40,7 @@ function show_folder($fileset,$type,$href) {
     foreach ($fileset as $key => $value) {
         $html_ans .= "<li id=";
         $html_ans .=$value;
-        $html_ans .=" class='folder chinese'><img class='folder-icon' src='icons/folder.png'><label>";
+        $html_ans .=" class='folder chinese'><img class='folder-icon' src='images/folder.png'><label>";
         $html_ans .= $value;
         $html_ans .= "</label></li>";
         }

@@ -7,7 +7,7 @@ include 'function/basic.php';
 */
 function getFile($connection, $filepath) {
     $mmlsattr_cmd = "mmlsattr -L '" . $filepath . "'";
-    $stat_cmd = "stat -c \"%g,%u,%n,%o,%s,%x,%y,%z,%F\"  '" . $filepath . "'";
+    $stat_cmd = "stat -c \"%g|%u|%n|%o|%s|%x|%y|%z|%F\"  '" . $filepath . "'";
     $filetype_cmd = "file '" . $filepath .  "'";
 
     $file = array();
@@ -80,7 +80,7 @@ function getFile($connection, $filepath) {
         %z--%z--Finally change the time (file attributes, permission owners, etc., format Epoch Times)
     */
     $response3 = basic_exec($connection, $stat_cmd);
-    $props_stat = explode(",", $response3["output"]);
+    $props_stat = explode("|", $response3["output"]);
     $items_stat = array();
 
     foreach ($props_stat as $key => $value) {

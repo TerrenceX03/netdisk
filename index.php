@@ -36,7 +36,7 @@ include 'function/show_list.php';
                 </th> 
             </tr>
             <tr>
-                <td id="navbar" rowspan="3" width="250px">
+                <td id="navbar" rowspan="4" width="250px">
                     <div id="navbar-title" class="chinese">全部文件夹</div>
                     <?php 
                     // show list of files 
@@ -61,10 +61,7 @@ include 'function/show_list.php';
                             <li class="button"><a href = "JavaScript:void(0)" onclick="deletefiles()">删除</a></li>
                             <li class="button"><a id="backpath" onclick="returnback()" href = "JavaScript:void(0)">返回</a></li>
                             <li class="align-right button">
-                                <div class="select">
-                                    <span class="placeholder">请选择存储池</span>
-                                    <ul id="poolfilter"></ul>
-                                </div>
+                                
                             </li>
                         </ul>
                     </div>
@@ -76,6 +73,48 @@ include 'function/show_list.php';
                          <label id='path' class='chinese'>当前路径：</label>
                     </div>
                     <div class="fullpath chinese" id="all_path"></div>
+                </td>
+            </tr>
+            <tr>
+                <td id="filter" colspan="2">
+                    <div id="table-filter-container">
+                        <table width="100%" height="100%">
+                            <tr>
+                                <td class="filter-title filter-pool">存储池</td>
+                                <td class="filter-title filter-size">文件大小(KB)</td>
+                                <td class="filter-title filter-date">创建时间</td>
+                                <td class="filter-title filter-date">修改时间</td>
+                                <td rowspan="2">
+                                    <div id="btn_filter">
+                                        <i class="fa fa-filter fa-lg"></i>
+                                        <label>过滤</label>
+                                    </div>
+                                    <div id="btn_clear">
+                                        <i class="fa fa-reply-all fa-lg"></i>
+                                        <label>清空</label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td class="filter-pool-data">
+                                    <div><label>请选择存储池</label></div>
+                                    <div class="select"><span class="placeholder">全部存储池</span><ul id="poolfilter"></ul></div>
+                                </td>
+                                <td>
+                                    <div class="filter-data"><label>从</label><input type="text" id="size_since" /></div>
+                                    <div class="filter-data"><label>到</label><input type="text" id="size_to" /></div>
+                                </td>
+                                <td>
+                                    <div class="filter-data datepicker"><label>从</label><input type="text" id="creationdate_since" /></div>
+                                    <div class="filter-data datepicker"><label>到</label><input type="text" id="creationdate_to" /></div>
+                                </td>
+                                <td>
+                                    <div class="filter-data datepicker"><label>从</label><input type="text" id="changedate_since" /></div>
+                                    <div class=" filter-datadatepicker"><label>到</label><input type="text" id="changedate_to" /></div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
                 </td>
             </tr>
             <tr>  

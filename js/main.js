@@ -1,7 +1,51 @@
 $(document).ready(function() {
     generateProgressBar();
     initStatInfo();
+    initFilter();
 });
+
+function initFilter() {
+    var creationdateSince = $("#creationdate_since").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "yy-mm-dd"
+    }).on("change", function () {
+        creationdateTo.datepicker("option", "minDate", main_getDate(this));
+    });
+
+    var creationdateTo = $("#creationdate_to").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "yy-mm-dd"
+    }).on("change", function () {
+        creationdateSince.datepicker("option", "maxDate", main_getDate(this));
+    });
+
+    var changedateSince = $("#changedate_since").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "yy-mm-dd"
+    }).on("change", function () {
+        changedateTo.datepicker("option", "minDate", main_getDate(this));
+    });
+
+    var changedateTo = $("#changedate_to").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        dateFormat: "yy-mm-dd"
+    }).on("change", function () {
+        changedateSince.datepicker("option", "maxDate", main_getDate(this));
+    });
+
+    $("#btn_filter").on("click", function () {
+        $("#dataTable").DataTable().draw();
+    });
+
+    $("#btn_clear").on("click", function () {
+        $("#size_since, #size_to, #creationdate_since, #creationdate_to, #changedate_since, #changedate_to").val("");
+        $("#dataTable").DataTable().draw();
+    });
+}
 
 /* input the folder name and create the folder added in the table */
 function CreateFolder(){
@@ -39,7 +83,6 @@ function CreateFolder(){
                     },
                     method: 'POST',
                     success: function(res) {
-                        console.log(res);
                         if (res.result == 1) {
                             t.row(tr).data(res.files);
                             t.draw(false);
@@ -86,9 +129,9 @@ function uploadfile(){
                 console.log(data);
             },
             progressall: function (e, data) {
-    　           var progress = parseInt(data.loaded / data.total * 100, 10);
-    　           $('#progress .progress-bar').css('width',progress + '%');
-    　      }
+                var progress = parseInt(data.loaded / data.total * 100, 10);
+                $('#progress .progress-bar').css('width',progress + '%');
+            }
         });
     });
 }
@@ -397,4 +440,27 @@ function initStatInfo() {
 
 function main_trim( string ) {
     return string.replace(/(^\s*)|(\s*$)/g, "");
+}
+
+function main_getDate ( string ) {
+    var date;
+    try {
+        date = $.datepicker.parseDate("yy-mm-dd", string.value);
+    } catch (error) {
+        date = null;
+    }
+
+    return date;
+}
+
+String.prototype.startWith = function (s) {
+    if (s == null || s == "" || this.length == 0 || s.length > this.length) {
+        return false;
+    }
+
+    if (this.substr(0, s.length) == s) {
+        return true;
+    } else {
+        return false;
+    }
 }

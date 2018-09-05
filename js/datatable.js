@@ -58,6 +58,38 @@ function createFileTable ( folderName ) {
         table.destroy();
     }
 
+    $.fn.dataTable.ext.search.push(function (settings, data, dataIndex) {
+        var sizeSince = parseInt($("#size_since").val(), 10);
+        var sizeTo = parseInt($("#size_to").val(), 10);
+        var size = parseFloat(data[2]) || 0;
+        var sizeMatched = false;
+        if ((isNaN(sizeSince) && isNaN(sizeTo)) || (isNaN(sizeSince) && size <= sizeTo) || (sizeSince <= size && isNaN(sizeTo)) || (sizeSince <= size && size <= sizeTo)) {
+            sizeMatched = true;
+        }
+
+        var creationdateSince = new Date($.datepicker.formatDate("yy/mm/dd", $("#creationdate_since").datepicker("getDate")));
+        var creationdateTo = new Date($.datepicker.formatDate("yy/mm/dd", $("#creationdate_to").datepicker("getDate")));
+        var creationDate = new Date(data[3].substr(0, 10).replace(/\-/g, "\/"));
+        var creationDateMatched = false;
+        if ((isNaN(creationdateSince) && isNaN(creationdateTo)) || (isNaN(creationdateSince) && creationDate <= creationdateTo) || (creationdateSince <= creationDate && isNaN(creationdateTo)) || (creationdateSince <= creationDate && creationDate <= creationdateTo)) {
+            creationDateMatched = true;
+        }
+
+        var changedateSince = new Date($.datepicker.formatDate("yy/mm/dd", $("#changedate_since").datepicker("getDate")));
+        var changedateTo = new Date($.datepicker.formatDate("yy/mm/dd", $("#changedate_to").datepicker("getDate")));
+        var changeDate = new Date(data[4].substr(0, 10).replace(/\-/g, "\/"));
+        var changeDateMatched = false;
+        if ((isNaN(changedateSince) && isNaN(changedateTo)) || (isNaN(changedateSince) && changeDate <= changedateTo) || (changedateSince <= changeDate && isNaN(changedateTo)) || (changedateSince <= changeDate && changeDate <= changedateTo)) {
+            changeDateMatched = true;
+        }
+
+        if (sizeMatched && creationDateMatched && changeDateMatched) {
+            return true;
+        }
+
+        return false;
+    });
+
     table = $('#dataTable').DataTable( {
         "ajax": {
             "url":'files.php?myaction=LIST',
@@ -70,16 +102,22 @@ function createFileTable ( folderName ) {
             {
                 "render": function (data, type, row) {
                     if (isNaN(row) && row.type == "0_directory") {
-                        return "<img class='data-icon' src='images/folder-min.png' />"
+                        return "<i class='fa fa-folder-o fa-lg type-icon' aria-hidden='true'></i>"
                                 + "<span class='data-label'>"
                                 + "<input id='new_foldername' type='text' />" 
                                 + "<i class=\"fa fa-check fa-lg inline-icon newfolder-yes\"  aria-hidden=\"true\" ></i>"
                                 + "<i class=\"fa fa-times fa-lg inline-icon newfolder-no\"  aria-hidden=\"true\" ></i>"
                                 + "</span>";
                     } else if (row.type == "directory") {
-                        return "<img class='data-icon' src='images/folder-min.png' /><span class='data-label'>" + data + "</span>";
+                        return "<i class='fa fa-folder-o fa-lg type-icon' aria-hidden='true'></i><span class='data-label'>" + data + "</span>";
+                    } else if (row.filetype.startWith("PDF document")) {
+                        return "<i class='fa fa-file-pdf-o fa-lg type-icon' aria-hidden='true'></i><span class='data-label'>" + data + "</span>";
+                    } else if (row.filetype.startWith("PNG") || row.filetype.startWith("JPEG")) {
+                        return "<i class='fa fa-file-image-o fa-lg type-icon' aria-hidden='true'></i><span class='data-label'>" + data + "</span>";
+                    } else if (row.filetype.startWith("HTML")) {
+                        return "<i class='fa fa-file-code-o fa-lg type-icon' aria-hidden='true'></i><span class='data-label'>" + data + "</span>";
                     } else {
-                        return data;
+                        return "<i class='fa fa-file-text-o fa-lg type-icon' aria-hidden='true'></i><span class='data-label'>" + data + "</span>";
                     }
                 },
                 "targets": 1  // file name column
@@ -173,7 +211,7 @@ function createFileTable ( folderName ) {
         "paging":         true,
         "lengthChange":   false,
         "pagingType":     "first_last_numbers",
-        "pageLength":     15,
+        "pageLength":     10,
         "destroy":        true
     } );
 
@@ -222,12 +260,13 @@ function returnback(){
     backfolder = backfolder.join('/');
     $('#backpath').attr("class", backfolder);
 }
+
 $(document).ready(function() {
     // Open the first fileset by default
     var firstFolder = $("#navbar ul li:first");
     var firstFolderName = firstFolder.attr("id");
     $(firstFolder).addClass("openfolder");
-    $("#navbar ul li:first img").attr("src", "icons/folder-open.png");
+    $("#navbar ul li:first img").attr("src", "images/folder-open.png");
     createFileTable(firstFolderName);
 
     $("#navbar li").click(function () {
@@ -238,7 +277,7 @@ $(document).ready(function() {
         $("#navbar li.openfolder img").attr("src", "icons/folder.png");
         $("#navbar li.openfolder").removeClass("openfolder");
         $(this).addClass("openfolder");
-        $(this).children("img").attr("src", "icons/folder-open.png");
+        $(this).children("img").attr("src", "images/folder-open.png");
 
         createFileTable($(this).attr("id"))
     });  
