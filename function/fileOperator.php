@@ -171,7 +171,7 @@ function migrate($connection, $files, $target){
     $result = array();
 
     foreach($files as $key => $filepath) {
-        $response = basic_exec($connection, "mmchattr -P " . $target . " " . $filepath);
+        $response = basic_exec($connection, "mmchattr -P " . $target . " '" . $filepath . "'");
         $file = array();
 
         if (trim($response["error"]) == "") {

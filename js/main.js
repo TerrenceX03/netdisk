@@ -421,27 +421,30 @@ function main_generateMigrationDialog() {
                                             tmp2.prop("checked", false);
                                             tmp2.prop("disabled", false);
 
+                                            var f = tmp3.data();
                                             if (j.result == 1) { // migrate sucessfully
-                                                var f = tmp3.data();
                                                 f.storage_pool_name = target;
-                                                tmp3.data(f);
                                                 $("#log").append("<span>" + tmp3.data().filename + " has been migrated to " + target + " pool.</span><br/>");
                                                 successful ++;
                                             } else {
                                                 $("#log").append("<span>" + tmp3.data().filename + " hasn't been migrated to " + target + " pool with error: " + j.error + "</span><br/>");
                                                 failed ++;
                                             }
+                                            tmp3.data(f);
                                         });
 
                                         if (failed > 0 && successful > 0) {
                                             $("#messageBar-icon i").removeClass("fa-check").addClass("fa-exclamation-triangle");
                                             $("#messageBar-msg span").empty().append("警告！迁移成�? + successful + "个文件，迁移失败" + failed + "个文件！");
+                                            $("#messageBar").css({"display":"block", "color": "#fbbc05", "border-color": "#fbbc05"});
                                         } else if (failed > 0 && successful == 0) {
                                             $("#messageBar-icon i").removeClass("fa-check").addClass("fa-times-circle");
                                             $("#messageBar-msg span").empty().append("警告！迁移成�? + successful + "个文件，迁移失败" + failed + "个文件！");
+                                            $("#messageBar").css({"display":"block", "color": "#ea4335", "border-color": "#ea4335"});
                                         } else {
                                             $("#messageBar-icon i").removeClass("fa-times-circle").removeClass("fa-exclamation-triangle").addClass("fa-check");
                                             $("#messageBar-msg span").empty().append("迁移成功" + successful + "个文�?");
+                                            $("#messageBar").css({"display":"block", "color": "#33a451", "border-color": "#33a451"});
                                         }
                                         $("#messageBar").css("display", "block");
 
