@@ -2,6 +2,15 @@ $(document).ready(function() {
     generateProgressBar();
     initStatInfo();
     initFilter();
+
+    $("#allcheckbox").on("click", function() {
+        if ($(this).prop("checked")) {
+            $("#dataTable td.datatable-checkbox input[type=checkbox]").prop("checked", true);
+        } else {
+            $("#dataTable td.datatable-checkbox input[type=checkbox]").prop("checked", false);
+        }
+        
+    });
 });
 
 function initFilter() {
@@ -121,12 +130,21 @@ function uploadfile(){
                         "file_path":file.file_path,
                         "folder_path":file.folder_path,
                         "filetype":file.filetype,
-                        "type":file.type
+                        "type":file.type,
+                        "metadata_replication":file.metadata_replication,
+                        "data_replication":file.data_replication
                     }).draw(false);
+
+                    $("#messageBar-icon i").removeClass("fa-times-circle").removeClass("fa-exclamation-triangle").addClass("fa-check");
+                    $("#messageBar-msg span").empty().append("文件上传成功: " + file.name + "!");
+                    $("#messageBar").css({"display":"block", "color": "#33a451", "border-color": "#33a451"});
+                    $("#log").append("<span>" + file.name + " has been uploaded sucessfully!");
                 });
             },
             fail: function (e, data) {
-                console.log(data);
+                $("#messageBar-icon i").removeClass("fa-check").addClass("fa-times-circle");
+                $("#messageBar-msg span").empty().append("警告：文件上传失�? " + file.name + "�?" + data);
+                $("#messageBar").css({"display":"block", "color": "#ea4335", "border-color": "#ea4335"});
             },
             progressall: function (e, data) {
                 var progress = parseInt(data.loaded / data.total * 100, 10);
@@ -193,10 +211,12 @@ function generateProgressBar() {
 
 function main_generateDeleteDialog() {
     var table = $("#dataTable").DataTable();
-    var checkedLines = $("#dataTable input[type=checkbox]:checked");
+    var checkedLines = $("#dataTable tbody input[type=checkbox]:checked");
 
     if (checkedLines.length == 0) {
-        $("#delete-dialog p.selectedFiles").append("You must select at least one file!");
+        $("#delete-dialog i").removeClass("fa-info-circle").addClass("fa-exclamation-triangle");
+        $("#delete-dialog p.messageType").empty().append("Warning!");
+        $("#delete-dialog p.selectedFiles").empty().append("You must select at least one file!");
 
         var dialog = $("#delete-dialog").dialog({
             resizable: false,
@@ -211,7 +231,9 @@ function main_generateDeleteDialog() {
             }
         });
     } else {
-        $("#delete-dialog p.selectedFiles").append("You have selected " + checkedLines.length + " files. Do you confirm to delete these files");
+        $("#delete-dialog i").removeClass("fa-exclamation-triangle").addClass("fa-info-circle");
+        $("#delete-dialog p.messageType").empty().append("Information!");
+        $("#delete-dialog p.selectedFiles").empty().append("You have selected " + checkedLines.length + " files.<br/>Do you confirm to delete these files?");
 
         var dialog = $("#delete-dialog").dialog({
             resizable: false,
@@ -242,18 +264,36 @@ function main_generateDeleteDialog() {
                         },
                         method: 'POST',
                         success: function(res) {
+                            var failed = 0;
+                            var successful = 0;
+
                             $.each(res, function(i, j) {
                                 var row = table.row(trs[i]);
                                 if (j.result == 1) { // migrate sucessfully
-                                    row.remove();
                                     $("#log").append("<span>" + row.data().filename + " has been deleted</span><br/>");
+                                    successful ++;
+                                    row.remove();
                                 } else {
                                     $(trs[i]).children(".pool-col").children("img").remove();
                                     $(trs[i]).find("input[type=checkbox]").prop("disabled", false);
-                                    $("#log").append("<span>" + row.data().filename + " hasn't been deleted with error.</span><br/>");
-                                    alert(row.data().filename + " delete failed, because of " + j.error);
+                                    $("#log").append("<span>" + row.data().filename + " hasn't been deleted with error: " + j.error + "</span><br/>");
+                                    failed ++;
                                 }
                             });
+
+                            if (failed > 0 && successful > 0) {
+                                $("#messageBar-icon i").removeClass("fa-check").addClass("fa-exclamation-triangle");
+                                $("#messageBar-msg span").empty().append("警告！删除成�? + successful + "个文件，删除失败" + failed + "个文件！");
+                                $("#messageBar").css({"display":"block", "color": "#fbbc05", "border-color": "#fbbc05"});
+                            } else if (failed > 0 && successful == 0) {
+                                $("#messageBar-icon i").removeClass("fa-check").addClass("fa-times-circle");
+                                $("#messageBar-msg span").empty().append("警告！删除成�? + successful + "个文件，删除失败" + failed + "个文件！");
+                                $("#messageBar").css({"display":"block", "color": "#ea4335", "border-color": "#ea4335"});
+                            } else {
+                                $("#messageBar-icon i").removeClass("fa-times-circle").removeClass("fa-exclamation-triangle").addClass("fa-check");
+                                $("#messageBar-msg span").empty().append("删除成功" + successful + "个文�?");
+                                $("#messageBar").css({"display":"block", "color": "#33a451", "border-color": "#33a451"});
+                            }
 
                             table.draw(false);
                             generateProgressBar();
@@ -272,10 +312,12 @@ function main_generateDeleteDialog() {
 
 function main_generateMigrationDialog() {
     var table = $("#dataTable").DataTable();
-    var checkedLines = $("#dataTable input[type=checkbox]:checked");
+    var checkedLines = $("#dataTable tbody input[type=checkbox]:checked");
 
     if (checkedLines.length == 0) {
-        $("#migration-dialog p.selectedFiles").append("You must select at least one file!");
+        $("#migration-dialog i").removeClass("fa-info-circle").addClass("fa-exclamation-triangle");
+        $("#migration-dialog p.messageType").empty().append("Warning!");
+        $("#migration-dialog p.selectedFiles").empty().append("You must select at least one file!");
 
         var dialog = $("#migration-dialog").dialog({
             resizable: false,
@@ -310,11 +352,13 @@ function main_generateMigrationDialog() {
             files[poolName + "_tr"].push(tr);
         });
 
+        $("#migration-dialog i").removeClass("fa-exclamation-triangle").addClass("fa-info-circle");
+        $("#migration-dialog p.messageType").empty().append("Information!");
         $("#migration-dialog p.selectedFiles").append("You have selected ");
         $.each(files["pool"], function (j, poolName) {
-            $("#migration-dialog p.selectedFiles").append(files[poolName].length + " files in pool " + poolName + ", ");
+            $("#migration-dialog p.selectedFiles").append(files[poolName].length + " files in pool " + poolName + ".<br/>");
         });
-        $("#migration-dialog p.selectedFiles").append("please select target pool:");
+        $("#migration-dialog p.selectedFiles").append("Please select target pool for your migration:");
 
         $.ajax({
             url: "pools.php",
@@ -322,7 +366,7 @@ function main_generateMigrationDialog() {
             success: function(res) {
                 $.each(res ,function(i, pool) {
                     var poolName = pool["name"];
-                    $("#migration-dialog ul").append("<li><label><input type='radio' name='targetPool' value='" + poolName + "' />" + poolName + "</label></li>");
+                    $("#migration-dialog ul").append("<li><input type='radio' name='targetPool' value='" + poolName + "' /><label class='" + poolName + "'>" + poolName + "</label></li>");
                 });
 
                 var dialog = $("#migration-dialog").dialog({
@@ -366,6 +410,9 @@ function main_generateMigrationDialog() {
                                     },
                                     method: 'POST',
                                     success: function(res) {
+                                        var successful = 0;
+                                        var failed = 0;
+
                                         $.each(res, function(i, j) {
                                             var tmp = $(trs[i]).children(".pool-col");
                                             var tmp2 = $(trs[i]).find("input[type=checkbox]");
@@ -379,11 +426,24 @@ function main_generateMigrationDialog() {
                                                 f.storage_pool_name = target;
                                                 tmp3.data(f);
                                                 $("#log").append("<span>" + tmp3.data().filename + " has been migrated to " + target + " pool.</span><br/>");
+                                                successful ++;
                                             } else {
-                                                $("#log").append("<span>" + tmp3.data().filename + " hasn't been migrated to " + target + " pool with error.</span><br/>");
-                                                alert(tmp3.data().filename + " migrated failed, because of " + j.error);
+                                                $("#log").append("<span>" + tmp3.data().filename + " hasn't been migrated to " + target + " pool with error: " + j.error + "</span><br/>");
+                                                failed ++;
                                             }
                                         });
+
+                                        if (failed > 0 && successful > 0) {
+                                            $("#messageBar-icon i").removeClass("fa-check").addClass("fa-exclamation-triangle");
+                                            $("#messageBar-msg span").empty().append("警告！迁移成�? + successful + "个文件，迁移失败" + failed + "个文件！");
+                                        } else if (failed > 0 && successful == 0) {
+                                            $("#messageBar-icon i").removeClass("fa-check").addClass("fa-times-circle");
+                                            $("#messageBar-msg span").empty().append("警告！迁移成�? + successful + "个文件，迁移失败" + failed + "个文件！");
+                                        } else {
+                                            $("#messageBar-icon i").removeClass("fa-times-circle").removeClass("fa-exclamation-triangle").addClass("fa-check");
+                                            $("#messageBar-msg span").empty().append("迁移成功" + successful + "个文�?");
+                                        }
+                                        $("#messageBar").css("display", "block");
 
                                         table.draw(false);
                                         generateProgressBar();
@@ -459,6 +519,18 @@ String.prototype.startWith = function (s) {
     }
 
     if (this.substr(0, s.length) == s) {
+        return true;
+    } else {
+        return false;
+    }
+}
+
+String.prototype.endWith = function(str){
+    if(str==null||str==""||this.length==0||str.length>this.length) {
+        return false;
+    }
+
+    if(this.substring(this.length - str.length) == str) {
         return true;
     } else {
         return false;

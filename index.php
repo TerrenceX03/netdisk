@@ -36,7 +36,7 @@ include 'function/show_list.php';
                 </th> 
             </tr>
             <tr>
-                <td id="navbar" rowspan="4" width="250px">
+                <td id="navbar" rowspan="5" width="250px">
                     <div id="navbar-title" class="chinese">全部文件夹</div>
                     <?php 
                     // show list of files 
@@ -44,13 +44,17 @@ include 'function/show_list.php';
                     echo show_folder($ans,'picture', "display()"); 
                     ?>
                 </td>
-                <td id="opbar" colspan="2" height="50px">
+                <td id="opbar" colspan="2">
+                    <div id="messageBar">
+                        <div id="messageBar-icon"><i class="fa fa-check" aria-hidden="true"></i></div>
+                        <div id="messageBar-msg"><span>3个文件被成功迁移到sliver存储池！</span></div>
+                        <div id="messageBar-close" onclick="$('#messageBar').css('display', 'none')"><span></span></div>
+                    </div>
                     <div>
                         <ul>
                             <li class="uploadbtn button">
                                 <a>
                                     <span onclick="uploadfile()" class="btn btn-success fileinput-button default-button chinese" href = "JavaScript:void(0)">
-                                        <i class="glyphicon glyphicon-plus"></i>
                                         <span>上传</span>
                                         <input id="fileupload" type="file" name="newFile" multiple>
                                     </span>
@@ -119,7 +123,7 @@ include 'function/show_list.php';
                     <table id="dataTable" class="hover row-border" style="width:100%">
                     	<thead>
                             <tr>
-                                <th class="chinese" style="background: none"></th>
+                                <th class="chinese" style="background: none"><label><input id='allcheckbox' class='checkbox' type='checkbox'><span></span></label></th>
                                 <th class="chinese">文件名</th>
                                 <th class="chinese">文件大小</th>
                                 <th class="chinese">创建时间</th>
@@ -163,15 +167,17 @@ include 'function/show_list.php';
             </div>
         </div>
 
-        <div id="migration-dialog" title="Migration..." style="display: none">
-            <p>Migrate your selected file(s) to another storage pool</p>
+        <div id="migration-dialog" title="" style="display: none">
+            <i class="fa fa-3x" aria-hidden="true"></i>
+            <p class="messageType"></p>
             <p class="selectedFiles"></p>
             <ul></ul>
             <p class="message"></p>
         </div>
 
-        <div id="delete-dialog" title="Delete..." style="display: none">
-            <p>Delete your selected file(s)</p>
+        <div id="delete-dialog" title="" style="display: none">
+            <i class="fa fa-3x" aria-hidden="true"></i>
+            <p class="messageType"></p>
             <p class="selectedFiles"></p>
             <p class="message"></p>
         </div>

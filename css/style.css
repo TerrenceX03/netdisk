@@ -90,10 +90,64 @@ body {
 	height: 30px;
 }
 
+/* Message Bar */
+#messageBar {
+	height: 25px;
+    width: 100%;
+    position: relative;
+    background: #FFF;
+    margin: 5px 0;
+    border-radius: 2px;
+    color: #33a451;
+    border: 1px solid #33a451;
+    display: none;
+}
+
+#messageBar #messageBar-icon {
+	float: left;
+	display: inline-block;
+	line-height: 25px;
+	vertical-align: middle;
+	padding: 0 10px;
+}
+
+#messageBar #messageBar-msg {
+	display: inline-block;
+	line-height: 25px;
+	vertical-align: middle;
+	text-align: left;
+	color: #404040;
+	font-size: 12px;
+}
+
+#messageBar #messageBar-close {
+	float: right;
+	display: inline-block;
+	line-height: 25px;
+	vertical-align: middle;
+	cursor: pointer;
+	color: #103319;
+}
+
+#messageBar #messageBar-close span:before {
+	font-family: 'FontAwesome';
+    content: '\f00d';
+    font-size: 15px;
+    margin: 0 10px;
+    opacity: 0.5;
+}
+
+#messageBar #messageBar-close:hover span:before {
+    opacity: 1;
+}
+
+
 /* Operation Button */
 #opbar {
-	padding: 3px 10px;
 	position: relative;
+	vertical-align: top;
+	height: 35px;
+    padding: 10px 15px 5px 15px;
 }
 
 #opbar li.button {
@@ -367,15 +421,15 @@ table.dataTable.no-footer  {
     font-size: 15px;
 }
 
-.pool-col label.system:before {
+.system:before {
 	color: #FED230;
 }
 
-.pool-col label.silver:before {
+.silver:before {
 	color: #CFCFCF;
 }
 
-.pool-col label.bronze:before {
+.bronze:before {
 	color: #FE7916;
 }
 
@@ -414,6 +468,11 @@ table.dataTable.no-footer  {
 	border: 1px solid #DEE2E6;
 	background: #ececec;
 	color: #0d5bdd !important;
+}
+
+#dataTable td.datatable-checkbox {
+	text-align: center;
+	vertical-align: middle;
 }
 
  /* Statistics */
@@ -716,7 +775,7 @@ migration pool css
 	left: 6px;
 }
 
-input[type=radio]:checked:before {
+/*input[type=radio]:checked:before {
 	content: '';
 	display: inline-block;
 	width: 8px;
@@ -730,7 +789,7 @@ input[type=radio]:checked:before {
 
 input[type=radio] {
 	margin-right: 6px;
-}
+}*/
 
 .pool_check {
 	position: relative;
@@ -798,6 +857,8 @@ input[type=radio] {
 .select.is-open ul {
     display: block;
     box-shadow: 0 0 4px rgba(0,0,0,.04);
+    border-radius: 3px;
+    border: 1px solid #c5c5c5;
 }
 .select.select--white .placeholder {
     background: #fff;
@@ -826,7 +887,7 @@ input[type=radio] {
     padding: 8px 10px;
     color: #999;
     cursor: pointer;
-    background: #f5f5f5;
+    background: #FFF;
 }
 .select ul li:hover {
     background: #4ebbf0;
@@ -890,5 +951,96 @@ input[type=radio] {
     color: #FFF;
 }
 
+/* Dialog widget */
+.ui-draggable .ui-dialog-titlebar {
+	background: #FFF;
+	border: 0;
+}
 
+.ui-dialog .ui-dialog-titlebar-close {
+	background: #FFF;
+	border: 0;
+}
 
+.ui-dialog .ui-dialog-buttonpane {
+	border: 0;
+}
+
+.ui-dialog .ui-dialog-content {
+	text-align: center;
+}
+
+.ui-dialog .ui-dialog-content i.fa-exclamation-triangle {
+	color: #fbbc05!important;
+}
+
+.ui-dialog .ui-dialog-content i.fa-info-circle {
+	color: #4285f4!important;
+}
+
+.ui-dialog .ui-dialog-content p {
+	margin: 15px 0;
+	color: #404040;
+}
+
+.ui-dialog .ui-dialog-content p.messageType {
+	font-size: 20px;
+}
+
+.ui-dialog .ui-dialog-buttonpane button {
+    background: #FFF;
+    border: 1px solid #dbdbdb;
+}
+
+.ui-dialog .ui-dialog-buttonpane button:hover {
+    border: 1px solid #bababa;
+}
+
+#migration-dialog ul {
+	text-align: left;
+	padding-left: 45px;
+}
+
+#migration-dialog ul li input {
+	margin-right: 10px;
+}
+
+/* Input Check Box */
+input[type="checkbox"] {
+    display: none;
+}
+
+input[type="checkbox"]:checked {
+    background: #2489c5;
+}
+
+input[type="checkbox"]:disabled {
+    border-color: #CCC;
+}
+
+input[type="checkbox"] + span:before {
+    font-family: 'FontAwesome';
+    content: '';
+    font-size: 15px;
+    margin-right: 5px;
+    border: 1px solid #ccc;
+    width: 1.1rem;
+    height: 1.1rem;
+    line-height: 1.1rem;
+    display: inline-block;
+    vertical-align: middle;
+    text-align: center;
+    border-radius: 2px;
+    cursor: pointer;
+} 
+
+input[type="checkbox"]:checked + span:before {
+    content: '\f00c';
+    border: 1px solid #2489c5;
+    color: #2489c5;
+}
+
+input[type="checkbox"]:disabled + span:before {
+    cursor: none;
+    background: #EEE;
+}

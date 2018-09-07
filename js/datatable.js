@@ -116,6 +116,10 @@ function createFileTable ( folderName ) {
                         return "<i class='fa fa-file-image-o fa-lg type-icon' aria-hidden='true'></i><span class='data-label'>" + data + "</span>";
                     } else if (row.filetype.startWith("HTML")) {
                         return "<i class='fa fa-file-code-o fa-lg type-icon' aria-hidden='true'></i><span class='data-label'>" + data + "</span>";
+                    } else if (row.filetype.startWith("Microsoft PowerPoint") || data.endWith("ppt") || data.endWith("pptx")) {
+                        return "<i class='fa fa-file-powerpoint-o fa-lg type-icon' aria-hidden='true'></i><span class='data-label'>" + data + "</span>";
+                    } else if (row.filetype.startWith("Microsoft Word") || data.endWith("doc") || data.endWith("docx")) {
+                        return "<i class='fa fa-file-word-o fa-lg type-icon' aria-hidden='true'></i><span class='data-label'>" + data + "</span>";
                     } else {
                         return "<i class='fa fa-file-text-o fa-lg type-icon' aria-hidden='true'></i><span class='data-label'>" + data + "</span>";
                     }
@@ -163,7 +167,7 @@ function createFileTable ( folderName ) {
                 "className":      'datatable-checkbox',
                 "orderable":      false,
                 "data":           null,
-                "defaultContent": "<input type='checkbox' />",
+                "defaultContent": "<label><input class='checkbox' type='checkbox'><span></span></label>",
                 "width": "2%"
             },
             { "data": "filename", "className": "datatable-data-col" },
