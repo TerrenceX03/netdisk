@@ -85,7 +85,7 @@ include 'function/show_list.php';
                                 <td class="filter-title filter-size">文件大小(KB)</td>
                                 <td class="filter-title filter-date">创建时间</td>
                                 <td class="filter-title filter-date">修改时间</td>
-                                <td rowspan="2">
+                                <td class="filter-btn" rowspan="2">
                                     <div id="btn_filter">
                                         <i class="fa fa-filter fa-lg"></i>
                                         <label>过滤</label>
@@ -101,15 +101,15 @@ include 'function/show_list.php';
                                     <div><label>请选择存储池</label></div>
                                     <div class="select"><span class="placeholder">全部存储池</span><ul id="poolfilter"></ul></div>
                                 </td>
-                                <td>
+                                <td class="filter-size">
                                     <div class="filter-data"><label>从</label><input type="text" id="size_since" /></div>
                                     <div class="filter-data"><label>到</label><input type="text" id="size_to" /></div>
                                 </td>
-                                <td>
+                                <td class="filter-date">
                                     <div class="filter-data datepicker"><label>从</label><input type="text" id="creationdate_since" /></div>
                                     <div class="filter-data datepicker"><label>到</label><input type="text" id="creationdate_to" /></div>
                                 </td>
-                                <td>
+                                <td class="filter-date">
                                     <div class="filter-data datepicker"><label>从</label><input type="text" id="changedate_since" /></div>
                                     <div class=" filter-datadatepicker"><label>到</label><input type="text" id="changedate_to" /></div>
                                 </td>

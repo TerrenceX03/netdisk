@@ -146,19 +146,15 @@ body {
 #opbar {
 	position: relative;
 	vertical-align: top;
-	height: 35px;
+	height: 30px;
     padding: 10px 15px 5px 15px;
 }
 
 #opbar li.button {
 	float: left;
 	margin-right: 5px;
-	padding-top: 9px;
 }
 
-#opbar li.button.uploadbtn {
-	padding-top: 8px;
-}
 
 #opbar li.button.uploadbtn span span:before {
 	font-family: 'FontAwesome';
@@ -199,10 +195,13 @@ body {
 	text-align: center;
 	vertical-align: middle;
 	border-radius: 2px;
-	padding: 8px 10px;
 	background: #0074E8;
 	cursor: pointer;
 	border: 1px solid #EEE;
+	height: 30px;
+	line-height: 30px;
+	padding: 0 8px;
+	display: inline-block;
 }
 
 #opbar li a:hover {
@@ -218,9 +217,26 @@ body {
 	color: #0074E8;
 }
 
-#opbar li.uploadbtn a span.btn {
-	height: 15px;
+/*#opbar li.uploadbtn a span.btn {
+	height: 20px;
 	width: 60px;
+}*/
+#opbar li.uploadbtn a,
+#opbar li.uploadbtn span {
+	height: 30px;
+	width: 70px;
+	vertical-align: middle;
+	text-align: center;
+	display: inline-block;
+	padding: 0;
+}
+
+#opbar li.uploadbtn a {
+	line-height: inherit;
+}
+
+#opbar li.uploadbtn span span {
+	line-height: 30px;
 }
 
 #opbar li.align-right {
@@ -260,6 +276,10 @@ body {
 
 #filter td {
 	padding: 5px 0 0 15px;
+}
+
+#filter td.filter-btn {
+	padding-right: 10px;
 }
 
 #filter td.filter-title {
@@ -307,11 +327,18 @@ body {
 #table-filter-container input {
 	padding: 4px 12px;
 	height: 23px;
-	width: 80px;
 	border: 1px solid #BDC0C7;
 	border-radius: 2px;
 	line-height: 1.6;
 	display: block;
+}
+
+#table-filter-container .filter-size input {
+	width: 40px;
+}
+
+#table-filter-container .filter-date input {
+	width: 70px;
 }
 
 #btn_filter, #btn_clear {
@@ -414,7 +441,7 @@ table.dataTable.no-footer  {
 	color: green;
 }
 
-label.pool:before {
+.pool:before {
 	width: 15px;
     font-family: 'FontAwesome';
     margin-right: 10px;
@@ -423,11 +450,11 @@ label.pool:before {
     display: inline-block;
 }
 
-label.pool.internal:before {
+.pool.internal:before {
     content: '\f1c0';
 }
 
-label.pool.external:before {
+.pool.external:before {
     content: '\f0c2';
     color: #077DF1;
 }
@@ -903,14 +930,6 @@ input[type=radio] {
 .select ul li:hover {
     background: #4ebbf0;
     color: #fff;
-}
-
-.select ul li:before {
-	content: "\f1c0";
-	transform: translateY(-50%);
-    font-family: 'FontAwesome';
-    z-index: 10;
-    margin-right: 10px;
 }
 
 /* Date Picker */

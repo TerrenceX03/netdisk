@@ -5,10 +5,9 @@ include 'function/basic.php';
   
   $filepath:Absolute filepath. 
 */
-function getFile($connection, $filepath) {
+function getFile($connection, $filepath, $tctTeringEnabled) {
     $mmlsattr_cmd = "mmlsattr -L '" . $filepath . "'";
     $stat_cmd = "stat -c \"%g|%u|%n|%o|%s|%x|%y|%z|%F\"  '" . $filepath . "'";
-    $filetype_cmd = "file '" . $filepath .  "'";
     $tct_cmd = "mmcloudgateway files list '" . $filepath . "'";
 
     $file = array();
@@ -16,10 +15,6 @@ function getFile($connection, $filepath) {
     //get file information from mmlsattr command
     $response1 = basic_exec($connection, $mmlsattr_cmd);
     $lines = explode(",", str_replace(array("\r\n", "\n"), ",", $response1["output"]));
-
-    //get fileype from file command
-    $response2 = basic_exec($connection, $filetype_cmd);
-    $file['filetype'] =  trim(explode(':', $response2["output"])[1]);
 
     foreach ($lines as $line) {
         $tmpArray = explode(":", $line);
@@ -98,6 +93,29 @@ function getFile($connection, $filepath) {
     $file['type'] = trim($items_stat[8]);
     $file["action"] = "GET";
 
+    if ($tctTeringEnabled) {
+        $response4 = basic_exec($connection, $tct_cmd);
+        $lines = explode(",", str_replace(array("\r\n", "\n"), ",", trim($response4["output"])));
+        foreach ($lines as $line) {
+            $tmpArray = explode(":", $line);
+            if (trim($tmpArray[0]) == "On-line size") {
+                $file["online_size"] = trim($tmpArray[1]);
+            } else if (trim($tmpArray[0]) == "Used blocks") {
+                $file["used_blocks"] = trim($tmpArray[1]);
+            } else if (trim($tmpArray[0]) == "Data Version") {
+                $file["data_version"] = trim($tmpArray[1]);
+            } else if (trim($tmpArray[0]) == "Meta Version") {
+                $file["meta_version"] = trim($tmpArray[1]);
+            } else if (trim($tmpArray[0]) == "State") {
+                $file["state"] = trim($tmpArray[1]);
+            } else if (trim($tmpArray[0]) == "Container Index") {
+                $file["container_index"] = trim($tmpArray[1]);
+            } else if (trim($tmpArray[0]) == "Base Name") {
+                $file["base_name"] = trim($tmpArray[1]);
+            }
+        }
+    }
+
     return $file;
 }
 
@@ -113,16 +131,52 @@ function listFiles($connection, $dirpath) {
     $files = array();
     $files['data'] = array();
     $file = array();
+    $isTctTeringEnabled = _isTctTeringEnabled($connection, $dirpath . "/");
 
     for ($i = 0; $i < count($tmp); $i++) {
         if ($tmp[$i] != '') {
-            $file = getFile($connection, $dirpath . "/" . $tmp[$i]);
+            $file = getFile($connection, $dirpath . "/" . $tmp[$i], $isTctTeringEnabled["enabled"]);
             $file['filename'] = $tmp[$i];
+
+            if ($isTctTeringEnabled["enabled"]) {
+                $file['external_storage_pool_name'] = $isTctTeringEnabled["account"];
+            }
 
             array_push($files['data'], $file);
         }
     }
     return $files;
+}
+
+function _isTctTeringEnabled($connection, $dirpath) {
+    $response = basic_exec($connection, "mmcloudgateway containerPairSet list -Y");
+    $tmp = explode("\n", trim($response["output"]));
+    $result = array();
+    $result["enabled"] = false;
+
+    for ($i = 1; $i < count($tmp); $i++) {
+        if (trim($tmp[$i]) != '') {
+            $params = explode(":", trim($tmp[$i]));
+            $scopeTo = $params[9];
+            $path = $params[10];
+
+            if (($scopeTo == "filesystem") || ($scopeTo == "fileset" && $path == trim($dirpath))) {
+                $result["cloudservice"] = $params[8];
+                $result["enabled"] = true;
+                
+                $response2 = basic_exec($connection, "mmcloudgateway cloudService list --cloud-service-name " . $params[8] . " -Y");
+                $tmp2 = explode("\n", trim($response2["output"]));
+                if (isset($tmp2[1]) && trim($tmp2[1]) != '') {
+                    $params2 = explode(":", trim($tmp2[1]));
+                    $result["account"] = $params2[8];
+                }
+
+                return $result;
+            } 
+        }
+    }
+
+    return $result;
 }
 
 /*
@@ -148,8 +202,9 @@ function postFile($connection, $file, $dirpath) {
         $tmpfile["url"] = "";
         $tmpfile["deleteUrl"] = "";
         $tmpfile["deleteType"] = "DELETE";
+        $isTctTeringEnabled = _isTctTeringEnabled($connection, $dirpath . "/");
 
-        $serverSideFile = getFile($connection, $filepath);
+        $serverSideFile = getFile($connection, $filepath, $isTctTeringEnabled["enabled"]);
         $tmpfile = array_merge($tmpfile, $serverSideFile);
         $tmpfile["size"] = $tmpfile["file_size"];
     } else {

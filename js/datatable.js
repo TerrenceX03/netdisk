@@ -3,15 +3,15 @@ function format ( d ) {
     // `d` is the original data object for the row
     return '<ul id=\"more_fileinfo\">'+
         '<li>'+
-            '<p class=\"fileinfo_label\">Œƒº˛¬∑æ∂:</p>'+
+            '<p class=\"fileinfo_label\">Êñá‰ª∂Ë∑ØÂæÑ:</p>'+
             '<p class=\"fileinfo_value\">'+d.file_path+'</p>'+
         '</li>'+
         '<li>'+
-            '<p class=\"fileinfo_label\">‘™ ˝æ›∏±±æ ˝:</p>'+
+            '<p class=\"fileinfo_label\">ÂÖÉÊï∞ÊçÆÂâØÊú¨:</p>'+
             '<p class=\"fileinfo_value\">'+d.metadata_replication+'</p>'+
         '</li>'+
         '<li>'+
-            '<p class=\"fileinfo_label\"> ˝æ›∏±±æ ˝:</p>'+
+            '<p class=\"fileinfo_label\">Êï∞ÊçÆÂâØÊú¨:</p>'+
             '<p class=\"fileinfo_value\">'+d.data_replication+'</p>'+
         '</li>'
     '</ul>';
@@ -110,15 +110,15 @@ function createFileTable ( folderName ) {
                                 + "</span>";
                     } else if (row.type == "directory") {
                         return "<i class='fa fa-folder-o fa-lg type-icon' aria-hidden='true'></i><span class='data-label'>" + data + "</span>";
-                    } else if (row.filetype.startWith("PDF document")) {
+                    } else if (data.toLowerCase().endWith("pdf")) {
                         return "<i class='fa fa-file-pdf-o fa-lg type-icon' aria-hidden='true'></i><span class='data-label'>" + data + "</span>";
-                    } else if (row.filetype.startWith("PNG") || row.filetype.startWith("JPEG")) {
+                    } else if (data.toLowerCase().endWith("png") || data.toLowerCase().endWith("jpg")) {
                         return "<i class='fa fa-file-image-o fa-lg type-icon' aria-hidden='true'></i><span class='data-label'>" + data + "</span>";
-                    } else if (row.filetype.startWith("HTML")) {
+                    } else if (data.toLowerCase().endWith("html")) {
                         return "<i class='fa fa-file-code-o fa-lg type-icon' aria-hidden='true'></i><span class='data-label'>" + data + "</span>";
-                    } else if (row.filetype.startWith("Microsoft PowerPoint") || data.endWith("ppt") || data.endWith("pptx")) {
+                    } else if (data.toLowerCase().endWith("ppt") || data.toLowerCase().endWith("pptx")) {
                         return "<i class='fa fa-file-powerpoint-o fa-lg type-icon' aria-hidden='true'></i><span class='data-label'>" + data + "</span>";
-                    } else if (row.filetype.startWith("Microsoft Word") || data.endWith("doc") || data.endWith("docx")) {
+                    } else if (data.toLowerCase().endWith("doc") || data.toLowerCase().endWith("docx")) {
                         return "<i class='fa fa-file-word-o fa-lg type-icon' aria-hidden='true'></i><span class='data-label'>" + data + "</span>";
                     } else {
                         return "<i class='fa fa-file-text-o fa-lg type-icon' aria-hidden='true'></i><span class='data-label'>" + data + "</span>";
@@ -127,12 +127,19 @@ function createFileTable ( folderName ) {
                 "targets": 1  // file name column
             },
             {
-                "render": function (data, type, row) {
-                    if (row.type == "directory" || row.type == "0_directory") {
-                        return " - ";
-                    } else {
-                        return main_formatDataSizeWithUnit(data);
-                    }
+                "data": function(row, type, val, meta) {
+                    if (type == "set") {
+                        row.file_size = val;
+                        return;
+                    } else if (type == "display") {
+                        if (row.type == "directory" || row.type == "0_directory") {
+                            return " - ";
+                        } else {
+                            return  main_formatDataSizeWithUnit(row.file_size);
+                        }
+                    } 
+                    
+                    return row.file_size; // sort, filter, undefined,
                 },
                 "targets": 2  // file size column
             },
@@ -151,7 +158,11 @@ function createFileTable ( folderName ) {
                     if (isNaN(row) && row.type == "0_directory") {
                         return " - ";
                     } else {
-                        return "<label class='pool internal " + data + "'>" + data.toUpperCase() + "</label>";
+                        if(row.state && row.state == "Non-resident") {
+                            return "<label class='pool external " + row.external_storage_pool_name + "'>" + row.external_storage_pool_name.toUpperCase() + "</label>";
+                        } else {
+                            return "<label class='pool internal " + data + "'>" + data.toUpperCase() + "</label>"; 
+                        }
                     }
                 },
                 "targets": 5
@@ -171,7 +182,7 @@ function createFileTable ( folderName ) {
                 "width": "2%"
             },
             { "data": "filename", "className": "datatable-data-col" },
-            { "data": "file_size", "className": "datatable-data-col" },
+            { "className": "datatable-data-col" }, // file_size, the data info has been defined in columnDefs
             { "data": "creation_time", "className": "datatable-data-col" },
             { "data": "L_mod_time", "className": "datatable-data-col" },
             { "data": "storage_pool_name", "className": "datatable-data-col pool-col" },
@@ -184,10 +195,20 @@ function createFileTable ( folderName ) {
                 $('.select').off('click', '.placeholder');
                 $('.select').off('click', 'ul > li');
 
-                var poolFilter = $("#poolfilter").empty().append("<li value=\"\">»´≤ø¥Ê¥¢≥ÿ</li>");
-                column.data().unique().sort().each( function ( d, j ) {
-                    poolFilter.append( '<li class="' + d + '" value="'+d+'">'+d+'&nbsp;¥Ê¥¢≥ÿ</li>' )
-                } );
+                var poolFilter = $("#poolfilter").empty().append("<li class='pool internal' value=\"\">ÂÖ®ÈÉ®Â≠òÂÇ®Ê±†</li>");
+                // column.data().unique().sort().each( function ( d, j ) {
+                //     poolFilter.append( '<li class="' + d + '" value="'+d+'">'+d+'&nbsp;Â≠òÂÇ®Ê±†</li>' );
+                // } );
+                $.ajax({
+                    url: "pools.php",
+                    method: 'GET',
+                    success: function(res) {
+                        $.each(res ,function(i, pool) {
+                            var poolName = pool["name"];
+                            poolFilter.append( "<li class='pool " + pool["type"] + " " + poolName + "' value='" + poolName + "'>" + poolName + "&nbsp;Â≠òÂÇ®Ê±†</li>" );
+                        });
+                    }
+                });
 
                 $('.select').on('click', '.placeholder', function(e) {
                     var parent = $(this).closest('.select');
@@ -258,7 +279,7 @@ function createFileTable ( folderName ) {
     } );
 }
 
-/*Click the "∑µªÿ" button to return back*/
+/*Click the "¬∑¬µ¬ª√ò" button to return back*/
 function returnback(){
     var backfolder = $('#backpath').attr('class');
     createFileTable(backfolder);
@@ -286,7 +307,7 @@ $(document).ready(function() {
         $(this).addClass("openfolder");
         $(this).children("img").attr("src", "images/folder-open.png");
 
-        $(".placeholder").text("»´≤ø¥Ê¥¢≥ÿ");
+        $(".placeholder").text("ÂÖ®ÈÉ®Â≠òÂÇ®Ê±†");
         $('.select.is-open').removeClass('is-open');
 
         createFileTable($(this).attr("id"))

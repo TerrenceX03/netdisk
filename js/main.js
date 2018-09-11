@@ -289,15 +289,15 @@ function main_generateDeleteDialog() {
 
                             if (failed > 0 && successful > 0) {
                                 $("#messageBar-icon i").removeClass("fa-check").addClass("fa-exclamation-triangle");
-                                $("#messageBar-msg span").empty().append("警告！删除成�? + successful + "个文件，删除失败" + failed + "个文件！");
+                                $("#messageBar-msg span").empty().append("Warning! Successfully deleted " + successful + " files, and failed to delete " + failed + " files!");
                                 $("#messageBar").css({"display":"block", "color": "#fbbc05", "border-color": "#fbbc05"});
                             } else if (failed > 0 && successful == 0) {
                                 $("#messageBar-icon i").removeClass("fa-check").addClass("fa-times-circle");
-                                $("#messageBar-msg span").empty().append("警告！删除成�? + successful + "个文件，删除失败" + failed + "个文件！");
+                                $("#messageBar-msg span").empty().append("Warning! Successfully deleted " + successful + " files, and failed to delete " + failed + " files!");
                                 $("#messageBar").css({"display":"block", "color": "#ea4335", "border-color": "#ea4335"});
                             } else {
                                 $("#messageBar-icon i").removeClass("fa-times-circle").removeClass("fa-exclamation-triangle").addClass("fa-check");
-                                $("#messageBar-msg span").empty().append("删除成功" + successful + "个文�?");
+                                $("#messageBar-msg span").empty().append("Good! Successfully deleted " + successful + " files!");
                                 $("#messageBar").css({"display":"block", "color": "#33a451", "border-color": "#33a451"});
                             }
 
@@ -432,7 +432,13 @@ function main_generateMigrationDialog() {
 
                                             var f = tmp3.data();
                                             if (j.result == 1) { // migrate sucessfully
-                                                f.storage_pool_name = target;
+                                                if (targetpooltype == "external") {
+                                                    f.state = "Non-resident";
+                                                    f.external_storage_pool_name = target;
+                                                } else {
+                                                    f.storage_pool_name = target;
+                                                }
+                                                
                                                 $("#log").append("<span>" + tmp3.data().filename + " has been migrated to " + target + " pool.</span><br/>");
                                                 successful ++;
                                             } else {
@@ -444,15 +450,15 @@ function main_generateMigrationDialog() {
 
                                         if (failed > 0 && successful > 0) {
                                             $("#messageBar-icon i").removeClass("fa-check").addClass("fa-exclamation-triangle");
-                                            $("#messageBar-msg span").empty().append("警告！迁移成�? + successful + "个文件，迁移失败" + failed + "个文件！");
+                                            $("#messageBar-msg span").empty().append("Warning! Successfully migrated " + successful + " files, and failed to migrate " + failed + " files!");
                                             $("#messageBar").css({"display":"block", "color": "#fbbc05", "border-color": "#fbbc05"});
                                         } else if (failed > 0 && successful == 0) {
                                             $("#messageBar-icon i").removeClass("fa-check").addClass("fa-times-circle");
-                                            $("#messageBar-msg span").empty().append("警告！迁移成�? + successful + "个文件，迁移失败" + failed + "个文件！");
+                                            $("#messageBar-msg span").empty().append("Warning! Successfully migrated " + successful + " files, and failed to migrate " + failed + " files!");
                                             $("#messageBar").css({"display":"block", "color": "#ea4335", "border-color": "#ea4335"});
                                         } else {
                                             $("#messageBar-icon i").removeClass("fa-times-circle").removeClass("fa-exclamation-triangle").addClass("fa-check");
-                                            $("#messageBar-msg span").empty().append("迁移成功" + successful + "个文�?");
+                                            $("#messageBar-msg span").empty().append("Good! Successfully migrated " + successful + " files!");
                                             $("#messageBar").css({"display":"block", "color": "#33a451", "border-color": "#33a451"});
                                         }
                                         $("#messageBar").css("display", "block");
