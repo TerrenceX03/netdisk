@@ -9,6 +9,7 @@ function getFile($connection, $filepath) {
     $mmlsattr_cmd = "mmlsattr -L '" . $filepath . "'";
     $stat_cmd = "stat -c \"%g|%u|%n|%o|%s|%x|%y|%z|%F\"  '" . $filepath . "'";
     $filetype_cmd = "file '" . $filepath .  "'";
+    $tct_cmd = "mmcloudgateway files list '" . $filepath . "'";
 
     $file = array();
 
@@ -166,14 +167,21 @@ Modify the storage tier of the file with the specified ID
 $files：An array,it contains filepath of the files to be migrated
 
 $target:  storage pool where files will be migrated to.
+
+$targetPoolType: internal or external pool
 */
-function migrate($connection, $files, $target){
+function migrate($connection, $files, $target, $targetPoolType){
     $result = array();
+    $response = null;
 
     foreach($files as $key => $filepath) {
-        $response = basic_exec($connection, "mmchattr -P " . $target . " '" . $filepath . "'");
+        if ($targetPoolType == "internal") {
+            $response = basic_exec($connection, "mmchattr -P " . $target . " '" . $filepath . "'");
+        } else if ($targetPoolType == "external") {
+            $response = basic_exec($connection, "mmcloudgateway files migrate '" . $filepath . "'");
+        }
+        
         $file = array();
-
         if (trim($response["error"]) == "") {
             $file["result"] = 1;    
         } else {

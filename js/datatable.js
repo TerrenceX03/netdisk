@@ -151,7 +151,7 @@ function createFileTable ( folderName ) {
                     if (isNaN(row) && row.type == "0_directory") {
                         return " - ";
                     } else {
-                        return "<label class='" + data + "'>" + data.toUpperCase() + "</label>";
+                        return "<label class='pool internal " + data + "'>" + data.toUpperCase() + "</label>";
                     }
                 },
                 "targets": 5
@@ -186,7 +186,7 @@ function createFileTable ( folderName ) {
 
                 var poolFilter = $("#poolfilter").empty().append("<li value=\"\">È«²¿´æ´¢³Ø</li>");
                 column.data().unique().sort().each( function ( d, j ) {
-                    poolFilter.append( '<li value="'+d+'">'+d+'&nbsp;´æ´¢³Ø</li>' )
+                    poolFilter.append( '<li class="' + d + '" value="'+d+'">'+d+'&nbsp;´æ´¢³Ø</li>' )
                 } );
 
                 $('.select').on('click', '.placeholder', function(e) {

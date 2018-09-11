@@ -27,10 +27,28 @@ function listPools($connection, $fsname) {
     			$pool["totalmetasize"] = $matches[9];
     			$pool["freemetasize"] = $matches[10];
     			$pool["freemetapercentage"] = $matches[11];
+                $pool["type"] = "internal";
     			array_push($pools, $pool);
     		}
     	}
 	}
+
+    $externalPool = array();
+    $response = basic_exec($connection, "mmlsconfig tctEnable");
+    $tmp = explode(" ", trim($response["output"]));
+    if ($tmp[1] == "yes") {
+        $response = basic_exec($connection, "mmcloudgateway account list -Y");
+        $tmp = explode(";", str_replace(array("\r\n", "\n"), ";", trim($response["output"])));
+        
+        for ($i = 1; $i < count($tmp); $i++) {
+            $tmp2 = explode(":", $tmp[$i]);
+            $externalPool["name"] = $tmp2[7];
+            $externalPool["cloudtype"] = $tmp2[8];
+            $externalPool["username"] = $tmp2[9];
+            $externalPool["type"] = "external";
+            array_push($pools, $externalPool);
+        }
+    }
 
 	return $pools;
 }

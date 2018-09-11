@@ -414,11 +414,22 @@ table.dataTable.no-footer  {
 	color: green;
 }
 
-.pool-col label:before {
+label.pool:before {
+	width: 15px;
     font-family: 'FontAwesome';
-    content: '\f1c0';
     margin-right: 10px;
     font-size: 15px;
+    text-align: center;
+    display: inline-block;
+}
+
+label.pool.internal:before {
+    content: '\f1c0';
+}
+
+label.pool.external:before {
+    content: '\f0c2';
+    color: #077DF1;
 }
 
 .system:before {
@@ -999,6 +1010,10 @@ input[type=radio] {
 #migration-dialog ul {
 	text-align: left;
 	padding-left: 45px;
+}
+
+#migration-dialog li {
+	margin: 3px 0;
 }
 
 #migration-dialog ul li input {

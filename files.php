@@ -21,6 +21,6 @@ if ($_GET["myaction"] == "LIST") { // List a folder
 } elseif($_GET['myaction'] == "DELETE") { // Delete file
 	echo json_encode(deleteFiles($connection, json_decode($_POST['files'])));
 } elseif($_GET['myaction'] == "MIGRATE") { // Migration
-	echo json_encode(migrate($connection, json_decode($_POST['files']), $_POST['target']));
+	echo json_encode(migrate($connection, json_decode($_POST['files']), $_POST['target'], $_POST['targetpooltype']));
 } 
 ?> 

@@ -52,6 +52,10 @@ function initFilter() {
 
     $("#btn_clear").on("click", function () {
         $("#size_since, #size_to, #creationdate_since, #creationdate_to, #changedate_since, #changedate_to").val("");
+        creationdateSince.datepicker("option", "maxDate", "");
+        creationdateTo.datepicker("option", "minDate", "");
+        changedateSince.datepicker("option", "maxDate", "");
+        changedateTo.datepicker("option", "minDate", "");
         $("#dataTable").DataTable().draw();
     });
 }
@@ -180,30 +184,32 @@ function generateProgressBar() {
             $("#stat_progressbar_content tbody").empty();
 
             $.each(res ,function(i, pool) {
-                var poolName = pool["name"];
-                var totaldatasize = pool["totaldatasize"];
-                var freedatasize = pool["freedatasize"];
-                var userdatapercentage = 100 - pool["freedatapercentage"];
+                if (pool["type"] == "internal") {
+                    var poolName = pool["name"];
+                    var totaldatasize = pool["totaldatasize"];
+                    var freedatasize = pool["freedatasize"];
+                    var userdatapercentage = 100 - pool["freedatapercentage"];
 
-                $("#stat_progressbar_content tbody").append(
-                    "<tr><td class='stat_progressbar-name english' colspan='2'><label class='left'>" + poolName.toUpperCase() + "</label><label class='right'>FREE: " + main_formatDataSizeWithUnit(freedatasize) + "</label></td></tr>"
-                    + "<tr><td class='stat_progressbar-row'><div id='stat_progressbar-" + poolName + "'></div></td><td class='stat_progressbar-label english'><div>" + userdatapercentage + "%</div></td></tr>"
-                    + "<tr><td class='stat_progressbar-name english bottom' colspan='2'><label class='left'>USED: " + main_formatDataSizeWithUnit(totaldatasize - freedatasize) + "</label><label class='right'>CAPACITY: " + main_formatDataSizeWithUnit(totaldatasize) + "</label></td></tr>"
-                );
+                    $("#stat_progressbar_content tbody").append(
+                        "<tr><td class='stat_progressbar-name english' colspan='2'><label class='left'>" + poolName.toUpperCase() + "</label><label class='right'>FREE: " + main_formatDataSizeWithUnit(freedatasize) + "</label></td></tr>"
+                        + "<tr><td class='stat_progressbar-row'><div id='stat_progressbar-" + poolName + "'></div></td><td class='stat_progressbar-label english'><div>" + userdatapercentage + "%</div></td></tr>"
+                        + "<tr><td class='stat_progressbar-name english bottom' colspan='2'><label class='left'>USED: " + main_formatDataSizeWithUnit(totaldatasize - freedatasize) + "</label><label class='right'>CAPACITY: " + main_formatDataSizeWithUnit(totaldatasize) + "</label></td></tr>"
+                    );
 
-                $("#stat_progressbar-" + poolName).progressbar({
-                    value: userdatapercentage
-                });
+                    $("#stat_progressbar-" + poolName).progressbar({
+                        value: userdatapercentage
+                    });
 
-                var backgroundColor = "green";
-                if (userdatapercentage > 50 && userdatapercentage <= 90) {
-                    backgroundColor = "yellow";
-                } else if (userdatapercentage > 90) {
-                    backgroundColor = "red";
+                    var backgroundColor = "green";
+                    if (userdatapercentage > 50 && userdatapercentage <= 90) {
+                        backgroundColor = "yellow";
+                    } else if (userdatapercentage > 90) {
+                        backgroundColor = "red";
+                    }
+                    $("#stat_progressbar-" + poolName + " .ui-widget-header").css({
+                        'background': backgroundColor
+                    });
                 }
-                $("#stat_progressbar-" + poolName + " .ui-widget-header").css({
-                    'background': backgroundColor
-                });
             });
         }
     })
@@ -354,7 +360,7 @@ function main_generateMigrationDialog() {
 
         $("#migration-dialog i").removeClass("fa-exclamation-triangle").addClass("fa-info-circle");
         $("#migration-dialog p.messageType").empty().append("Information!");
-        $("#migration-dialog p.selectedFiles").append("You have selected ");
+        $("#migration-dialog p.selectedFiles").empty().append("You have selected: <br/>");
         $.each(files["pool"], function (j, poolName) {
             $("#migration-dialog p.selectedFiles").append(files[poolName].length + " files in pool " + poolName + ".<br/>");
         });
@@ -364,9 +370,10 @@ function main_generateMigrationDialog() {
             url: "pools.php",
             method: 'GET',
             success: function(res) {
+                $("#migration-dialog ul").empty();
                 $.each(res ,function(i, pool) {
                     var poolName = pool["name"];
-                    $("#migration-dialog ul").append("<li><input type='radio' name='targetPool' value='" + poolName + "' /><label class='" + poolName + "'>" + poolName + "</label></li>");
+                    $("#migration-dialog ul").append("<li><input class='" + pool["type"] + "' type='radio' name='targetPool' value='" + poolName + "' /><label class='pool " + pool["type"] + " " + poolName + "'>" + poolName + "</label></li>");
                 });
 
                 var dialog = $("#migration-dialog").dialog({
@@ -382,6 +389,7 @@ function main_generateMigrationDialog() {
                                 $("#migration-dialog p.message").append("Please select your target pool!");
                             } else {
                                 var target = selectedTarget[0].value;
+                                var targetpooltype = $(selectedTarget).hasClass("external") ? "external" : "internal";
                                 var filepaths = new Array();
                                 var trs = new Array();
 
@@ -406,7 +414,8 @@ function main_generateMigrationDialog() {
                                     dataType: 'json',
                                     data: {
                                         files: JSON.stringify(filepaths),
-                                        target: target
+                                        target: target,
+                                        targetpooltype: targetpooltype
                                     },
                                     method: 'POST',
                                     success: function(res) {
