@@ -279,7 +279,7 @@ function createFileTable ( folderName ) {
     } );
 }
 
-/*Click the "·µ»Ø" button to return back*/
+/*Click the "Return" button to return back*/
 function returnback(){
     var backfolder = $('#backpath').attr('class');
     createFileTable(backfolder);
@@ -288,28 +288,3 @@ function returnback(){
     backfolder = backfolder.join('/');
     $('#backpath').attr("class", backfolder);
 }
-
-$(document).ready(function() {
-    // Open the first fileset by default
-    var firstFolder = $("#navbar ul li:first");
-    var firstFolderName = firstFolder.attr("id");
-    $(firstFolder).addClass("openfolder");
-    $("#navbar ul li:first img").attr("src", "images/folder-open.png");
-    createFileTable(firstFolderName);
-
-    $("#navbar li").click(function () {
-        if ($(this).hasClass("openfolder")) {
-            return;
-        }
-
-        $("#navbar li.openfolder img").attr("src", "icons/folder.png");
-        $("#navbar li.openfolder").removeClass("openfolder");
-        $(this).addClass("openfolder");
-        $(this).children("img").attr("src", "images/folder-open.png");
-
-        $(".placeholder").text("全部存储池");
-        $('.select.is-open').removeClass('is-open');
-
-        createFileTable($(this).attr("id"))
-    });  
-} );

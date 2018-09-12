@@ -81,7 +81,9 @@ function Select_all_filesets() {
   $ans_=json_decode($ans,true);
   $result=array();
   foreach ($ans_['filesets'] as $key => $value) {
-    if ($value['filesetName'] != "root") {
+    if ($value['filesetName'] == "root") {
+        array_push($result, "/");
+    } else {
         array_push($result, $value['filesetName']);
     }
   }

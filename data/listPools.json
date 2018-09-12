@@ -1,0 +1,36 @@
+[
+    {
+        "name":"system",
+        "id":"0",
+        "blocksize":"256",
+        "isDataPool":"yes",
+        "isMetaPool":"yes",
+        "totaldatasize":"1048576",
+        "freedatasize":"399360",
+        "freedatapercentage":"38",
+        "totalmetasize":"1048576",
+        "freemetasize":"400128",
+        "freemetapercentage":"38",
+        "type":"internal"
+    },
+    {
+        "name":"silver",
+        "id":"65537",
+        "blocksize":"256",
+        "isDataPool":"yes",
+        "isMetaPool":"no",
+        "totaldatasize":"1048576",
+        "freedatasize":"721920",
+        "freedatapercentage":"69",
+        "totalmetasize":"0",
+        "freemetasize":"0",
+        "freemetapercentage":"0",
+        "type":"internal"
+    },
+    {
+        "name":"cos",
+        "cloudtype":"cleversafe-new",
+        "username":"wA8Fx8JQ3F08VxiAqeza",
+        "type":"external"
+    }
+]

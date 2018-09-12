@@ -38,16 +38,12 @@ include 'function/show_list.php';
             <tr>
                 <td id="navbar" rowspan="5" width="250px">
                     <div id="navbar-title" class="chinese">全部文件夹</div>
-                    <?php 
-                    // show list of files 
-                    $ans=Select_all_filesets(); 
-                    echo show_folder($ans,'picture', "display()"); 
-                    ?>
+                    <ul id="navbar-fileset"></ul>
                 </td>
                 <td id="opbar" colspan="2">
                     <div id="messageBar">
                         <div id="messageBar-icon"><i class="fa fa-check" aria-hidden="true"></i></div>
-                        <div id="messageBar-msg"><span>3个文件被成功迁移到sliver存储池！</span></div>
+                        <div id="messageBar-msg"><span></span></div>
                         <div id="messageBar-close" onclick="$('#messageBar').css('display', 'none')"><span></span></div>
                     </div>
                     <div>

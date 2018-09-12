@@ -13,7 +13,7 @@ function postFolder($connection,$folderpath,$foldername){
 
         if (trim($response["error"]) == "") {
             $result["result"] = 1;
-            $serverSideFile = getFile($connection, $folderpath . $foldername);
+            $serverSideFile = getFile($connection, $folderpath . $foldername, false);
             $serverSideFile["filename"] = $foldername;
         	$result["files"] = $serverSideFile;
         } else {

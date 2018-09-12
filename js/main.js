@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    initNavBar();
     generateProgressBar();
     initStatInfo();
     initFilter();
@@ -12,6 +13,44 @@ $(document).ready(function() {
         
     });
 });
+
+function initNavBar() {
+    $.ajax({
+        url: "filesets.php?myaction=LIST",
+        method: "GET",
+        success: function (res) {
+            var filesetContainer = $("#navbar-fileset");
+            $("#navbar-fileset").empty();
+
+            $.each(res, function(i, fileset) {
+                $("#navbar-fileset").append("<li id='" + fileset["name"] + "' path='" + fileset["path"] + "' class='folder chinese " + fileset["status"].toLowerCase() + "'><img class='folder-icon' src='images/folder.png'><label>" + fileset["name"] + "</label></li>");
+            });
+
+            // Open the first fileset by default
+            var firstFolder = $("#navbar ul li:first");
+            var firstFolderName = firstFolder.attr("id");
+            $(firstFolder).addClass("openfolder");
+            $("#navbar ul li:first img").attr("src", "images/folder-open.png");
+            createFileTable(firstFolderName);
+
+            $("#navbar li").click(function () {
+                if ($(this).hasClass("openfolder")) {
+                    return;
+                }
+
+                $("#navbar li.openfolder img").attr("src", "icons/folder.png");
+                $("#navbar li.openfolder").removeClass("openfolder");
+                $(this).addClass("openfolder");
+                $(this).children("img").attr("src", "images/folder-open.png");
+
+                $(".placeholder").text("全部存储池");
+                $('.select.is-open').removeClass('is-open');
+
+                createFileTable($(this).attr("id"))
+            });
+        }
+    });  
+}
 
 function initFilter() {
     var creationdateSince = $("#creationdate_since").datepicker({
@@ -140,14 +179,14 @@ function uploadfile(){
                     }).draw(false);
 
                     $("#messageBar-icon i").removeClass("fa-times-circle").removeClass("fa-exclamation-triangle").addClass("fa-check");
-                    $("#messageBar-msg span").empty().append("文件上传成功: " + file.name + "!");
+                    $("#messageBar-msg span").empty().append("æ–‡ä»¶ä¸Šä¼ æˆåŠŸ: " + file.name + "!");
                     $("#messageBar").css({"display":"block", "color": "#33a451", "border-color": "#33a451"});
                     $("#log").append("<span>" + file.name + " has been uploaded sucessfully!");
                 });
             },
             fail: function (e, data) {
                 $("#messageBar-icon i").removeClass("fa-check").addClass("fa-times-circle");
-                $("#messageBar-msg span").empty().append("警告：文件上传失�? " + file.name + "�?" + data);
+                $("#messageBar-msg span").empty().append("è­¦å‘Šï¼šæ–‡ä»¶ä¸Šä¼ å¤±è´? " + file.name + "ï¼?" + data);
                 $("#messageBar").css({"display":"block", "color": "#ea4335", "border-color": "#ea4335"});
             },
             progressall: function (e, data) {
@@ -171,7 +210,7 @@ function back_to_click_folder(folder) {
 }
 
 /* 
-GenerateProgressBar：Generate the progressbar for tier information such as GPFS
+GenerateProgressBarï¼šGenerate the progressbar for tier information such as GPFS
 tier:COS,GPFS,etc..
 barID:The ID of progressbar
 labelClass:Html sign for class

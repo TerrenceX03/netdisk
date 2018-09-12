@@ -1,0 +1,27 @@
+[
+    {
+        "name":"root",
+        "status":"Linked",
+        "path":"/gpfs1"
+    },
+    {
+        "name":"Documents",
+        "status":"Linked",
+        "path":"/gpfs1/Documents"
+    },
+    {
+        "name":"FileNet",
+        "status":"Linked",
+        "path":"/gpfs1/FileNet"
+    },
+    {
+        "name":"Hadoop",
+        "status":"Linked",
+        "path":"/gpfs1/Hadoop"
+    },
+    {
+        "name":"test",
+        "status":"Unlinked",
+        "path":"--"
+    }
+]
