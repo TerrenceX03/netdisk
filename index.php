@@ -59,7 +59,6 @@ include 'function/show_list.php';
                             <li class="createfolderbtn button"><a href = "JavaScript:void(0)" onclick="CreateFolder()">新建文件夹</a></li>
                             <li class="migratebtn button"><a href = "JavaScript:void(0)" onclick="main_generateMigrationDialog()">迁移</a></li>
                             <li class="deletebtn button"><a href = "JavaScript:void(0)" onclick="deletefiles()">删除</a></li>
-                            <li class="returnbtn button"><a id="backpath" onclick="returnback()" href = "JavaScript:void(0)">返回</a></li>
                         </ul>
                     </div>
                 </td>

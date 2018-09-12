@@ -28,10 +28,9 @@ function initNavBar() {
 
             // Open the first fileset by default
             var firstFolder = $("#navbar ul li:first");
-            var firstFolderName = firstFolder.attr("id");
             $(firstFolder).addClass("openfolder");
             $("#navbar ul li:first img").attr("src", "images/folder-open.png");
-            createFileTable(firstFolderName);
+            createFileTable(firstFolder.attr("path"));
 
             $("#navbar li").click(function () {
                 if ($(this).hasClass("openfolder")) {
@@ -46,7 +45,7 @@ function initNavBar() {
                 $(".placeholder").text("全部存储池");
                 $('.select.is-open').removeClass('is-open');
 
-                createFileTable($(this).attr("id"))
+                createFileTable($(this).attr("path"))
             });
         }
     });  
@@ -200,13 +199,6 @@ function uploadfile(){
 /* Delete files */
 function deletefiles(){
     main_generateDeleteDialog();
-}
-
-/*
-    return to display file information of clicked floder
-*/
-function back_to_click_folder(folder) {
-    createFileTable (folder);
 }
 
 /* 

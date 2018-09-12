@@ -13,7 +13,7 @@ $connection = ssh2_connect($ip, $port);
 ssh2_auth_password($connection, $user, $pass);
 
 if ($_GET["myaction"] == "LIST") { // List a folder 
-	echo json_encode(listFiles($connection, FS_MOUNT_POINT . "/" . $_POST['foldername']));
+	echo json_encode(listFiles($connection, $_POST['foldername']));
 } elseif ($_GET['myaction'] == "GET") { // Get a file information
 	echo json_encode(getFile($connection, FS_MOUNT_POINT . $_GET['filepath']));
 } elseif($_GET['myaction'] == "POST") { // Upload a new file

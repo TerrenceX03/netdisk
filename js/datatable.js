@@ -18,37 +18,24 @@ function format ( d ) {
 }
 
 function createFileTable ( folderName ) {
-    //add the file information to table and modify the foderName to the correct format.
-    var elem = document.getElementById('all_path').innerHTML = "";
-    var tmp_array = folderName.split('/');
-    var new_foldername = '';
+    // Generate return path and action
+    folderName = folderName.endWith("/") ? folderName.substr(0, folderName.length - 1) : folderName; // remove the last '/'
+    var folders = folderName.substr(1).split("/"); // remove the first '/'
 
-    for (var i = 0; i < tmp_array.length; i++) {
-        if (tmp_array[i] != '') {
-            var tmp_str = '';
-            var back_str = '';
-
-            for (var j = 0; j <= i; j++) {
-                if (j == i) {
-                    back_str += tmp_array[j];  
-                } else {
-                    back_str += tmp_array[j]; 
-                    back_str += '/';
-                }
-            }
-
-            if (i == (tmp_array.length - 1)) {                
-                new_foldername += tmp_array[i]; 
-                tmp_str += "<label onclick=\"back_to_click_folder(\'"+back_str+"\')\" class='folder_path'>"+tmp_array[i]+"</label>";
-            } else {
-                new_foldername += tmp_array[i]; 
-                new_foldername += '/'; 
-                tmp_str += "<label onclick=\"back_to_click_folder(\'"+back_str+"\')\" class='folder_path'>"+tmp_array[i]+"/</label>";
-            }
-
-            $('#all_path').append(tmp_str);
+    if (folders.length == 1){
+        $("#all_path").empty().append("<label class='folder_path firstpath currentpath'>HOME</label>");
+    } else {
+        $("#all_path").empty().append("<label onclick=\"createFileTable('/" + folders[0] + "')\" class='folder_path firstpath'>HOME</label><label>></label>");
+        var tmpPath = "/" + folders[0];
+        
+        for (var i = 1; i < folders.length - 1; i ++) {
+            tmpPath += ("/" + folders[i]);
+            $("#all_path").append("<label onclick=\"createFileTable('" + tmpPath + "')\" class='folder_path'>" + folders[i] + "</label><label>></label>");
         }
+
+        $("#all_path").append("<label class='folder_path currentpath'>" + folders[folders.length - 1] + "</label>");
     }
+
     //create the file information table
     var table = $('#dataTable').DataTable();
     if (table) {
@@ -256,16 +243,7 @@ function createFileTable ( folderName ) {
 
         
         if (row.data().type == "directory"){
-            var folderAbsolutePath = main_trim(row.data().file_path);
-            var folders = folderAbsolutePath.substr(1).split("/"); // remove the first '/'
-            folders.shift(); // remove the first element from Array, which is the storage pool name.
-            var folderRelativePath = folders.join("/");
-            createFileTable (folderRelativePath);
-            folders.pop(); // remove the last element from Array, which is current folder name.
-            backfolder = folders.join('/');
-
-            //set classname for return button.
-            $('#backpath').attr("class", backfolder);
+            createFileTable(main_trim(row.data().file_path));
             $("#navbar li.openfolder").removeClass("openfolder");
         } else if (row.data().type != "directory" && row.data().type != "0_directory") {
             if ( row.child.isShown() ) {
@@ -277,14 +255,4 @@ function createFileTable ( folderName ) {
             }
         }
     } );
-}
-
-/*Click the "Return" button to return back*/
-function returnback(){
-    var backfolder = $('#backpath').attr('class');
-    createFileTable(backfolder);
-    backfolder = backfolder.split("/");
-    backfolder.pop();
-    backfolder = backfolder.join('/');
-    $('#backpath').attr("class", backfolder);
 }
