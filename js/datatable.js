@@ -1,31 +1,68 @@
 /* Formatting function for row details - modify as you need */
 function format ( d ) {
     // `d` is the original data object for the row
-    return '<ul id=\"more_fileinfo\">'+
-        '<li>'+
-            '<p class=\"fileinfo_label\">文件路径:</p>'+
-            '<p class=\"fileinfo_value\">'+d.file_path+'</p>'+
-        '</li>'+
-        '<li>'+
-            '<p class=\"fileinfo_label\">元数据副本:</p>'+
-            '<p class=\"fileinfo_value\">'+d.metadata_replication+'</p>'+
-        '</li>'+
-        '<li>'+
-            '<p class=\"fileinfo_label\">数据副本:</p>'+
-            '<p class=\"fileinfo_value\">'+d.data_replication+'</p>'+
-        '</li>'
-    '</ul>';
+    var result = '<ul id=\"more_fileinfo\">' + 
+                '<li>' +
+                    '<p class=\"fileinfo_label\">文件路径</p>' +
+                    '<p class=\"fileinfo_value\">' + d.file_path + '</p>' +
+                '</li>' +
+                '<li>' +
+                    '<p class=\"fileinfo_label\">元数据副本:数据副本</p>' +
+                    '<p class=\"fileinfo_value\">' + d.metadata_replication + '; ' + d.data_replication + '</p>' +
+                '</li>';
+
+    if (d.external_storage_pool_name) {
+        result = result + 
+                '<li>' +
+                    '<p class=\"fileinfo_label\">占用的block数</p>' +
+                    '<p class=\"fileinfo_value\">' + d.used_blocks + '</p>' +
+                '</li>' + 
+                '<li>' +
+                    '<p class=\"fileinfo_label\">元数据版本：数据版本</p>' +
+                    '<p class=\"fileinfo_value\">' + d.meta_version + '; ' + d.data_version + '</p>' +
+                '</li>' +
+                '<li>' +
+                    '<p class=\"fileinfo_label\">数据状态</p>' +
+                    '<p class=\"fileinfo_value\">' + d.state + '</p>' +
+                '</li>' +
+                '<li>' +
+                    '<p class=\"fileinfo_label\">云端数据索引</p>' +
+                    '<p class=\"fileinfo_value\">' + d.base_name + '</p>' +
+                '</li>';
+    }
+
+    return result + '</ul>';
 }
 
 function createFileTable ( folderName ) {
+    // Close the past opened folder, and restore the pool filter
+    $("#navbar li.openfolder img").attr("src", "icons/folder.png");
+    $("#navbar li.openfolder").removeClass("openfolder");
+    if ($("li.folder[path='" + folderName + "']").length > 0) {
+        $("li.folder[path='" + folderName + "']").addClass("openfolder").children("img").attr("src", "images/folder-open.png");
+    } else { // Open the nearest parent folder
+        var tmp = folderName.split("/");
+        for (var i = 0; i < tmp.length - 2; i ++) {
+            tmp.pop();
+            var tmppath = tmp.join("/");
+            if ($("li.folder[path='" + tmppath + "']").length > 0) {
+                $("li.folder[path='" + tmppath + "']").addClass("openfolder").children("img").attr("src", "images/folder-open.png");
+                break;
+            }
+        }
+    }
+    $(".placeholder").text("全部存储池");
+    $('.select.is-open').removeClass('is-open');
+
     // Generate return path and action
     folderName = folderName.endWith("/") ? folderName.substr(0, folderName.length - 1) : folderName; // remove the last '/'
     var folders = folderName.substr(1).split("/"); // remove the first '/'
 
+    $("#all_path").empty().attr("path", folderName);
     if (folders.length == 1){
-        $("#all_path").empty().append("<label class='folder_path firstpath currentpath'>HOME</label>");
+        $("#all_path").append("<label class='folder_path firstpath currentpath'>HOME</label>");
     } else {
-        $("#all_path").empty().append("<label onclick=\"createFileTable('/" + folders[0] + "')\" class='folder_path firstpath'>HOME</label><label>></label>");
+        $("#all_path").append("<label onclick=\"createFileTable('/" + folders[0] + "')\" class='folder_path firstpath'>HOME</label><label>></label>");
         var tmpPath = "/" + folders[0];
         
         for (var i = 1; i < folders.length - 1; i ++) {
@@ -79,11 +116,8 @@ function createFileTable ( folderName ) {
 
     table = $('#dataTable').DataTable( {
         "ajax": {
-            "url":'files.php?myaction=LIST',
-            "type":"POST",
-            "data":function(h){
-                h.foldername = folderName;
-            }
+            "url":'files.php?myaction=LIST&foldername=' + folderName,
+            "type":"GET"
         },
         "columnDefs": [
             {
@@ -147,6 +181,8 @@ function createFileTable ( folderName ) {
                     } else {
                         if(row.state && row.state == "Non-resident") {
                             return "<label class='pool external " + row.external_storage_pool_name + "'>" + row.external_storage_pool_name.toUpperCase() + "</label>";
+                        } else if(row.state && row.state == "Co-resident") {
+                            return "<label class='pool internal co-resident " + data + "'>" + data.toUpperCase() + "</label>";
                         } else {
                             return "<label class='pool internal " + data + "'>" + data.toUpperCase() + "</label>"; 
                         }
@@ -190,9 +226,20 @@ function createFileTable ( folderName ) {
                     url: "pools.php",
                     method: 'GET',
                     success: function(res) {
+                        var tctTieringEnabled = $("#navbar li.openfolder").hasClass("cleversafe-new tiering");
+
                         $.each(res ,function(i, pool) {
                             var poolName = pool["name"];
-                            poolFilter.append( "<li class='pool " + pool["type"] + " " + poolName + "' value='" + poolName + "'>" + poolName + "&nbsp;存储池</li>" );
+                            // If the fileset hasn't enable tct tiering, the COS pool will be exluded from the pool filter list.
+                            if (!tctTieringEnabled &&  (!pool["cloudtype"] || pool["cloudtype"] != "cleversafe-new")) {
+                                poolFilter.append( "<li class='pool " + pool["type"] + " " + poolName + "' value='" + poolName + "'>" + poolName + "&nbsp;存储池</li>" );
+                            } else if (tctTieringEnabled) {
+                                if (pool["cloudtype"] && pool["cloudtype"] == "cleversafe-new") {
+                                    poolFilter.append( "<li class='pool " + pool["type"] + " " + pool["cloudtype"] + " " + poolName + "' value='" + poolName + "'>" + poolName + "&nbsp;存储池</li>" ); 
+                                } else {
+                                    poolFilter.append( "<li class='pool " + pool["type"] + " " + poolName + "' value='" + poolName + "'>" + poolName + "&nbsp;存储池</li>" );
+                                }
+                            }    
                         });
                     }
                 });
@@ -244,7 +291,6 @@ function createFileTable ( folderName ) {
         
         if (row.data().type == "directory"){
             createFileTable(main_trim(row.data().file_path));
-            $("#navbar li.openfolder").removeClass("openfolder");
         } else if (row.data().type != "directory" && row.data().type != "0_directory") {
             if ( row.child.isShown() ) {
                 row.child.hide();

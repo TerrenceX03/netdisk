@@ -1,0 +1,17 @@
+[
+    {
+        "name":"documentstier",
+        "cloudservice":"costering",
+        "cloudservicetype":"Tiering",
+        "account":"cos",
+        "accounttype":"cleversafe-new",
+        "accountusername":"wA8Fx8JQ3F08VxiAqeza",
+        "scopeto":"fileset",
+        "path":"/gpfs1/Documents/",
+        "datacontainer":"documentstier",
+        "metacontainer":"documentstier.meta",
+        "cloudpath":"/gpfs1/Documents/",
+        "fileset":"Documents",
+        "filesystem":"gpfs1"
+    }
+]

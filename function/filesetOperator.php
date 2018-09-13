@@ -1,5 +1,5 @@
 <?php
-include 'function/basic.php';
+include_once 'function/basic.php';
 
 function listFileSet($connection){
     $response = basic_exec($connection, "mmlsfileset " . FS_NAME);

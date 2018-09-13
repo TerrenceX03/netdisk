@@ -37,7 +37,7 @@ include 'function/show_list.php';
             </tr>
             <tr>
                 <td id="navbar" rowspan="5" width="250px">
-                    <div id="navbar-title" class="chinese">全部文件夹</div>
+                    <div id="navbar-title" class="chinese">全部文件集/工作目录</div>
                     <ul id="navbar-fileset"></ul>
                 </td>
                 <td id="opbar" colspan="2">

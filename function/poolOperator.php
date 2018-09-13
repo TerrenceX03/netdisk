@@ -1,5 +1,5 @@
 <?php
-include 'function/basic.php';
+include_once 'function/basic.php';
 
 /*
 	List all pools under particular filesystem

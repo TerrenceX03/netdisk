@@ -1,5 +1,6 @@
 <?php
-include 'function/basic.php';
+include_once 'function/basic.php';
+include 'function/cloudgatewayOperator.php';
 /* 
   Get fileinfo of a file and return to files.php.
   
@@ -94,26 +95,7 @@ function getFile($connection, $filepath, $tctTeringEnabled) {
     $file["action"] = "GET";
 
     if ($tctTeringEnabled) {
-        $response4 = basic_exec($connection, $tct_cmd);
-        $lines = explode(",", str_replace(array("\r\n", "\n"), ",", trim($response4["output"])));
-        foreach ($lines as $line) {
-            $tmpArray = explode(":", $line);
-            if (trim($tmpArray[0]) == "On-line size") {
-                $file["online_size"] = trim($tmpArray[1]);
-            } else if (trim($tmpArray[0]) == "Used blocks") {
-                $file["used_blocks"] = trim($tmpArray[1]);
-            } else if (trim($tmpArray[0]) == "Data Version") {
-                $file["data_version"] = trim($tmpArray[1]);
-            } else if (trim($tmpArray[0]) == "Meta Version") {
-                $file["meta_version"] = trim($tmpArray[1]);
-            } else if (trim($tmpArray[0]) == "State") {
-                $file["state"] = trim($tmpArray[1]);
-            } else if (trim($tmpArray[0]) == "Container Index") {
-                $file["container_index"] = trim($tmpArray[1]);
-            } else if (trim($tmpArray[0]) == "Base Name") {
-                $file["base_name"] = trim($tmpArray[1]);
-            }
-        }
+        $file = array_merge($file, getFileCloudInfo($connection, $filepath));
     }
 
     return $file;
@@ -127,11 +109,10 @@ function getFile($connection, $filepath, $tctTeringEnabled) {
 function listFiles($connection, $dirpath) {
     $response = basic_exec($connection, "ls " . $dirpath);
     $tmp = explode("\n", $response["output"]);
-
     $files = array();
     $files['data'] = array();
     $file = array();
-    $isTctTeringEnabled = _isTctTeringEnabled($connection, $dirpath . "/");
+    $isTctTeringEnabled = isTctTeringEnabled($connection, $dirpath . "/");
 
     for ($i = 0; $i < count($tmp); $i++) {
         if ($tmp[$i] != '') {
@@ -146,37 +127,6 @@ function listFiles($connection, $dirpath) {
         }
     }
     return $files;
-}
-
-function _isTctTeringEnabled($connection, $dirpath) {
-    $response = basic_exec($connection, "mmcloudgateway containerPairSet list -Y");
-    $tmp = explode("\n", trim($response["output"]));
-    $result = array();
-    $result["enabled"] = false;
-
-    for ($i = 1; $i < count($tmp); $i++) {
-        if (trim($tmp[$i]) != '') {
-            $params = explode(":", trim($tmp[$i]));
-            $scopeTo = $params[9];
-            $path = $params[10];
-
-            if (($scopeTo == "filesystem") || ($scopeTo == "fileset" && $path == trim($dirpath))) {
-                $result["cloudservice"] = $params[8];
-                $result["enabled"] = true;
-                
-                $response2 = basic_exec($connection, "mmcloudgateway cloudService list --cloud-service-name " . $params[8] . " -Y");
-                $tmp2 = explode("\n", trim($response2["output"]));
-                if (isset($tmp2[1]) && trim($tmp2[1]) != '') {
-                    $params2 = explode(":", trim($tmp2[1]));
-                    $result["account"] = $params2[8];
-                }
-
-                return $result;
-            } 
-        }
-    }
-
-    return $result;
 }
 
 /*
@@ -202,7 +152,7 @@ function postFile($connection, $file, $dirpath) {
         $tmpfile["url"] = "";
         $tmpfile["deleteUrl"] = "";
         $tmpfile["deleteType"] = "DELETE";
-        $isTctTeringEnabled = _isTctTeringEnabled($connection, $dirpath . "/");
+        $isTctTeringEnabled = isTctTeringEnabled($connection, $dirpath . "/");
 
         $serverSideFile = getFile($connection, $filepath, $isTctTeringEnabled["enabled"]);
         $tmpfile = array_merge($tmpfile, $serverSideFile);
@@ -219,31 +169,65 @@ function postFile($connection, $file, $dirpath) {
 /* 
 Modify the storage tier of the file with the specified ID
 
-$files：An array,it contains filepath of the files to be migrated
+$files：An array,it contains filepath of the files which are located in internal pool now, to be migrated
+
+$externalFiles: An array, it contains filepath of the files which are located in external pool now, to be migrated
 
 $target:  storage pool where files will be migrated to.
 
 $targetPoolType: internal or external pool
 */
-function migrate($connection, $files, $target, $targetPoolType){
+function migrate($connection, $files, $externalFiles, $target, $targetPoolType){
     $result = array();
     $response = null;
+    $data= null;
 
     foreach($files as $key => $filepath) {
         if ($targetPoolType == "internal") {
             $response = basic_exec($connection, "mmchattr -P " . $target . " '" . $filepath . "'");
         } else if ($targetPoolType == "external") {
             $response = basic_exec($connection, "mmcloudgateway files migrate '" . $filepath . "'");
+            $data = getFileCloudInfo($connection, $filepath);
         }
         
         $file = array();
         if (trim($response["error"]) == "") {
-            $file["result"] = 1;    
+            $file["result"] = 1;
+            $file["file"] = $data;
         } else {
             $file["result"] = 0;
             $file["error"] = trim($response["error"]);
         }
         
+        array_push($result, $file);
+    }
+
+    foreach($externalFiles as $key => $filepath) {
+        $file = array();
+
+        if ($targetPoolType == "internal") {
+            $response = basic_exec($connection, "mmcloudgateway files recall '" . $filepath . "'");
+            
+            if (trim($response["error"]) == "") {
+                $data = getFileCloudInfo($connection, $filepath);
+                $response = basic_exec($connection, "mmchattr -P " . $target . " '" . $filepath . "'");
+                if (trim($response["error"]) == "") {
+                    $file["result"] = 1; 
+                    $file["file"] = $data;   
+                } else {
+                    $file["result"] = 0;
+                    $file["error"] = trim($response["error"]);
+                }    
+            } else {
+                $file["result"] = 0;
+                $file["error"] = trim($response["error"]);
+            }
+        
+        } else {
+            $file["result"] = 0;
+            $file["error"] = "Cannot migrate a file from external pool to another external pool.";
+        }
+
         array_push($result, $file);
     }
 

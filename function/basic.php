@@ -17,3 +17,16 @@ function basic_exec($connection, $cmd) {
 
     return $result;
 }
+
+function startWith($str, $needle) {
+    return strpos($str, $needle) === 0;
+}
+
+ function endWith($str, $needle) {   
+    $length = strlen($needle);  
+    if($length == 0) {    
+        return true;  
+    }  
+    
+    return (substr($str, -$length) === $needle);
+ }

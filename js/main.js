@@ -23,29 +23,34 @@ function initNavBar() {
             $("#navbar-fileset").empty();
 
             $.each(res, function(i, fileset) {
-                $("#navbar-fileset").append("<li id='" + fileset["name"] + "' path='" + fileset["path"] + "' class='folder chinese " + fileset["status"].toLowerCase() + "'><img class='folder-icon' src='images/folder.png'><label>" + fileset["name"] + "</label></li>");
+                var displayName = (fileset["name"] == "root") ? "Home" : fileset["name"];
+                var linked = fileset["status"].toLowerCase();
+                $("#navbar-fileset").append("<li id='" + fileset["name"] + "' path='" + fileset["path"] + "' class='folder chinese " + linked + " " + (displayName=="Home"?"home":"") + "'><img class='folder-icon' src='images/folder.png'><label>" + displayName  + "</label>" + (linked=="unlinked"?"<label class='navbar_tips'>UNLINKED</label>":"") + "</li>");
             });
 
             // Open the first fileset by default
             var firstFolder = $("#navbar ul li:first");
-            $(firstFolder).addClass("openfolder");
-            $("#navbar ul li:first img").attr("src", "images/folder-open.png");
             createFileTable(firstFolder.attr("path"));
 
-            $("#navbar li").click(function () {
+            $("#navbar li.linked").click(function () {
                 if ($(this).hasClass("openfolder")) {
                     return;
                 }
+                createFileTable($(this).attr("path"));
+            });
 
-                $("#navbar li.openfolder img").attr("src", "icons/folder.png");
-                $("#navbar li.openfolder").removeClass("openfolder");
-                $(this).addClass("openfolder");
-                $(this).children("img").attr("src", "images/folder-open.png");
-
-                $(".placeholder").text("全部存储池");
-                $('.select.is-open').removeClass('is-open');
-
-                createFileTable($(this).attr("path"))
+            $.ajax({
+                url: "cloudgateway.php?myaction=LIST",
+                method: "GET",
+                success: function (pairs) {
+                    $.each(pairs, function(i, pair) {
+                        if (pair.scopeto == "filesytem") {
+                            $("#navbar-fileset li").addClass(pair.accounttype.toLowerCase() + " " + pair.cloudservicetype.toLowerCase()).append("<label class='navbar_tips'>" + pair.cloudservicetype + "</label>");
+                        } else if (pair.scopeto == "fileset") {
+                            $("#" + pair.fileset).addClass(pair.accounttype.toLowerCase() + " " + pair.cloudservicetype.toLowerCase()).append("<label class='navbar_tips'>" + pair.cloudservicetype + "</label>");
+                        }
+                    });
+                }
             });
         }
     });  
@@ -123,14 +128,12 @@ function CreateFolder(){
                 $("#new_foldername").css("border", "1px solid red");
             } else {
                 var tr = $(this).closest('tr');
-                var label = document.getElementById("all_path");
-                var true_filepath = '/' + label.innerText + '/';
                 $.ajax({
                     url: "folder.php?myaction=POST",
                     dataType: 'json',
                     data: {
                         foldername: foldername,
-                        folderpath: true_filepath
+                        folderpath: $("#all_path").attr("path")
                     },
                     method: 'POST',
                     success: function(res) {
@@ -154,11 +157,9 @@ function CreateFolder(){
 
 /* add the new uploaded files in table */
 function uploadfile(){
-    var label = document.getElementById("all_path");
-    var true_filepath = label.innerText;
     $(document).ready(function() {
         $('#fileupload').fileupload({
-            url: "files.php?myaction=POST&parent=" + true_filepath,
+            url: "files.php?myaction=POST&parent=" + $("#all_path").attr("path"),
             dataType: 'json',
             done: function (e, data) {
                 $.each(data.result.files, function (index, file) {
@@ -178,14 +179,14 @@ function uploadfile(){
                     }).draw(false);
 
                     $("#messageBar-icon i").removeClass("fa-times-circle").removeClass("fa-exclamation-triangle").addClass("fa-check");
-                    $("#messageBar-msg span").empty().append("æ–‡ä»¶ä¸Šä¼ æˆåŠŸ: " + file.name + "!");
+                    $("#messageBar-msg span").empty().append("Successfully uploaded: " + file.name + "!");
                     $("#messageBar").css({"display":"block", "color": "#33a451", "border-color": "#33a451"});
                     $("#log").append("<span>" + file.name + " has been uploaded sucessfully!");
                 });
             },
             fail: function (e, data) {
                 $("#messageBar-icon i").removeClass("fa-check").addClass("fa-times-circle");
-                $("#messageBar-msg span").empty().append("è­¦å‘Šï¼šæ–‡ä»¶ä¸Šä¼ å¤±è´? " + file.name + "ï¼?" + data);
+                $("#messageBar-msg span").empty().append("Failed to upload " + file.name + ": " + data);
                 $("#messageBar").css({"display":"block", "color": "#ea4335", "border-color": "#ea4335"});
             },
             progressall: function (e, data) {
@@ -372,17 +373,24 @@ function main_generateMigrationDialog() {
     } else {
         var files = new Array();
         files["pool"] = new Array();
+        files["externalpool"] = new Array();
 
         $.each(checkedLines, function (i, line) {
             var tr = $(line).closest('tr');
             var row = table.row(tr);
-            var poolName = row.data().storage_pool_name;
             var filePath = row.data().file_path;
+
+            var poolName = (row.data().state && row.data().state == "Non-resident") ? row.data().external_storage_pool_name : row.data().storage_pool_name;
 
             if (!files[poolName]) {
                 files[poolName] =  new Array();
                 files[poolName + "_tr"] = new Array();
-                files["pool"].push(poolName);
+
+                if (row.data().state == "Non-resident") {
+                    files["externalpool"].push(poolName);
+                } else {
+                    files["pool"].push(poolName);
+                } 
             }
 
             files[poolName].push(main_trim(filePath));
@@ -395,6 +403,9 @@ function main_generateMigrationDialog() {
         $.each(files["pool"], function (j, poolName) {
             $("#migration-dialog p.selectedFiles").append(files[poolName].length + " files in pool " + poolName + ".<br/>");
         });
+        $.each(files["externalpool"], function (j, poolName) {
+            $("#migration-dialog p.selectedFiles").append(files[poolName].length + " files in pool " + poolName + ".<br/>");
+        });
         $("#migration-dialog p.selectedFiles").append("Please select target pool for your migration:");
 
         $.ajax({
@@ -402,9 +413,20 @@ function main_generateMigrationDialog() {
             method: 'GET',
             success: function(res) {
                 $("#migration-dialog ul").empty();
+                var tctTieringEnabled = $("#navbar li.openfolder").hasClass("cleversafe-new tiering");
+
                 $.each(res ,function(i, pool) {
                     var poolName = pool["name"];
-                    $("#migration-dialog ul").append("<li><input class='" + pool["type"] + "' type='radio' name='targetPool' value='" + poolName + "' /><label class='pool " + pool["type"] + " " + poolName + "'>" + poolName + "</label></li>");
+                    // If the fileset hasn't enable tct tiering, the COS pool will be exluded from the migration target list.
+                    if (!tctTieringEnabled &&  (!pool["cloudtype"] || pool["cloudtype"] != "cleversafe-new")) {
+                        $("#migration-dialog ul").append("<li><input class='" + pool["type"] + "' type='radio' name='targetPool' value='" + poolName + "' /><label class='pool " + pool["type"] + " " + poolName + "'>" + poolName + "</label></li>");
+                    } else if (tctTieringEnabled) {
+                        if (pool["cloudtype"] && pool["cloudtype"] == "cleversafe-new") {
+                            $("#migration-dialog ul").append("<li><input class='" + pool["type"] + " " + pool["cloudtype"] + "' type='radio' name='targetPool' value='" + poolName + "' /><label class='pool " + pool["type"] + " " + poolName + "'>" + poolName + "</label></li>");
+                        } else {
+                            $("#migration-dialog ul").append("<li><input class='" + pool["type"] + "' type='radio' name='targetPool' value='" + poolName + "' /><label class='pool " + pool["type"] + " " + poolName + "'>" + poolName + "</label></li>");
+                        }
+                    }    
                 });
 
                 var dialog = $("#migration-dialog").dialog({
@@ -422,11 +444,19 @@ function main_generateMigrationDialog() {
                                 var target = selectedTarget[0].value;
                                 var targetpooltype = $(selectedTarget).hasClass("external") ? "external" : "internal";
                                 var filepaths = new Array();
+                                var externalfilepaths = new Array();
                                 var trs = new Array();
 
                                 $.each(files["pool"], function (j, poolName) {
                                     if (poolName != target) {
                                         filepaths = filepaths.concat(files[poolName]);
+                                        trs = trs.concat(files[poolName + "_tr"]);
+                                    }
+                                });
+
+                                $.each(files["externalpool"], function (j, poolName) {
+                                    if (poolName != target) {
+                                        externalfilepaths = externalfilepaths.concat(files[poolName]);
                                         trs = trs.concat(files[poolName + "_tr"]);
                                     }
                                 });
@@ -445,6 +475,7 @@ function main_generateMigrationDialog() {
                                     dataType: 'json',
                                     data: {
                                         files: JSON.stringify(filepaths),
+                                        externalfiles: JSON.stringify(externalfilepaths),
                                         target: target,
                                         targetpooltype: targetpooltype
                                     },
@@ -464,10 +495,17 @@ function main_generateMigrationDialog() {
                                             var f = tmp3.data();
                                             if (j.result == 1) { // migrate sucessfully
                                                 if (targetpooltype == "external") {
-                                                    f.state = "Non-resident";
                                                     f.external_storage_pool_name = target;
                                                 } else {
                                                     f.storage_pool_name = target;
+                                                }
+
+                                                if (targetpooltype == "external" || (targetpooltype == "internal" && f.state == "Non-resident")) {
+                                                    f.state = j.file.state;
+                                                    f.base_name = j.file.base_name;
+                                                    f.meta_version = j.file.meta_version;
+                                                    f.data_version = j.file.data_version;
+                                                    f.used_blocks = j.file.used_blocks;
                                                 }
                                                 
                                                 $("#log").append("<span>" + tmp3.data().filename + " has been migrated to " + target + " pool.</span><br/>");
