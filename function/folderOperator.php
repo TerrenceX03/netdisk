@@ -6,7 +6,6 @@ include 'function/fileOperator.php';
    $foldername:the foldername you type in.
 */
 function postFolder($connection, $folderpath, $foldername){
-	$success = false;
 	$result = array();
     $fullpath = $folderpath . "/" . $foldername;
 
@@ -15,7 +14,7 @@ function postFolder($connection, $folderpath, $foldername){
 
         if (trim($response["error"]) == "") {
             $result["result"] = 1;
-            $serverSideFile = getFile($connection, $fullpath, false);
+            $serverSideFile = getFile($connection, $fullpath);
             $serverSideFile["filename"] = $foldername;
         	$result["files"] = $serverSideFile;
         } else {

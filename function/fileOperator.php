@@ -1,132 +1,31 @@
 <?php
 include_once 'function/basic.php';
 include 'function/cloudgatewayOperator.php';
+
+
+/*
+    $dirpath - MUST not be end with "/", and white space in the path must be wrapped by "\""
+*/
+function listFiles($connection, $dirpath) {
+    $files = array();
+    $files["data"] = _getFiles($connection, $dirpath, "*");
+
+    return $files;
+}
+
 /* 
   Get fileinfo of a file and return to files.php.
   
   $filepath:Absolute filepath. 
 */
-function getFile($connection, $filepath, $tctTeringEnabled) {
-    $mmlsattr_cmd = "mmlsattr -L '" . $filepath . "'";
-    $stat_cmd = "stat -c \"%g|%u|%n|%o|%s|%x|%y|%z|%F\"  '" . $filepath . "'";
-    $tct_cmd = "mmcloudgateway files list '" . $filepath . "'";
+function getFile($connection, $filepath) {
+    $tmp = explode("/", trim($filepath));
+    $filename = array_pop($tmp);
+    $dirpath = implode("/", $tmp);
 
-    $file = array();
+    $files = _getFiles($connection, $dirpath, $filename);
 
-    //get file information from mmlsattr command
-    $response1 = basic_exec($connection, $mmlsattr_cmd);
-    $lines = explode(",", str_replace(array("\r\n", "\n"), ",", $response1["output"]));
-
-    foreach ($lines as $line) {
-        $tmpArray = explode(":", $line);
-        if (isset($tmpArray[0]) && isset($tmpArray[1])) {
-            if ($tmpArray[0] == 'creation time') {
-                $tmp_str = '';
-                $tmp_str .= trim($tmpArray[1]);
-                $tmp_str .= ':';
-                $tmp_str .= trim($tmpArray[2]);
-                $tmp_str .= ':';
-                $tmp_str .= trim($tmpArray[3]);
-                $file['creation_time'] = date("Y-m-d H:i:s", strtotime($tmp_str));
-            } elseif ($tmpArray[0] == 'file name') {
-                $file['file_path'] = trim($tmpArray[1]);
-                $tmp_folder_path = str_replace("/", ",", trim($tmpArray[1]));
-                $tmp_folder_path = explode(',', $tmp_folder_path);
-                array_pop($tmp_folder_path);
-                $tmp_path_str = '';
-                foreach ($tmp_folder_path as $key => $value) {
-                    if ($value != '') {
-                        $tmp_path_str .= $value;
-                        $tmp_path_str .= "/";
-                    }
-                }
-                $file['folder_path'] = $tmp_path_str;
-            } elseif ($tmpArray[0] == 'metadata replication') {
-                $file['metadata_replication'] = trim($tmpArray[1]);
-            } elseif ($tmpArray[0] == 'data replication') {
-                $file['data_replication'] = trim($tmpArray[1]);
-            } elseif ($tmpArray[0] == 'storage pool name') {
-                $file['storage_pool_name'] = trim($tmpArray[1]);
-            } elseif ($tmpArray[0] == 'snapshot name') {
-                $file['snapshot_name'] =trim($tmpArray[1]);
-            }  elseif ($tmpArray[0] == 'Misc attributes') {
-                $file['Misc_attributes'] = trim($tmpArray[1]);
-            } else {
-                $props[trim($tmpArray[0])] = trim($tmpArray[1]);
-            }
-        }
-    }
-
-    /*
-        get file information from stat command
-        command:stat -c "%g,%u,%n,%o,%s,%x,%y,%z" s3-dg.pdf
-        %F--file type
-        %g--File owner's group ID
-        %G--File owner's group name
-        %i--inode number
-        %n--file name
-        %o--System format block size
-        %s--file size(bytes)
-        %t--Main equipment type (hexadecimal)
-        %T--Secondary equipment type (hexadecimal)
-        %u--Owner's user ID
-        %U--Owner's user name
-        %x--Last visit time
-        %X--Time of the last visit (Epoch Times)
-        %y--%Y--Last modified content time
-        %z--%z--Finally change the time (file attributes, permission owners, etc., format Epoch Times)
-    */
-    $response3 = basic_exec($connection, $stat_cmd);
-    $props_stat = explode("|", $response3["output"]);
-    $items_stat = array();
-
-    foreach ($props_stat as $key => $value) {
-        $items_stat[$key] = $value;
-    }
-
-    $file['file_group_id'] = $items_stat[0];
-    $file['user_id'] = $items_stat[1];
-    $file['block_size'] = $items_stat[3];
-    $file['file_size'] = round($items_stat[4]/1024,1);
-    $file['L_vist_time'] = date("Y-m-d H:i:s", strtotime($items_stat[5]));
-    $file['L_mod_time'] = date("Y-m-d H:i:s", strtotime(explode(".",$items_stat[6])[0]));
-    $file['F_chan_time'] = date("Y-m-d H:i:s", strtotime($items_stat[7]));
-    $file['type'] = trim($items_stat[8]);
-    $file["action"] = "GET";
-
-    if ($tctTeringEnabled) {
-        $file = array_merge($file, getFileCloudInfo($connection, $filepath));
-    }
-
-    return $file;
-}
-
-/* 
-   Get files information in specific dirpath.
-   
-   $dirpath:Absolute path.
-*/
-function listFiles($connection, $dirpath) {
-    $response = basic_exec($connection, "ls " . $dirpath);
-    $tmp = explode("\n", $response["output"]);
-    $files = array();
-    $files['data'] = array();
-    $file = array();
-    $isTctTeringEnabled = isTctTeringEnabled($connection, $dirpath . "/");
-
-    for ($i = 0; $i < count($tmp); $i++) {
-        if ($tmp[$i] != '') {
-            $file = getFile($connection, $dirpath . "/" . $tmp[$i], $isTctTeringEnabled["enabled"]);
-            $file['filename'] = $tmp[$i];
-
-            if ($isTctTeringEnabled["enabled"]) {
-                $file['external_storage_pool_name'] = $isTctTeringEnabled["account"];
-            }
-
-            array_push($files['data'], $file);
-        }
-    }
-    return $files;
+    return $files[0];
 }
 
 /*
@@ -152,9 +51,8 @@ function postFile($connection, $file, $dirpath) {
         $tmpfile["url"] = "";
         $tmpfile["deleteUrl"] = "";
         $tmpfile["deleteType"] = "DELETE";
-        $isTctTeringEnabled = isTctTeringEnabled($connection, $dirpath . "/");
 
-        $serverSideFile = getFile($connection, $filepath, $isTctTeringEnabled["enabled"]);
+        $serverSideFile = getFile($connection, $filepath);
         $tmpfile = array_merge($tmpfile, $serverSideFile);
         $tmpfile["size"] = $tmpfile["file_size"];
     } else {
@@ -257,6 +155,81 @@ function deleteFiles($connection, $filepaths){
     }
 
     return $result;
+}
+
+/*
+get files information
+        
+        command:stat -c "%g,%u,%n,%o,%s,%x,%y,%z" s3-dg.pdf
+        %F--file type
+        %g--File owner's group ID
+        %G--File owner's group name
+        %i--inode number
+        %n--file name
+        %o--System format block size
+        %s--file size(bytes)
+        %t--Main equipment type (hexadecimal)
+        %T--Secondary equipment type (hexadecimal)
+        %u--Owner's user ID
+        %U--Owner's user name
+        %x--Last visit time
+        %X--Time of the last visit (Epoch Times)
+        %y--%Y--Last modified content time
+        %z--%z--Finally change the time (file attributes, permission owners, etc., format Epoch Times)
+
+$dirpath - MUST not be end with "/", and white space in the path must be wrapped by "\"
+$filename - white space in the path must be wrapped by "\"
+
+*/
+
+function _getFiles($connection, $dirpath, $filename) {
+    $files = array();
+    $map = array();
+    $file = array();
+
+    $response = basic_exec($connection, "mmlsattr -L " . $dirpath . "/" . $filename);
+
+    if (trim($response["output"]) != "" && trim($response["error"]) == "") {
+        $lines = explode(",", str_replace(array("\r\n", "\n"), ",", trim($response["output"])));
+        foreach ($lines as $line) {
+            if (trim($line) == "") {
+                $file['folder_name'] = $dirpath;
+                $map[$file['file_name']] = $file;
+                $file = array();
+            } else {
+                $isMatched = preg_match('#(\w+.[^:]*):\s*(.*)\s*#i', $line, $matches);
+                if ($isMatched == 1) {
+                    $file[str_replace(" ", "_", strtolower(trim($matches[1])))] = $matches[2];
+                }
+            }
+        }
+
+        $map[$file['file_name']] = $file;
+
+        $response = basic_exec($connection, "stat -c \"%n|%g|%u|%o|%s|%x|%y|%z|%F\"  " . $dirpath . "/" . $filename);
+        $lines = explode(",", str_replace(array("\r\n", "\n"), ",", trim($response["output"])));
+        foreach ($lines as $line) {
+            $props = explode("|", $line);
+            $filename = $props[0];
+            $map[$filename]['file_group_id'] = $props[1];
+            $map[$filename]['user_id'] = $props[2];
+            $map[$filename]['block_size'] = $props[3];
+            $map[$filename]['file_size'] = round($props[4]/1024,1);
+            $map[$filename]['l_vist_time'] = date("Y-m-d H:i:s", strtotime($props[5]));
+            $map[$filename]['l_mod_time'] = date("Y-m-d H:i:s", strtotime(explode(".",$props[6])[0]));
+            $map[$filename]['f_chan_time'] = date("Y-m-d H:i:s", strtotime($props[7]));
+            $map[$filename]['type'] = trim($props[8]);
+            $map[$filename]["action"] = "GET";
+        }
+
+        foreach ($map as $file) {
+            $file['file_path'] = $file['file_name'];
+            $file['file_name'] = substr($file['file_name'], strlen($dirpath) + 1);
+            array_push($files, $file);
+        }
+    }
+    
+    return $files;
 }
 
 ?>

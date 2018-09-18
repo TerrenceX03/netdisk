@@ -12,6 +12,8 @@ ssh2_auth_password($connection, $user, $pass);
 
 if ($_GET["myaction"] == "LIST") { // List a folder 
 	echo json_encode(listContainerPairSet($connection));
+} else if ($_GET["myaction"] == "GET" && $_GET["key"] == "FILE") { // List a folder 
+	echo json_encode(getFileCloudInfo($connection, $_GET["filepath"]));
 }
 
 ?>

@@ -1,34 +1,21 @@
 /* Formatting function for row details - modify as you need */
 function format ( d ) {
     // `d` is the original data object for the row
-    var result = '<ul id=\"more_fileinfo\">' + 
-                '<li>' +
-                    '<p class=\"fileinfo_label\">文件路径</p>' +
-                    '<p class=\"fileinfo_value\">' + d.file_path + '</p>' +
-                '</li>' +
-                '<li>' +
-                    '<p class=\"fileinfo_label\">元数据副本:数据副本</p>' +
-                    '<p class=\"fileinfo_value\">' + d.metadata_replication + '; ' + d.data_replication + '</p>' +
-                '</li>';
+    var result = "<ul class='more_fileinfo'>" + 
+                "<li>" +
+                    "<p class='fileinfo_label'>文件路径</p>" +
+                    "<p class='fileinfo_value'>" + d.file_path + "</p>" +
+                "</li>" +
+                "<li>" +
+                    "<p class='fileinfo_label'>元数据副本:数据副本</p>" +
+                    "<p class='fileinfo_value'>" + d.metadata_replication + "; " + d.data_replication + "</p>" +
+                "</li>";
 
-    if (d.external_storage_pool_name) {
+    if(d.misc_attributes && d.misc_attributes == "ARCHIVE OFFLINE") {
         result = result + 
-                '<li>' +
-                    '<p class=\"fileinfo_label\">占用的block数</p>' +
-                    '<p class=\"fileinfo_value\">' + d.used_blocks + '</p>' +
-                '</li>' + 
-                '<li>' +
-                    '<p class=\"fileinfo_label\">元数据版本：数据版本</p>' +
-                    '<p class=\"fileinfo_value\">' + d.meta_version + '; ' + d.data_version + '</p>' +
-                '</li>' +
-                '<li>' +
-                    '<p class=\"fileinfo_label\">数据状态</p>' +
-                    '<p class=\"fileinfo_value\">' + d.state + '</p>' +
-                '</li>' +
-                '<li>' +
-                    '<p class=\"fileinfo_label\">云端数据索引</p>' +
-                    '<p class=\"fileinfo_value\">' + d.base_name + '</p>' +
-                '</li>';
+                "<li class='cloudinfo'>" +
+                    "<input id='cloudinfo_btn' type='button' value='查看云信息'' />" + 
+                "</li>";
     }
 
     return result + '</ul>';
@@ -53,6 +40,14 @@ function createFileTable ( folderName ) {
     }
     $(".placeholder").text("全部存储池");
     $('.select.is-open').removeClass('is-open');
+
+    // Control operation buttons
+    $(".exportbtn").remove();
+    $(".importbtn").remove();
+    if ($("#navbar li.openfolder").hasClass("cleversafe-new sharing")) {
+        $("#opbar-btn-container").append("<li class='exportbtn button'><a href = 'JavaScript:void(0)' onclick='exportfiles()'>导出</a></li>");
+        $("#opbar-btn-container").append("<li class='importbtn button'><a href = 'JavaScript:void(0)' onclick='importfiles()'>导入</a></li>");
+    }
 
     // Generate return path and action
     folderName = folderName.endWith("/") ? folderName.substr(0, folderName.length - 1) : folderName; // remove the last '/'
@@ -179,10 +174,9 @@ function createFileTable ( folderName ) {
                     if (isNaN(row) && row.type == "0_directory") {
                         return " - ";
                     } else {
-                        if(row.state && row.state == "Non-resident") {
-                            return "<label class='pool external " + row.external_storage_pool_name + "'>" + row.external_storage_pool_name.toUpperCase() + "</label>";
-                        } else if(row.state && row.state == "Co-resident") {
-                            return "<label class='pool internal co-resident " + data + "'>" + data.toUpperCase() + "</label>";
+                        if(row.misc_attributes && row.misc_attributes == "ARCHIVE OFFLINE") {
+                            var externalPoolAccount = $("#navbar li.openfolder").attr("account");
+                            return "<label class='pool external " + externalPoolAccount + "'>" + externalPoolAccount.toUpperCase() + "</label>";
                         } else {
                             return "<label class='pool internal " + data + "'>" + data.toUpperCase() + "</label>"; 
                         }
@@ -204,10 +198,10 @@ function createFileTable ( folderName ) {
                 "defaultContent": "<label><input class='checkbox' type='checkbox'><span></span></label>",
                 "width": "2%"
             },
-            { "data": "filename", "className": "datatable-data-col" },
+            { "data": "file_name", "className": "datatable-data-col" },
             { "className": "datatable-data-col" }, // file_size, the data info has been defined in columnDefs
             { "data": "creation_time", "className": "datatable-data-col" },
-            { "data": "L_mod_time", "className": "datatable-data-col" },
+            { "data": "l_mod_time", "className": "datatable-data-col" },
             { "data": "storage_pool_name", "className": "datatable-data-col pool-col" },
             { "data": "type", "className": "datatable-data-col" }
         ],
@@ -298,6 +292,34 @@ function createFileTable ( folderName ) {
             } else {
                 row.child(format(row.data()) ).show();
                 tr.addClass('shown');
+                $(tr).next().find("#cloudinfo_btn").on("click", function () {
+                    var moreFileInfo = $(this).closest(".more_fileinfo");
+                    var cloudInfo = $(this).parent(".cloudinfo");
+                    $.ajax({
+                        url: 'cloudgateway.php?myaction=GET&key=FILE&filepath=' + row.data().file_path,
+                        method: "GET",
+                        success: function (res) {
+                            $(cloudInfo).remove();
+                            $(moreFileInfo).append('<li>' +
+                                    '<p class=\"fileinfo_label\">占用的block数</p>' +
+                                    '<p class=\"fileinfo_value\">' + res.used_blocks + '</p>' +
+                                '</li>' + 
+                                '<li>' +
+                                    '<p class=\"fileinfo_label\">元数据版本：数据版本</p>' +
+                                    '<p class=\"fileinfo_value\">' + res.meta_version + '; ' + res.data_version + '</p>' +
+                                '</li>' +
+                                '<li>' +
+                                    '<p class=\"fileinfo_label\">数据状态</p>' +
+                                    '<p class=\"fileinfo_value\">' + res.state + '</p>' +
+                                '</li>' +
+                                '<li>' +
+                                    '<p class=\"fileinfo_label\">云端数据索引</p>' +
+                                    '<p class=\"fileinfo_value\">' + res.base_name + '</p>' +
+                                '</li>'
+                            );
+                        }
+                    });
+                });
             }
         }
     } );

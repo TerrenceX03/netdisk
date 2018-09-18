@@ -80,21 +80,9 @@ function getFileCloudInfo($connection, $filepath) {
     $file = array();
 
     foreach ($lines as $line) {
-        $tmpArray = explode(":", $line);
-        if (trim($tmpArray[0]) == "On-line size") {
-            $file["online_size"] = trim($tmpArray[1]);
-        } else if (trim($tmpArray[0]) == "Used blocks") {
-            $file["used_blocks"] = trim($tmpArray[1]);
-        } else if (trim($tmpArray[0]) == "Data Version") {
-            $file["data_version"] = trim($tmpArray[1]);
-        } else if (trim($tmpArray[0]) == "Meta Version") {
-            $file["meta_version"] = trim($tmpArray[1]);
-        } else if (trim($tmpArray[0]) == "State") {
-            $file["state"] = trim($tmpArray[1]);
-        } else if (trim($tmpArray[0]) == "Container Index") {
-            $file["container_index"] = trim($tmpArray[1]);
-        } else if (trim($tmpArray[0]) == "Base Name") {
-            $file["base_name"] = trim($tmpArray[1]);
+        $isMatched = preg_match('#(\w+.[^:]*):\s*(.*)\s*#i', $line, $matches);
+        if ($isMatched == 1) {
+            $file[str_replace(" ", "_", strtolower(trim($matches[1])))] = $matches[2];
         }
     }
 

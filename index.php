@@ -40,14 +40,14 @@ include 'function/show_list.php';
                     <div id="navbar-title" class="chinese">全部文件集/工作目录</div>
                     <ul id="navbar-fileset"></ul>
                 </td>
-                <td id="opbar" colspan="2">
+                <td id="opbar" colspan="2" style="visibility: hidden;">
                     <div id="messageBar">
                         <div id="messageBar-icon"><i class="fa fa-check" aria-hidden="true"></i></div>
                         <div id="messageBar-msg"><span></span></div>
                         <div id="messageBar-close" onclick="$('#messageBar').css('display', 'none')"><span></span></div>
                     </div>
                     <div>
-                        <ul>
+                        <ul id="opbar-btn-container">
                             <li class="uploadbtn button">
                                 <a>
                                     <span onclick="uploadfile()" class="btn btn-success fileinput-button default-button chinese" href = "JavaScript:void(0)">
@@ -64,7 +64,7 @@ include 'function/show_list.php';
                 </td>
             </tr>
             <tr>
-                <td id="returnpath" colspan="2">
+                <td id="returnpath" colspan="2" style="visibility: hidden;">
                     <div class="returnlabel">
                          <label id='path' class='chinese'>当前路径：</label>
                     </div>
@@ -72,7 +72,7 @@ include 'function/show_list.php';
                 </td>
             </tr>
             <tr>
-                <td id="filter" colspan="2">
+                <td id="filter" colspan="2" style="visibility: hidden;">
                     <div id="table-filter-container">
                         <table width="100%" height="100%">
                             <tr>
@@ -114,7 +114,7 @@ include 'function/show_list.php';
                 </td>
             </tr>
             <tr>  
-                <td id="content" colspan="2">
+                <td id="content" colspan="2" style="visibility: hidden;">
                     <table id="dataTable" class="hover row-border" style="width:100%">
                     	<thead>
                             <tr>

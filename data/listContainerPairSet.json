@@ -13,5 +13,20 @@
         "cloudpath":"/gpfs1/Documents/",
         "fileset":"Documents",
         "filesystem":"gpfs1"
+    },
+    {
+        "name":"filenet",
+        "cloudservice":"cossharing",
+        "cloudservicetype":"Sharing",
+        "account":"cos",
+        "accounttype":"cleversafe-new",
+        "accountusername":"wA8Fx8JQ3F08VxiAqeza",
+        "scopeto":"fileset",
+        "path":"/gpfs1/FileNet/",
+        "datacontainer":"filenet",
+        "metacontainer":"filenet.meta",
+        "cloudpath":"",
+        "fileset":"FileNet",
+        "filesystem":"gpfs1"
     }
 ]
