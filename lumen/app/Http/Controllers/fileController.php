@@ -44,38 +44,21 @@ class fileController extends Controller{
 
     public function download(Request $request){
         $id = $request->get('id');
-        if($id != NULL){
-            $file = DB::table('files')->select('name')->where('id', '=', $id)->value('name');
-            $directory = DB::table('files')->select('directory')->where('id', '=', $id)->value('directory');
-            $path = $directory.'/'.$file;
-            if($file != NULL && $directory != NULL){
-                if(!file_exists($path)){
-                    File::findOrFail($id)->delete();
-                    return 'no such file';
-                }
-            }else{
-                return 'no such file';
-            }
+        $path = $this->checkFile($id);
+        if($path == NULL){
+            return 'no such file';
         }
-        return response()->download($path, $filename);
+        return response()->download($path);
     }
 
     public function delete(Request $request){
         $id = $request->get('id');
-        if($id != NULL){
-            $file = DB::table('files')->select('name')->where('id', '=', $id)->value('name');
-            $directory = DB::table('files')->select('directory')->where('id', '=', $id)->value('directory');
-            $path = $directory.'/'.$file;
-            if($file != NULL && $directory != NULL){
-                if(!file_exists($path)){
-                    File::findOrFail($id)->delete();
-                    return 'no such file';
-                }
-            }else{
-                return 'no such file';
-            }
+        $path = $this->checkFile($id);
+        if($path == NULL){
+            return 'no such file';
         }
         unlink($path);
+        File::findOrFail($id)->delete();
         return $file.' deleted';
     }
 
@@ -89,8 +72,21 @@ class fileController extends Controller{
         return response()->json(File::all());
     }
 
-    public function setPath($filename){
-        return realpath(base_path('public/upload')).'/'.$filename;
+    public function checkFile($id){
+        if($id != NULL){
+            $file = DB::table('files')->select('name')->where('id', '=', $id)->value('name');
+            $directory = DB::table('files')->select('directory')->where('id', '=', $id)->value('directory');
+            $path = $directory.'/'.$file;
+            if($file != NULL && $directory != NULL){
+                if(!file_exists($path)){
+                    File::findOrFail($id)->delete();
+                    $path = NULL;
+                }
+            }else{
+                $path = NULL;
+            }
+            return $path;
+        }
     }
 
 }
